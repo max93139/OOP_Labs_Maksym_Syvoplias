@@ -1,14 +1,25 @@
 namespace Console_Lab2
 {
     // тут: Generate, TotalSum, MonthSalary
+    /// <summary>
+    /// Клас для роботи з матрицею (дані про зарплату співробітників за місяцями).
+    /// </summary>
     class Matrix
     {
         private int rows;
         private const int MONTH_COUNT = 12;
         private int cols = MONTH_COUNT;
         private int[,] data = null!;
+
+        /// <summary>
+        /// Елементи матриці.
+        /// </summary>
         public int[,] Data => data!;
 
+        /// <summary>
+        /// Генерує матрицю випадкових зарплат.
+        /// </summary>
+        /// <param name="employees">Кількість співробітників (рядків).</param>
         public void Generate(int employees)
         {
             rows = employees ; 
@@ -22,6 +33,11 @@ namespace Console_Lab2
                 }   
             }
         }
+
+        /// <summary>
+        /// Обчислює річний бюджет (загальну суму всіх виплат).
+        /// </summary>
+        /// <returns>Сумарна зарплата всіх співробітників за всі місяці.</returns>
         public int TotalSum()
         {
             int totalSum = 0;
@@ -34,6 +50,12 @@ namespace Console_Lab2
             }
             return totalSum;
         }
+
+        /// <summary>
+        /// Обчислює загальну зарплату всіх співробітників за вказаний місяць.
+        /// </summary>
+        /// <param name="month">Номер місяця (1-12).</param>
+        /// <returns>Загальна зарплата за місяць.</returns>
         public int MonthSalary(int month)
         {
             int sum = 0;
@@ -45,6 +67,17 @@ namespace Console_Lab2
             }
 
             return sum;
+        }
+
+        /// <summary>
+        /// Обчислює середню зарплату одного співробітника за вказаний місяць.
+        /// </summary>
+        /// <param name="month">Номер місяця (1-12).</param>
+        /// <returns>Середня місячна зарплата.</returns>
+        public double MonthAverageSalary(int month)
+        {
+            if (rows == 0) return 0;
+            return Math.Round((double)MonthSalary(month) / rows, 2);
         }
     }
 }
