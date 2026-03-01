@@ -1,0 +1,13 @@
+<map id="Console_Lab2.Service.MatrixBlock" name="Console_Lab2.Service.MatrixBlock">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,120,198,161"/>
+<area shape="rect" id="Node000002" href="$class_console___lab2_1_1_matrix.html#a82a038543fda16fec8ba8a40f2cb6c36" title=" " alt="" coords="247,5,448,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,118,179,79,245,41,267,35,262,38,247,46,181,83,129,122"/>
+<area shape="rect" id="Node000003" href="$class_console___lab2_1_1_matrix.html#a90f47e333c032c255b1da31c6fe4625a" title=" " alt="" coords="255,55,440,96"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="180,117,256,99,251,102,182,122"/>
+<area shape="rect" id="Node000004" href="$class_console___lab2_1_1_service.html#a2465ca052f16f17009da7ece48907a56" title=" " alt="" coords="256,120,439,161"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="198,138,243,140,238,142,199,143"/>
+<area shape="rect" id="Node000005" href="$class_console___lab2_1_1_service.html#acbfcf34577e17de87a17eacad51fd1d4" title=" " alt="" coords="246,185,448,211"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="192,159,277,180,272,182,192,164"/>
+<area shape="rect" id="Node000006" href="$class_console___lab2_1_1_matrix.html#aa79331b44e289a04f7b9ba61a5f91ae7" title=" " alt="" coords="246,235,449,260"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="133,159,186,191,247,221,266,230,261,230,245,226,183,196,132,164"/>
+</map>
