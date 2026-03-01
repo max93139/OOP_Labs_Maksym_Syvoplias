@@ -4,11 +4,12 @@ namespace Console_Lab2
     class Matrix
     {
         private int rows;
-        private int cols = 12;
-        private int[,]? data;
+        private const int MONTH_COUNT = 12;
+        private int cols = MONTH_COUNT;
+        private int[,] data = null!;
         public int[,] Data => data!;
 
-         public void Generate(int employees)
+        public void Generate(int employees)
         {
             rows = employees ; 
             data = new int [rows, cols];

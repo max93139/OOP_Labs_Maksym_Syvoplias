@@ -4,9 +4,8 @@ namespace Console_Lab2
     class Vector
     {
         
-        private int[]? elements;
-
-        public int[] Elements => elements!;
+        private int[] elements = Array.Empty<int>();
+        public int[] Elements => elements;
         public void Generate(int elementsLength)
         {
             elements = new int[elementsLength];

@@ -9,10 +9,10 @@ namespace lab1
          /// </summary>
          static void Task1()
         {
-            const float a = 3.5f; //константи задані умовою завдання
-            const float b = 3f;
-            const float c = 10f;
-            const float d = 8.3f;
+            const double A = 3.5; //константи задані умовою завдання
+            const double B = 3;
+            const double C = 10;
+            const double D = 8.3;
 
             Console.WriteLine("Прізвище - Сивопляс");
             Console.WriteLine("Ім'я - Максим");
@@ -24,12 +24,12 @@ namespace lab1
             Console.WriteLine("Вираз: p = 3.5 * x^4 -  3 * x^3 + 10 * x + 8.3");
             Console.Write("Введіть x: ");
 
-            float x = Convert.ToSingle(Console.ReadLine());
-            float p = (float)(a * Math.Pow(x, 4)
-                            - b * Math.Pow(x, 3)
-                            + c * x + d);
+            double x = Convert.ToDouble(Console.ReadLine());
+            double p = (A * Math.Pow(x, 4)
+                            - B * Math.Pow(x, 3)
+                            + C * x + D);
 
-            Console.WriteLine("Результат: " + p);
+            Console.WriteLine("Результат: p = 3.5 * x^4 -  3 * x^3 + 10 * x + 8.3 = " + p );
         }
         /// <summary>
         /// Задача 2. Визначити значення виразу x = (a+b)^2 / √(sin(c) - cos(d)), де a, b, c, d - числа, які вводяться користувачем.
@@ -39,29 +39,29 @@ namespace lab1
             Console.WriteLine("x = (a+b)^2 / √(sin(c) - cos(d))");
 
             Console.Write("Введіть a: ");
-            float a = Convert.ToSingle(Console.ReadLine());
+            double a = Convert.ToSingle(Console.ReadLine());
 
             Console.Write("Введіть b: ");
-            float b = Convert.ToSingle(Console.ReadLine());
+            double b = Convert.ToSingle(Console.ReadLine());
 
             Console.Write("Введіть c: ");
-            float c = Convert.ToSingle(Console.ReadLine());
+            double c = Convert.ToSingle(Console.ReadLine());
 
             Console.Write("Введіть d: ");
-            float d = Convert.ToSingle(Console.ReadLine());
+            double d = Convert.ToSingle(Console.ReadLine());
 
-            float x = (float)(Math.Pow(a + b, 2)
+            double x = (Math.Pow(a + b, 2)
                             / Math.Sqrt(Math.Sin(c)
                             - Math.Cos(d)));
 
-            Console.WriteLine("Результат: " + x);
+            Console.WriteLine("Результат: x = (a+b)^2 / √(sin(c) - cos(d)) = " + x);
         }
         /// <summary>
         /// Задача 3. Обчислити значення функції f(x) в точці x, якщо f(x) = 4x - 1, коли x > 0; f(x) = 25x + 10, коли x < 0; f(x) = 0, коли x = 0.
         /// </summary>
         static void Task3()
         {
-            Console.Write("f(x) = 4x - 1");
+            Console.Write("f(x) = 4x - 1 \n");
             Console.Write("Введіть x: ");
             float x = Convert.ToSingle(Console.ReadLine());
 
@@ -84,7 +84,7 @@ namespace lab1
         static void Task4()
         {
             Console.Write("Введіть номер дня тижня (1–7): ");
-            int day = Convert.ToInt32(Console.ReadLine()); // Номер дня тижня , яке вводиться користувачем
+            int day = Convert.ToInt32(Console.ReadLine()); // Номер дня тижня, яке вводиться користувачем
 
             switch (day)
             {
@@ -132,26 +132,21 @@ namespace lab1
             {
                 Console.Write("Число: ");
                 string input = Console.ReadLine() ?? "" ;
-
-                if (int.TryParse(input, out int temp))
+                if (!int.TryParse(input, out int temp)) // Перевірка, чи введено число // Було Порушення структурності коду
                 {
-                    value = temp;
-
-                    if (value != 0)
-                    {
-                        if (value < min || value > max)
-                        {
-                            Console.WriteLine("Помилка! Число поза діапазоном.");
-                        }
-                        else
-                        {
-                            sum += value;
-                        }
-                    }
+                    Console.WriteLine("Помилка! Введено не число.");
+                }
+                else if (temp == 0)
+                {
+                    value = 0;
+                }
+                else if (temp < min || temp > max)
+                {
+                    Console.WriteLine("Помилка! Число поза діапазоном.");
                 }
                 else
                 {
-                    Console.WriteLine("Помилка! Введено не число.");
+                    sum += temp;
                 }
             } while (value != 0);
 
