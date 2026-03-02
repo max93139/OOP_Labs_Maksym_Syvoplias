@@ -15,9 +15,9 @@ namespace Console_Lab2
             Vector vector = new Vector();
             Matrix matrix = new Matrix();
 
-            bool exit = false; // створюємо прапорець виходу
+            string choice;
 
-            while (!exit) // запускаємо цикл меню
+            do // запускаємо цикл меню
             {
                 Console.WriteLine("МЕНЮ");
                 Console.WriteLine("1 - Робота з масивом");
@@ -25,27 +25,19 @@ namespace Console_Lab2
                 Console.WriteLine("0 - Вихід");
                 Console.Write("Оберіть пункт: ");
 
-                string input = Console.ReadLine() ?? string.Empty;
-                int choice;
-
-                // Використовуємо TryParse щоб уникнути падіння при вводі літер, але структура як у прикладі
-                if (!int.TryParse(input, out choice))
-                {
-                    choice = -1;
-                }
+                choice = Console.ReadLine() ?? string.Empty;
 
                 switch (choice) // перевіряємо вибір
                 {
-                    case 1:
+                    case "1":
                         VectorBlock(vector); // запускаємо вектор
                         break;
 
-                    case 2:
+                    case "2":
                         MatrixBlock(matrix); // запускаємо матрицю
                         break;
 
-                    case 0:
-                        exit = true; // встановлюємо вихід
+                    case "0":
                         Console.WriteLine("Завершення програми...");
                         Console.Clear();
                         break;
@@ -56,7 +48,7 @@ namespace Console_Lab2
                 }
 
                 Console.WriteLine(); // робимо відступ
-            }
+            } while (choice != "0");
         }
 
         /// <summary>

@@ -2,12 +2,12 @@ namespace Console_Lab2
 {
      // тут: Generate, ShellSort, Sum, Average
     /// <summary>
-    /// Клас для роботи з одновимірним масивом (вектором).
+    /// Клас для роботи з одновимірним масивом .
     /// </summary>
     class Vector
     {
         
-        private int[] elements = Array.Empty<int>();
+        private int[] elements = new int[0];
 
         /// <summary>
         /// Елементи вектора.
