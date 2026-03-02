@@ -1,8 +1,7 @@
 namespace Console_Lab2
 {
-    // тут: Generate, TotalSum, MonthSalary
     /// <summary>
-    /// Клас для роботи з матрицею (дані про зарплату співробітників за місяцями).
+    /// Клас для роботи з матрицею.
     /// </summary>
     class Matrix
     {

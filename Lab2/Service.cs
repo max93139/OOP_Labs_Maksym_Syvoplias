@@ -77,7 +77,7 @@ namespace Console_Lab2
                 Console.Write(j + "\t");
             }
             Console.WriteLine();
-            Console.WriteLine(new string('-', data.GetLength(1) * 8)); // лінія-розділювач для краси
+            Console.WriteLine(new string('-', data.GetLength(1) * 8)); 
 
             for (int i = 0; i < data.GetLength(0); i++)
             {
