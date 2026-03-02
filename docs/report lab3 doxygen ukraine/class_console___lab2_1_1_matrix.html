@@ -92,26 +92,40 @@ $(function(){initNavTree('class_console___lab2_1_1_matrix.html','',''); });
   <div class="headertitle"><div class="title">Клас Console_Lab2.Matrix</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Клас для роботи з матрицею (дані про зарплату співробітників за місяцями).  
+ <a href="#details">Детальніше...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Загальнодоступні елементи</h2></td></tr>
 <tr class="memitem:a82a038543fda16fec8ba8a40f2cb6c36" id="r_a82a038543fda16fec8ba8a40f2cb6c36"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a82a038543fda16fec8ba8a40f2cb6c36">Generate</a> (int employees)</td></tr>
+<tr class="memdesc:a82a038543fda16fec8ba8a40f2cb6c36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Генерує матрицю випадкових зарплат.  <br /></td></tr>
 <tr class="memitem:aa79331b44e289a04f7b9ba61a5f91ae7" id="r_aa79331b44e289a04f7b9ba61a5f91ae7"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#aa79331b44e289a04f7b9ba61a5f91ae7">TotalSum</a> ()</td></tr>
+<tr class="memdesc:aa79331b44e289a04f7b9ba61a5f91ae7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Обчислює річний бюджет (загальну суму всіх виплат).  <br /></td></tr>
 <tr class="memitem:a90f47e333c032c255b1da31c6fe4625a" id="r_a90f47e333c032c255b1da31c6fe4625a"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#a90f47e333c032c255b1da31c6fe4625a">MonthSalary</a> (int month)</td></tr>
+<tr class="memdesc:a90f47e333c032c255b1da31c6fe4625a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Обчислює загальну зарплату всіх співробітників за вказаний місяць.  <br /></td></tr>
+<tr class="memitem:afa6306d9103d4cfed1ab2776c37e6264" id="r_afa6306d9103d4cfed1ab2776c37e6264"><td class="memItemLeft">double&#160;</td><td class="memItemRight"><a class="el" href="#afa6306d9103d4cfed1ab2776c37e6264">MonthAverageSalary</a> (int month)</td></tr>
+<tr class="memdesc:afa6306d9103d4cfed1ab2776c37e6264"><td class="mdescLeft">&#160;</td><td class="mdescRight">Обчислює середню зарплату одного співробітника за вказаний місяць.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-properties" class="groupheader"><a id="properties" name="properties"></a>
 Властивості</h2></td></tr>
 <tr class="memitem:a2e4037614e57c78b34710a9a9cf87a95" id="r_a2e4037614e57c78b34710a9a9cf87a95"><td class="memItemLeft">int[,]&#160;</td><td class="memItemRight"><a class="el" href="#a2e4037614e57c78b34710a9a9cf87a95">Data</a><code> [get]</code></td></tr>
+<tr class="memdesc:a2e4037614e57c78b34710a9a9cf87a95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Елементи матриці.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pri-attribs" class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Приватні дані</h2></td></tr>
 <tr class="memitem:a71e69175bc1d27eea43671172be1795a" id="r_a71e69175bc1d27eea43671172be1795a"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#a71e69175bc1d27eea43671172be1795a">rows</a></td></tr>
-<tr class="memitem:a9e5224eac0d0f166329e4cb9381be025" id="r_a9e5224eac0d0f166329e4cb9381be025"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#a9e5224eac0d0f166329e4cb9381be025">cols</a> = 12</td></tr>
-<tr class="memitem:afa5d864ca23041feb142bf0239e2e426" id="r_afa5d864ca23041feb142bf0239e2e426"><td class="memItemLeft">int?[,]&#160;</td><td class="memItemRight"><a class="el" href="#afa5d864ca23041feb142bf0239e2e426">data</a></td></tr>
+<tr class="memitem:a9e5224eac0d0f166329e4cb9381be025" id="r_a9e5224eac0d0f166329e4cb9381be025"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#a9e5224eac0d0f166329e4cb9381be025">cols</a> = <a class="el" href="#a091a04e271bb303ae2c7d0d41a48867b">MONTH_COUNT</a></td></tr>
+<tr class="memitem:af7af71f6dcd091aa4564476d87b328d0" id="r_af7af71f6dcd091aa4564476d87b328d0"><td class="memItemLeft">int[,]&#160;</td><td class="memItemRight"><a class="el" href="#af7af71f6dcd091aa4564476d87b328d0">data</a> = null!</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pri-static-attribs" class="groupheader"><a id="pri-static-attribs" name="pri-static-attribs"></a>
+Приватні статичні дані</h2></td></tr>
+<tr class="memitem:a091a04e271bb303ae2c7d0d41a48867b" id="r_a091a04e271bb303ae2c7d0d41a48867b"><td class="memItemLeft">const int&#160;</td><td class="memItemRight"><a class="el" href="#a091a04e271bb303ae2c7d0d41a48867b">MONTH_COUNT</a> = 12</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Детальний опис</h2>
-<div class="textblock">
-<p class="definition">Див. визначення в файлі <a class="el" href="_matrix_8cs_source.html">Matrix.cs</a>, рядок <a class="el" href="_matrix_8cs_source.html#l00004">4</a></p>
+<div class="textblock"><p>Клас для роботи з матрицею (дані про зарплату співробітників за місяцями). </p>
+
+<p class="definition">Див. визначення в файлі <a class="el" href="_matrix_8cs_source.html">Matrix.cs</a>, рядок <a class="el" href="_matrix_8cs_source.html#l00007">7</a></p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Опис методів компонент</h2>
 <a id="a82a038543fda16fec8ba8a40f2cb6c36" name="a82a038543fda16fec8ba8a40f2cb6c36"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a82a038543fda16fec8ba8a40f2cb6c36">&#9670;&#160;</a></span>Generate()</h2>
@@ -128,17 +142,81 @@ $(function(){initNavTree('class_console___lab2_1_1_matrix.html','',''); });
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Див. визначення в файлі <a class="el" href="_matrix_8cs_source.html">Matrix.cs</a>, рядок <a class="el" href="_matrix_8cs_source.html#l00011">11</a></p>
+<p>Генерує матрицю випадкових зарплат. </p>
+<dl class="params"><dt>Аргументи</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">employees</td><td>Кількість співробітників (рядків).</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Див. визначення в файлі <a class="el" href="_matrix_8cs_source.html">Matrix.cs</a>, рядок <a class="el" href="_matrix_8cs_source.html#l00023">23</a></p>
 <div id="dynsection-0" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Граф викликів для цієї функції:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="class_console___lab2_1_1_matrix_a82a038543fda16fec8ba8a40f2cb6c36_icgraph.png" border="0" usemap="#aclass_console___lab2_1_1_matrix_a82a038543fda16fec8ba8a40f2cb6c36_icgraph" loading="lazy" alt=""/></div>
 <map name="aclass_console___lab2_1_1_matrix_a82a038543fda16fec8ba8a40f2cb6c36_icgraph" id="aclass_console___lab2_1_1_matrix_a82a038543fda16fec8ba8a40f2cb6c36_icgraph">
-<area shape="rect" title=" " alt="" coords="483,13,684,38"/>
-<area shape="rect" href="class_console___lab2_1_1_service.html#a6fb0e95eb4c8c037842adf5a4822c37b" title=" " alt="" coords="243,5,435,46"/>
-<area shape="poly" title=" " alt="" coords="465,26,436,28,435,23,470,26"/>
-<area shape="rect" href="class_console___lab2_1_1_program.html#aea185484ee7f7d74098238e1d21cf3ee" title=" " alt="" coords="5,13,195,38"/>
+<area shape="rect" title="Генерує матрицю випадкових зарплат." alt="" coords="743,13,945,38"/>
+<area shape="rect" href="class_console___lab2_1_1_service.html#a6fb0e95eb4c8c037842adf5a4822c37b" title="Блок коду для роботи з матрицею (генерація, виведення бюджету та зарплати за місяць)." alt="" coords="503,5,695,46"/>
+<area shape="poly" title=" " alt="" coords="725,26,696,28,696,23,730,26"/>
+<area shape="rect" href="class_console___lab2_1_1_service.html#a050c3efe3bb611a980499f030294a842" title="Запускає головний цикл меню програми." alt="" coords="243,13,455,38"/>
+<area shape="poly" title=" " alt="" coords="484,26,455,28,455,23,490,26"/>
+<area shape="rect" href="class_console___lab2_1_1_program.html#aea185484ee7f7d74098238e1d21cf3ee" title="Точка входу, що запускає меню програми." alt="" coords="5,13,195,38"/>
+<area shape="poly" title=" " alt="" coords="224,26,195,28,195,23,230,25"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="afa6306d9103d4cfed1ab2776c37e6264" name="afa6306d9103d4cfed1ab2776c37e6264"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa6306d9103d4cfed1ab2776c37e6264">&#9670;&#160;</a></span>MonthAverageSalary()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double Console_Lab2.Matrix.MonthAverageSalary </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>month</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Обчислює середню зарплату одного співробітника за вказаний місяць. </p>
+<dl class="params"><dt>Аргументи</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">month</td><td>Номер місяця (1-12).</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Повертає</dt><dd>Середня місячна зарплата.</dd></dl>
+
+<p class="definition">Див. визначення в файлі <a class="el" href="_matrix_8cs_source.html">Matrix.cs</a>, рядок <a class="el" href="_matrix_8cs_source.html#l00077">77</a></p>
+<div id="dynsection-1" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Граф всіх викликів цієї функції:</div>
+<div id="dynsection-1-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-1-content" class="dyncontent" style="display:none;">
+<div class="center"><img src="class_console___lab2_1_1_matrix_afa6306d9103d4cfed1ab2776c37e6264_cgraph.png" border="0" usemap="#aclass_console___lab2_1_1_matrix_afa6306d9103d4cfed1ab2776c37e6264_cgraph" loading="lazy" alt=""/></div>
+<map name="aclass_console___lab2_1_1_matrix_afa6306d9103d4cfed1ab2776c37e6264_cgraph" id="aclass_console___lab2_1_1_matrix_afa6306d9103d4cfed1ab2776c37e6264_cgraph">
+<area shape="rect" title="Обчислює середню зарплату одного співробітника за вказаний місяць." alt="" coords="5,5,190,46"/>
+<area shape="rect" href="class_console___lab2_1_1_matrix.html#a90f47e333c032c255b1da31c6fe4625a" title="Обчислює загальну зарплату всіх співробітників за вказаний місяць." alt="" coords="238,5,422,46"/>
+<area shape="poly" title=" " alt="" coords="190,23,224,25,219,26,190,28"/>
+</map>
+</div>
+<div id="dynsection-2" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Граф викликів для цієї функції:</div>
+<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-2-content" class="dyncontent" style="display:none;">
+<div class="center"><img src="class_console___lab2_1_1_matrix_afa6306d9103d4cfed1ab2776c37e6264_icgraph.png" border="0" usemap="#aclass_console___lab2_1_1_matrix_afa6306d9103d4cfed1ab2776c37e6264_icgraph" loading="lazy" alt=""/></div>
+<map name="aclass_console___lab2_1_1_matrix_afa6306d9103d4cfed1ab2776c37e6264_icgraph" id="aclass_console___lab2_1_1_matrix_afa6306d9103d4cfed1ab2776c37e6264_icgraph">
+<area shape="rect" title="Обчислює середню зарплату одного співробітника за вказаний місяць." alt="" coords="743,5,928,46"/>
+<area shape="rect" href="class_console___lab2_1_1_service.html#a6fb0e95eb4c8c037842adf5a4822c37b" title="Блок коду для роботи з матрицею (генерація, виведення бюджету та зарплати за місяць)." alt="" coords="503,5,695,46"/>
+<area shape="poly" title=" " alt="" coords="725,26,696,28,696,23,730,26"/>
+<area shape="rect" href="class_console___lab2_1_1_service.html#a050c3efe3bb611a980499f030294a842" title="Запускає головний цикл меню програми." alt="" coords="243,13,455,38"/>
+<area shape="poly" title=" " alt="" coords="484,26,455,28,455,23,490,26"/>
+<area shape="rect" href="class_console___lab2_1_1_program.html#aea185484ee7f7d74098238e1d21cf3ee" title="Точка входу, що запускає меню програми." alt="" coords="5,13,195,38"/>
 <area shape="poly" title=" " alt="" coords="224,26,195,28,195,23,230,25"/>
 </map>
 </div>
@@ -160,18 +238,32 @@ $(function(){initNavTree('class_console___lab2_1_1_matrix.html','',''); });
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Див. визначення в файлі <a class="el" href="_matrix_8cs_source.html">Matrix.cs</a>, рядок <a class="el" href="_matrix_8cs_source.html#l00036">36</a></p>
-<div id="dynsection-1" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Граф викликів для цієї функції:</div>
-<div id="dynsection-1-summary" class="dynsummary" style="display:block;">
+<p>Обчислює загальну зарплату всіх співробітників за вказаний місяць. </p>
+<dl class="params"><dt>Аргументи</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">month</td><td>Номер місяця (1-12).</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Повертає</dt><dd>Загальна зарплата за місяць.</dd></dl>
+
+<p class="definition">Див. визначення в файлі <a class="el" href="_matrix_8cs_source.html">Matrix.cs</a>, рядок <a class="el" href="_matrix_8cs_source.html#l00059">59</a></p>
+<div id="dynsection-3" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Граф викликів для цієї функції:</div>
+<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-1-content" class="dyncontent" style="display:none;">
+<div id="dynsection-3-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="class_console___lab2_1_1_matrix_a90f47e333c032c255b1da31c6fe4625a_icgraph.png" border="0" usemap="#aclass_console___lab2_1_1_matrix_a90f47e333c032c255b1da31c6fe4625a_icgraph" loading="lazy" alt=""/></div>
 <map name="aclass_console___lab2_1_1_matrix_a90f47e333c032c255b1da31c6fe4625a_icgraph" id="aclass_console___lab2_1_1_matrix_a90f47e333c032c255b1da31c6fe4625a_icgraph">
-<area shape="rect" title=" " alt="" coords="483,5,667,46"/>
-<area shape="rect" href="class_console___lab2_1_1_service.html#a6fb0e95eb4c8c037842adf5a4822c37b" title=" " alt="" coords="243,5,435,46"/>
-<area shape="poly" title=" " alt="" coords="465,26,435,28,435,23,470,26"/>
-<area shape="rect" href="class_console___lab2_1_1_program.html#aea185484ee7f7d74098238e1d21cf3ee" title=" " alt="" coords="5,13,195,38"/>
-<area shape="poly" title=" " alt="" coords="224,26,195,28,195,23,230,25"/>
+<area shape="rect" title="Обчислює загальну зарплату всіх співробітників за вказаний місяць." alt="" coords="976,5,1160,46"/>
+<area shape="rect" href="class_console___lab2_1_1_service.html#a6fb0e95eb4c8c037842adf5a4822c37b" title="Блок коду для роботи з матрицею (генерація, виведення бюджету та зарплати за місяць)." alt="" coords="503,5,695,46"/>
+<area shape="poly" title=" " alt="" coords="957,22,928,24,743,24,696,25,696,20,743,19,928,19,962,22"/>
+<area shape="rect" href="class_console___lab2_1_1_matrix.html#afa6306d9103d4cfed1ab2776c37e6264" title="Обчислює середню зарплату одного співробітника за вказаний місяць." alt="" coords="743,33,928,74"/>
+<area shape="poly" title=" " alt="" coords="963,38,929,45,928,40,957,39"/>
+<area shape="rect" href="class_console___lab2_1_1_service.html#a050c3efe3bb611a980499f030294a842" title="Запускає головний цикл меню програми." alt="" coords="243,13,455,38"/>
+<area shape="poly" title=" " alt="" coords="484,26,456,28,455,23,490,26"/>
+<area shape="rect" href="class_console___lab2_1_1_program.html#aea185484ee7f7d74098238e1d21cf3ee" title="Точка входу, що запускає меню програми." alt="" coords="5,13,195,38"/>
+<area shape="poly" title=" " alt="" coords="224,26,196,28,195,23,230,25"/>
+<area shape="poly" title=" " alt="" coords="725,41,696,40,696,34,730,41"/>
 </map>
 </div>
 
@@ -192,17 +284,22 @@ $(function(){initNavTree('class_console___lab2_1_1_matrix.html','',''); });
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Див. визначення в файлі <a class="el" href="_matrix_8cs_source.html">Matrix.cs</a>, рядок <a class="el" href="_matrix_8cs_source.html#l00024">24</a></p>
-<div id="dynsection-2" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Граф викликів для цієї функції:</div>
-<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
+<p>Обчислює річний бюджет (загальну суму всіх виплат). </p>
+<dl class="section return"><dt>Повертає</dt><dd>Сумарна зарплата всіх співробітників за всі місяці.</dd></dl>
+
+<p class="definition">Див. визначення в файлі <a class="el" href="_matrix_8cs_source.html">Matrix.cs</a>, рядок <a class="el" href="_matrix_8cs_source.html#l00041">41</a></p>
+<div id="dynsection-4" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Граф викликів для цієї функції:</div>
+<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-2-content" class="dyncontent" style="display:none;">
+<div id="dynsection-4-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="class_console___lab2_1_1_matrix_aa79331b44e289a04f7b9ba61a5f91ae7_icgraph.png" border="0" usemap="#aclass_console___lab2_1_1_matrix_aa79331b44e289a04f7b9ba61a5f91ae7_icgraph" loading="lazy" alt=""/></div>
 <map name="aclass_console___lab2_1_1_matrix_aa79331b44e289a04f7b9ba61a5f91ae7_icgraph" id="aclass_console___lab2_1_1_matrix_aa79331b44e289a04f7b9ba61a5f91ae7_icgraph">
-<area shape="rect" title=" " alt="" coords="483,13,686,38"/>
-<area shape="rect" href="class_console___lab2_1_1_service.html#a6fb0e95eb4c8c037842adf5a4822c37b" title=" " alt="" coords="243,5,435,46"/>
-<area shape="poly" title=" " alt="" coords="465,26,435,28,435,23,470,26"/>
-<area shape="rect" href="class_console___lab2_1_1_program.html#aea185484ee7f7d74098238e1d21cf3ee" title=" " alt="" coords="5,13,195,38"/>
+<area shape="rect" title="Обчислює річний бюджет (загальну суму всіх виплат)." alt="" coords="743,13,947,38"/>
+<area shape="rect" href="class_console___lab2_1_1_service.html#a6fb0e95eb4c8c037842adf5a4822c37b" title="Блок коду для роботи з матрицею (генерація, виведення бюджету та зарплати за місяць)." alt="" coords="503,5,695,46"/>
+<area shape="poly" title=" " alt="" coords="725,26,696,28,696,23,730,26"/>
+<area shape="rect" href="class_console___lab2_1_1_service.html#a050c3efe3bb611a980499f030294a842" title="Запускає головний цикл меню програми." alt="" coords="243,13,455,38"/>
+<area shape="poly" title=" " alt="" coords="484,26,455,28,455,23,490,26"/>
+<area shape="rect" href="class_console___lab2_1_1_program.html#aea185484ee7f7d74098238e1d21cf3ee" title="Точка входу, що запускає меню програми." alt="" coords="5,13,195,38"/>
 <area shape="poly" title=" " alt="" coords="224,26,195,28,195,23,230,25"/>
 </map>
 </div>
@@ -220,7 +317,7 @@ $(function(){initNavTree('class_console___lab2_1_1_matrix.html','',''); });
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int Console_Lab2.Matrix.cols = 12</td>
+          <td class="memname">int Console_Lab2.Matrix.cols = <a class="el" href="#a091a04e271bb303ae2c7d0d41a48867b">MONTH_COUNT</a></td>
         </tr>
       </table>
   </td>
@@ -230,12 +327,12 @@ $(function(){initNavTree('class_console___lab2_1_1_matrix.html','',''); });
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Див. визначення в файлі <a class="el" href="_matrix_8cs_source.html">Matrix.cs</a>, рядок <a class="el" href="_matrix_8cs_source.html#l00007">7</a></p>
+<p class="definition">Див. визначення в файлі <a class="el" href="_matrix_8cs_source.html">Matrix.cs</a>, рядок <a class="el" href="_matrix_8cs_source.html#l00011">11</a></p>
 
 </div>
 </div>
-<a id="afa5d864ca23041feb142bf0239e2e426" name="afa5d864ca23041feb142bf0239e2e426"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa5d864ca23041feb142bf0239e2e426">&#9670;&#160;</a></span>data</h2>
+<a id="af7af71f6dcd091aa4564476d87b328d0" name="af7af71f6dcd091aa4564476d87b328d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7af71f6dcd091aa4564476d87b328d0">&#9670;&#160;</a></span>data</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -244,7 +341,7 @@ $(function(){initNavTree('class_console___lab2_1_1_matrix.html','',''); });
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int? [,] Console_Lab2.Matrix.data</td>
+          <td class="memname">int [,] Console_Lab2.Matrix.data = null!</td>
         </tr>
       </table>
   </td>
@@ -254,7 +351,31 @@ $(function(){initNavTree('class_console___lab2_1_1_matrix.html','',''); });
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Див. визначення в файлі <a class="el" href="_matrix_8cs_source.html">Matrix.cs</a>, рядок <a class="el" href="_matrix_8cs_source.html#l00008">8</a></p>
+<p class="definition">Див. визначення в файлі <a class="el" href="_matrix_8cs_source.html">Matrix.cs</a>, рядок <a class="el" href="_matrix_8cs_source.html#l00012">12</a></p>
+
+</div>
+</div>
+<a id="a091a04e271bb303ae2c7d0d41a48867b" name="a091a04e271bb303ae2c7d0d41a48867b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a091a04e271bb303ae2c7d0d41a48867b">&#9670;&#160;</a></span>MONTH_COUNT</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int Console_Lab2.Matrix.MONTH_COUNT = 12</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Див. визначення в файлі <a class="el" href="_matrix_8cs_source.html">Matrix.cs</a>, рядок <a class="el" href="_matrix_8cs_source.html#l00010">10</a></p>
 
 </div>
 </div>
@@ -278,7 +399,7 @@ $(function(){initNavTree('class_console___lab2_1_1_matrix.html','',''); });
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Див. визначення в файлі <a class="el" href="_matrix_8cs_source.html">Matrix.cs</a>, рядок <a class="el" href="_matrix_8cs_source.html#l00006">6</a></p>
+<p class="definition">Див. визначення в файлі <a class="el" href="_matrix_8cs_source.html">Matrix.cs</a>, рядок <a class="el" href="_matrix_8cs_source.html#l00009">9</a></p>
 
 </div>
 </div>
@@ -303,7 +424,9 @@ $(function(){initNavTree('class_console___lab2_1_1_matrix.html','',''); });
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Див. визначення в файлі <a class="el" href="_matrix_8cs_source.html">Matrix.cs</a>, рядок <a class="el" href="_matrix_8cs_source.html#l00009">9</a></p>
+<p>Елементи матриці. </p>
+
+<p class="definition">Див. визначення в файлі <a class="el" href="_matrix_8cs_source.html">Matrix.cs</a>, рядок <a class="el" href="_matrix_8cs_source.html#l00017">17</a></p>
 
 </div>
 </div>

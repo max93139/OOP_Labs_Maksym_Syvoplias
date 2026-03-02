@@ -1,0 +1,9 @@
+<map id="Console_Lab2.Matrix.MonthAverageSalary" name="Console_Lab2.Matrix.MonthAverageSalary">
+<area shape="rect" id="Node000001" title="Обчислює середню зарплату одного співробітника за вказаний місяць." alt="" coords="743,5,928,46"/>
+<area shape="rect" id="Node000002" href="$class_console___lab2_1_1_service.html#a6fb0e95eb4c8c037842adf5a4822c37b" title="Блок коду для роботи з матрицею (генерація, виведення бюджету та зарплати за місяць)." alt="" coords="503,5,695,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="725,26,696,28,696,23,730,26"/>
+<area shape="rect" id="Node000003" href="$class_console___lab2_1_1_service.html#a050c3efe3bb611a980499f030294a842" title="Запускає головний цикл меню програми." alt="" coords="243,13,455,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="484,26,455,28,455,23,490,26"/>
+<area shape="rect" id="Node000004" href="$class_console___lab2_1_1_program.html#aea185484ee7f7d74098238e1d21cf3ee" title="Точка входу, що запускає меню програми." alt="" coords="5,13,195,38"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="224,26,195,28,195,23,230,25"/>
+</map>

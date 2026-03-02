@@ -17,7 +17,7 @@ namespace Console_Lab2
 
             string choice;
 
-            do // запускаємо цикл меню
+            do 
             {
                 Console.WriteLine("МЕНЮ");
                 Console.WriteLine("1 - Робота з масивом");
@@ -43,11 +43,11 @@ namespace Console_Lab2
                         break;
 
                     default:
-                        Console.WriteLine("Невірний вибір!"); // повідомляємо про помилку
+                        Console.WriteLine("Невірний вибір!"); 
                         break;
                 }
 
-                Console.WriteLine(); // робимо відступ
+                Console.WriteLine(); 
             } while (choice != "0");
         }
 
@@ -70,10 +70,21 @@ namespace Console_Lab2
         public void PrintMatrix(int[,] data)
         {
             Console.WriteLine("Матриця:");
+
+            // Виводимо номери місяців як заголовки стовпців
+            for (int j = 1; j <= data.GetLength(1); j++)
+            {
+                Console.Write(j + "\t");
+            }
+            Console.WriteLine();
+            Console.WriteLine(new string('-', data.GetLength(1) * 8)); // лінія-розділювач для краси
+
             for (int i = 0; i < data.GetLength(0); i++)
             {
                 for (int j = 0; j < data.GetLength(1); j++)
+                {
                     Console.Write(data[i, j] + "\t");
+                }
                 Console.WriteLine();
             }
         }

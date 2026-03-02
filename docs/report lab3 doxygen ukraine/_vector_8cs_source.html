@@ -95,109 +95,124 @@ $(function(){initNavTree('_vector_8cs_source.html','',''); });
 <a href="_vector_8cs.html">Див. документацію.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_console___lab2.html">Console_Lab2</a></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span>{</div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span>     <span class="comment">// тут: Generate, ShellSort, Sum, Average</span></div>
-<div class="foldopen" id="foldopen00004" data-start="{" data-end="};">
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno"><a class="line" href="class_console___lab2_1_1_vector.html">    4</a></span>    <span class="keyword">class </span><a class="code hl_class" href="class_console___lab2_1_1_vector.html">Vector</a></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span>    {</div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>        </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">    7</a></span>        <span class="keyword">private</span> <span class="keywordtype">int</span>[]? <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">elements</a>;</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="class_console___lab2_1_1_vector.html#a37723c4cdedcf7112f806d5af4f32fee">    9</a></span>        <span class="keyword">public</span> <span class="keywordtype">int</span>[] <a class="code hl_property" href="class_console___lab2_1_1_vector.html#a37723c4cdedcf7112f806d5af4f32fee">Elements</a> =&gt; <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">elements</a>!;</div>
-<div class="foldopen" id="foldopen00010" data-start="{" data-end="}">
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="class_console___lab2_1_1_vector.html#a2800de4af133ed608b703cb14e940e35">   10</a></span>        <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_console___lab2_1_1_vector.html#a2800de4af133ed608b703cb14e940e35">Generate</a>(<span class="keywordtype">int</span> elementsLength)</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        {</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>            <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">elements</a> = <span class="keyword">new</span> <span class="keywordtype">int</span>[elementsLength];</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>            Random rand = <span class="keyword">new</span> Random();</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">elements</a>.Length; i++)</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>            {</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>                <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">elements</a>[i] = rand.Next(-50 , 51); <span class="comment">// Генерація випадкових чисел </span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>            }</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        }</div>
-</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="foldopen" id="foldopen00020" data-start="{" data-end="}">
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="class_console___lab2_1_1_vector.html#a0142d0a08897a024da99967b4ac886ea">   20</a></span>        <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_console___lab2_1_1_vector.html#a0142d0a08897a024da99967b4ac886ea">ShellSort</a>() <span class="comment">//https://www.geeksforgeeks.org/dsa/shell-sort/</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        {</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>            <span class="keywordtype">int</span> n = <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">elements</a>.Length;</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>            <span class="comment">// Start with a large gap, then reduce it step by step</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> gap = n / 2; gap &gt; 0; gap /= 2)</div>
+<div class="foldopen" id="foldopen00007" data-start="{" data-end="};">
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="class_console___lab2_1_1_vector.html">    7</a></span>    <span class="keyword">class </span><a class="code hl_class" href="class_console___lab2_1_1_vector.html">Vector</a></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    {</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>        </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">   10</a></span>        <span class="keyword">private</span> <span class="keywordtype">int</span>[] <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">elements</a> = <span class="keyword">new</span> <span class="keywordtype">int</span>[0];</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="class_console___lab2_1_1_vector.html#a37723c4cdedcf7112f806d5af4f32fee">   15</a></span>        <span class="keyword">public</span> <span class="keywordtype">int</span>[] <a class="code hl_property" href="class_console___lab2_1_1_vector.html#a37723c4cdedcf7112f806d5af4f32fee">Elements</a> =&gt; <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">elements</a>;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span></div>
+<div class="foldopen" id="foldopen00021" data-start="{" data-end="}">
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="class_console___lab2_1_1_vector.html#a2800de4af133ed608b703cb14e940e35">   21</a></span>        <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_console___lab2_1_1_vector.html#a2800de4af133ed608b703cb14e940e35">Generate</a>(<span class="keywordtype">int</span> elementsLength)</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        {</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>            <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">elements</a> = <span class="keyword">new</span> <span class="keywordtype">int</span>[elementsLength];</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>            Random rand = <span class="keyword">new</span> Random();</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">elements</a>.Length; i++)</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>                <span class="comment">// Perform a &quot;gapped&quot; insertion sort for this gap elements.Length</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>                <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = gap; i &lt; n; i++)</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>                {   </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>                    <span class="comment">// Current element to be placed correctly</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>                    <span class="keywordtype">int</span> temp = <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">elements</a>[i]; </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>                    <span class="keywordtype">int</span> j = i;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>                    <span class="comment">// Shift earlier elements that are greater than temp</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>                    <span class="keywordflow">while</span> (j &gt;= gap &amp;&amp; <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">elements</a>[j - gap] &gt; temp)</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>                    {</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>                        <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">elements</a>[j] = <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">elements</a>[j - gap];</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                        j -= gap;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                    }</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                    <span class="comment">// Place temp in its correct position</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                    <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">elements</a>[j] = temp;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                }</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            }</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        }</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>                <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">elements</a>[i] = rand.Next(-50 , 51); <span class="comment">// Генерація випадкових чисел </span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            }</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        }</div>
 </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="foldopen" id="foldopen00047" data-start="{" data-end="}">
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="class_console___lab2_1_1_vector.html#aa52cd0cec329d30fbd51538ab157e0ef">   47</a></span>        <span class="keyword">public</span> <span class="keywordtype">int</span> <a class="code hl_function" href="class_console___lab2_1_1_vector.html#aa52cd0cec329d30fbd51538ab157e0ef">Sum</a> ()</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        {</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            <span class="keywordtype">int</span> sum = 0;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0 ; i &lt; elements.Length ; i++)</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            {</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                sum += <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">elements</a>[i];</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            }</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            <span class="keywordflow">return</span> sum;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        }</div>
-</div>
-<div class="foldopen" id="foldopen00056" data-start="{" data-end="}">
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="class_console___lab2_1_1_vector.html#a36d49b919348677da963db62f927729e">   56</a></span>        <span class="keyword">public</span> <span class="keywordtype">double</span> <a class="code hl_function" href="class_console___lab2_1_1_vector.html#a36d49b919348677da963db62f927729e">Average</a> ()</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        {</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            <span class="keywordflow">return</span> (<span class="keywordtype">double</span>)<a class="code hl_function" href="class_console___lab2_1_1_vector.html#aa52cd0cec329d30fbd51538ab157e0ef">Sum</a>() / <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">elements</a>.Length;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span></div>
+<div class="foldopen" id="foldopen00034" data-start="{" data-end="}">
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="class_console___lab2_1_1_vector.html#a0142d0a08897a024da99967b4ac886ea">   34</a></span>        <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_console___lab2_1_1_vector.html#a0142d0a08897a024da99967b4ac886ea">ShellSort</a>() <span class="comment">//https://www.geeksforgeeks.org/dsa/shell-sort/</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        {</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>            <span class="keywordtype">int</span> n = <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">elements</a>.Length;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            <span class="comment">// Start with a large gap, then reduce it step by step</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> gap = n / 2; gap &gt; 0; gap /= 2)</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            {</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                <span class="comment">// Perform a &quot;gapped&quot; insertion sort for this gap elements.Length</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = gap; i &lt; n; i++)</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                {   </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                    <span class="comment">// Current element to be placed correctly</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                    <span class="keywordtype">int</span> temp = <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">elements</a>[i]; </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>                    <span class="keywordtype">int</span> j = i;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                    <span class="comment">// Shift earlier elements that are LESS than temp (to sort descending)</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                    <span class="keywordflow">while</span> (j &gt;= gap &amp;&amp; <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">elements</a>[j - gap] &lt; temp)</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                    {</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                        <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">elements</a>[j] = <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">elements</a>[j - gap];</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                        j -= gap;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                    }</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>                    <span class="comment">// Place temp in its correct position</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                    <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">elements</a>[j] = temp;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                }</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            }</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        }</div>
 </div>
-<div class="foldopen" id="foldopen00060" data-start="{" data-end="}">
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="class_console___lab2_1_1_vector.html#a7f0f72ef7632deb96f289f86a6b164b9">   60</a></span>        <span class="keyword">public</span> <span class="keywordtype">int</span> <a class="code hl_function" href="class_console___lab2_1_1_vector.html#a7f0f72ef7632deb96f289f86a6b164b9">Max</a> ()</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        {</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            <span class="keywordtype">int</span> max = <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">elements</a>[0];</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>            <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 1 ; i &lt; <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">elements</a>.Length; i++)</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            {</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>                <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">elements</a>[i] &gt; max)</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>                max = <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">elements</a>[i];</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            }</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            <span class="keywordflow">return</span> max ;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        }</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span></div>
+<div class="foldopen" id="foldopen00065" data-start="{" data-end="}">
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="class_console___lab2_1_1_vector.html#aa52cd0cec329d30fbd51538ab157e0ef">   65</a></span>        <span class="keyword">public</span> <span class="keywordtype">int</span> <a class="code hl_function" href="class_console___lab2_1_1_vector.html#aa52cd0cec329d30fbd51538ab157e0ef">Sum</a> ()</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        {</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            <span class="keywordtype">int</span> sum = 0;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0 ; i &lt; elements.Length ; i++)</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            {</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>                sum += <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">elements</a>[i];</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>            }</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>            <span class="keywordflow">return</span> sum;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        }</div>
 </div>
-<div class="foldopen" id="foldopen00070" data-start="{" data-end="}">
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="class_console___lab2_1_1_vector.html#a6d00bae96106240a47dce65e6c8b1c17">   70</a></span>        <span class="keyword">public</span> <span class="keywordtype">int</span> <a class="code hl_function" href="class_console___lab2_1_1_vector.html#a6d00bae96106240a47dce65e6c8b1c17">CountOccurrences</a>(<span class="keywordtype">int</span> value)</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        {</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>            <span class="keywordtype">int</span> count = 0;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">elements</a>.Length; i++)</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>            {</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>                <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">elements</a>[i] == value)</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>                {</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>                    count++;</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                }</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>            }</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            <span class="keywordflow">return</span> count;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span></div>
+<div class="foldopen" id="foldopen00078" data-start="{" data-end="}">
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="class_console___lab2_1_1_vector.html#a36d49b919348677da963db62f927729e">   78</a></span>        <span class="keyword">public</span> <span class="keywordtype">double</span> <a class="code hl_function" href="class_console___lab2_1_1_vector.html#a36d49b919348677da963db62f927729e">Average</a> ()</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        {</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            <span class="keywordflow">return</span> Math.Round((<span class="keywordtype">double</span>)<a class="code hl_function" href="class_console___lab2_1_1_vector.html#aa52cd0cec329d30fbd51538ab157e0ef">Sum</a>() / <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">elements</a>.Length, 2);</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        }</div>
 </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    }</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span></div>
+<div class="foldopen" id="foldopen00087" data-start="{" data-end="}">
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="class_console___lab2_1_1_vector.html#acf3c2d68d9de8455cce0748ad9a59661">   87</a></span>        <span class="keyword">public</span> <span class="keywordtype">int</span> <a class="code hl_function" href="class_console___lab2_1_1_vector.html#acf3c2d68d9de8455cce0748ad9a59661">Max</a> (out <span class="keywordtype">int</span> index)</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        {</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>            <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">elements</a>.Length == 0)</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>            {</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>                index = -1;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>                <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            }</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>            <span class="keywordtype">int</span> max = <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">elements</a>[0];</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            index = 0;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>            <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 1 ; i &lt; <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">elements</a>.Length; i++)</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>            {</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>                <span class="keywordtype">int</span> currentMax = Math.Max(max, <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">elements</a>[i]);</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                <span class="keywordflow">if</span> (currentMax &gt; max)</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                {</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>                    max = currentMax;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>                    index = i;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>                }</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>            }</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            <span class="keywordflow">return</span> max ;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        }</div>
 </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>}</div>
-<div class="ttc" id="aclass_console___lab2_1_1_vector_html"><div class="ttname"><a href="class_console___lab2_1_1_vector.html">Console_Lab2.Vector</a></div><div class="ttdef"><b>Definition</b> <a href="#l00004">Vector.cs:5</a></div></div>
-<div class="ttc" id="aclass_console___lab2_1_1_vector_html_a0142d0a08897a024da99967b4ac886ea"><div class="ttname"><a href="class_console___lab2_1_1_vector.html#a0142d0a08897a024da99967b4ac886ea">Console_Lab2.Vector.ShellSort</a></div><div class="ttdeci">void ShellSort()</div><div class="ttdef"><b>Definition</b> <a href="#l00020">Vector.cs:20</a></div></div>
-<div class="ttc" id="aclass_console___lab2_1_1_vector_html_a2800de4af133ed608b703cb14e940e35"><div class="ttname"><a href="class_console___lab2_1_1_vector.html#a2800de4af133ed608b703cb14e940e35">Console_Lab2.Vector.Generate</a></div><div class="ttdeci">void Generate(int elementsLength)</div><div class="ttdef"><b>Definition</b> <a href="#l00010">Vector.cs:10</a></div></div>
-<div class="ttc" id="aclass_console___lab2_1_1_vector_html_a36d49b919348677da963db62f927729e"><div class="ttname"><a href="class_console___lab2_1_1_vector.html#a36d49b919348677da963db62f927729e">Console_Lab2.Vector.Average</a></div><div class="ttdeci">double Average()</div><div class="ttdef"><b>Definition</b> <a href="#l00056">Vector.cs:56</a></div></div>
-<div class="ttc" id="aclass_console___lab2_1_1_vector_html_a37723c4cdedcf7112f806d5af4f32fee"><div class="ttname"><a href="class_console___lab2_1_1_vector.html#a37723c4cdedcf7112f806d5af4f32fee">Console_Lab2.Vector.Elements</a></div><div class="ttdeci">int[] Elements</div><div class="ttdef"><b>Definition</b> <a href="#l00009">Vector.cs:9</a></div></div>
-<div class="ttc" id="aclass_console___lab2_1_1_vector_html_a3fd10a030fe93daaeb979b3c794e6605"><div class="ttname"><a href="class_console___lab2_1_1_vector.html#a3fd10a030fe93daaeb979b3c794e6605">Console_Lab2.Vector.elements</a></div><div class="ttdeci">int?[] elements</div><div class="ttdef"><b>Definition</b> <a href="#l00007">Vector.cs:7</a></div></div>
-<div class="ttc" id="aclass_console___lab2_1_1_vector_html_a6d00bae96106240a47dce65e6c8b1c17"><div class="ttname"><a href="class_console___lab2_1_1_vector.html#a6d00bae96106240a47dce65e6c8b1c17">Console_Lab2.Vector.CountOccurrences</a></div><div class="ttdeci">int CountOccurrences(int value)</div><div class="ttdef"><b>Definition</b> <a href="#l00070">Vector.cs:70</a></div></div>
-<div class="ttc" id="aclass_console___lab2_1_1_vector_html_a7f0f72ef7632deb96f289f86a6b164b9"><div class="ttname"><a href="class_console___lab2_1_1_vector.html#a7f0f72ef7632deb96f289f86a6b164b9">Console_Lab2.Vector.Max</a></div><div class="ttdeci">int Max()</div><div class="ttdef"><b>Definition</b> <a href="#l00060">Vector.cs:60</a></div></div>
-<div class="ttc" id="aclass_console___lab2_1_1_vector_html_aa52cd0cec329d30fbd51538ab157e0ef"><div class="ttname"><a href="class_console___lab2_1_1_vector.html#aa52cd0cec329d30fbd51538ab157e0ef">Console_Lab2.Vector.Sum</a></div><div class="ttdeci">int Sum()</div><div class="ttdef"><b>Definition</b> <a href="#l00047">Vector.cs:47</a></div></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span></div>
+<div class="foldopen" id="foldopen00113" data-start="{" data-end="}">
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno"><a class="line" href="class_console___lab2_1_1_vector.html#a6d00bae96106240a47dce65e6c8b1c17">  113</a></span>        <span class="keyword">public</span> <span class="keywordtype">int</span> <a class="code hl_function" href="class_console___lab2_1_1_vector.html#a6d00bae96106240a47dce65e6c8b1c17">CountOccurrences</a>(<span class="keywordtype">int</span> value)</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        {</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            <span class="keywordtype">int</span> count = 0;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; <a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">elements</a>.Length; i++)</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>            {</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">elements</a>[i] == value)</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                {</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>                    count++;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>                }</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>            }</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>            <span class="keywordflow">return</span> count;</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        }</div>
+</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    }</div>
+</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>}</div>
+<div class="ttc" id="aclass_console___lab2_1_1_vector_html"><div class="ttname"><a href="class_console___lab2_1_1_vector.html">Console_Lab2.Vector</a></div><div class="ttdoc">Клас для роботи з одновимірним масивом .</div><div class="ttdef"><b>Definition</b> <a href="#l00007">Vector.cs:8</a></div></div>
+<div class="ttc" id="aclass_console___lab2_1_1_vector_html_a0142d0a08897a024da99967b4ac886ea"><div class="ttname"><a href="class_console___lab2_1_1_vector.html#a0142d0a08897a024da99967b4ac886ea">Console_Lab2.Vector.ShellSort</a></div><div class="ttdeci">void ShellSort()</div><div class="ttdoc">Сортує масив за спаданням за алгоритмом Шелла.</div><div class="ttdef"><b>Definition</b> <a href="#l00034">Vector.cs:34</a></div></div>
+<div class="ttc" id="aclass_console___lab2_1_1_vector_html_a2800de4af133ed608b703cb14e940e35"><div class="ttname"><a href="class_console___lab2_1_1_vector.html#a2800de4af133ed608b703cb14e940e35">Console_Lab2.Vector.Generate</a></div><div class="ttdeci">void Generate(int elementsLength)</div><div class="ttdoc">Генерує елементи масиву випадковими числами.</div><div class="ttdef"><b>Definition</b> <a href="#l00021">Vector.cs:21</a></div></div>
+<div class="ttc" id="aclass_console___lab2_1_1_vector_html_a36d49b919348677da963db62f927729e"><div class="ttname"><a href="class_console___lab2_1_1_vector.html#a36d49b919348677da963db62f927729e">Console_Lab2.Vector.Average</a></div><div class="ttdeci">double Average()</div><div class="ttdoc">Обчислює середнє арифметичне елементів масиву.</div><div class="ttdef"><b>Definition</b> <a href="#l00078">Vector.cs:78</a></div></div>
+<div class="ttc" id="aclass_console___lab2_1_1_vector_html_a37723c4cdedcf7112f806d5af4f32fee"><div class="ttname"><a href="class_console___lab2_1_1_vector.html#a37723c4cdedcf7112f806d5af4f32fee">Console_Lab2.Vector.Elements</a></div><div class="ttdeci">int[] Elements</div><div class="ttdoc">Елементи вектора.</div><div class="ttdef"><b>Definition</b> <a href="#l00015">Vector.cs:15</a></div></div>
+<div class="ttc" id="aclass_console___lab2_1_1_vector_html_a6d00bae96106240a47dce65e6c8b1c17"><div class="ttname"><a href="class_console___lab2_1_1_vector.html#a6d00bae96106240a47dce65e6c8b1c17">Console_Lab2.Vector.CountOccurrences</a></div><div class="ttdeci">int CountOccurrences(int value)</div><div class="ttdoc">Визначає кількість повторень заданого елемента у масиві (лінійний пошук).</div><div class="ttdef"><b>Definition</b> <a href="#l00113">Vector.cs:113</a></div></div>
+<div class="ttc" id="aclass_console___lab2_1_1_vector_html_a74930b4b9f35f60fb007adac5ab461ce"><div class="ttname"><a href="class_console___lab2_1_1_vector.html#a74930b4b9f35f60fb007adac5ab461ce">Console_Lab2.Vector.elements</a></div><div class="ttdeci">int[] elements</div><div class="ttdef"><b>Definition</b> <a href="#l00010">Vector.cs:10</a></div></div>
+<div class="ttc" id="aclass_console___lab2_1_1_vector_html_aa52cd0cec329d30fbd51538ab157e0ef"><div class="ttname"><a href="class_console___lab2_1_1_vector.html#aa52cd0cec329d30fbd51538ab157e0ef">Console_Lab2.Vector.Sum</a></div><div class="ttdeci">int Sum()</div><div class="ttdoc">Обчислює суму елементів масиву.</div><div class="ttdef"><b>Definition</b> <a href="#l00065">Vector.cs:65</a></div></div>
+<div class="ttc" id="aclass_console___lab2_1_1_vector_html_acf3c2d68d9de8455cce0748ad9a59661"><div class="ttname"><a href="class_console___lab2_1_1_vector.html#acf3c2d68d9de8455cce0748ad9a59661">Console_Lab2.Vector.Max</a></div><div class="ttdeci">int Max(out int index)</div><div class="ttdoc">Знаходить максимальний елемент масиву та його індекс.</div><div class="ttdef"><b>Definition</b> <a href="#l00087">Vector.cs:87</a></div></div>
 <div class="ttc" id="anamespace_console___lab2_html"><div class="ttname"><a href="namespace_console___lab2.html">Console_Lab2</a></div><div class="ttdef"><b>Definition</b> <a href="_matrix_8cs_source.html#l00001">Matrix.cs:2</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

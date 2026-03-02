@@ -1,0 +1,33 @@
+<map id="Console_Lab2.Service.RunMenu" name="Console_Lab2.Service.RunMenu">
+<area shape="rect" id="Node000001" title="Запускає головний цикл меню програми." alt="" coords="5,313,218,339"/>
+<area shape="rect" id="Node000002" href="$class_console___lab2_1_1_service.html#a6fb0e95eb4c8c037842adf5a4822c37b" title="Блок коду для роботи з матрицею (генерація, виведення бюджету та зарплати за місяць)." alt="" coords="267,142,459,182"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,311,318,189,316,194,135,315"/>
+<area shape="rect" id="Node000008" href="$class_console___lab2_1_1_service.html#a530d4cd790d014052dc2f1076516b850" title="Блок коду для роботи з вектором." alt="" coords="266,412,460,453"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="144,337,301,404,297,407,144,342"/>
+<area shape="rect" id="Node000003" href="$class_console___lab2_1_1_matrix.html#a82a038543fda16fec8ba8a40f2cb6c36" title="Генерує матрицю випадкових зарплат." alt="" coords="509,5,710,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="382,139,435,90,469,64,507,41,526,35,522,38,509,46,472,68,438,94,385,143"/>
+<area shape="rect" id="Node000004" href="$class_console___lab2_1_1_matrix.html#afa6306d9103d4cfed1ab2776c37e6264" title="Обчислює середню зарплату одного співробітника за вказаний місяць." alt="" coords="518,55,702,96"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="422,139,537,100,533,103,425,143"/>
+<area shape="rect" id="Node000005" href="$class_console___lab2_1_1_matrix.html#a90f47e333c032c255b1da31c6fe4625a" title="Обчислює загальну зарплату всіх співробітників за вказаний місяць." alt="" coords="759,84,944,125"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="459,148,746,116,742,119,460,153"/>
+<area shape="rect" id="Node000006" href="$class_console___lab2_1_1_service.html#a2465ca052f16f17009da7ece48907a56" title="Виводить двовимірний масив (матрицю) на консоль." alt="" coords="518,170,701,210"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="459,171,505,177,500,179,460,176"/>
+<area shape="rect" id="Node000007" href="$class_console___lab2_1_1_matrix.html#aa79331b44e289a04f7b9ba61a5f91ae7" title="Обчислює річний бюджет (загальну суму всіх виплат)." alt="" coords="508,235,711,260"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="409,180,509,220,537,230,532,231,507,225,410,186"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="702,84,746,91,741,93,703,89"/>
+<area shape="rect" id="Node000009" href="$class_console___lab2_1_1_vector.html#a36d49b919348677da963db62f927729e" title="Обчислює середнє арифметичне елементів масиву." alt="" coords="511,284,708,310"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="387,410,440,368,507,326,544,314,539,316,509,331,443,373,390,414"/>
+<area shape="rect" id="Node000010" href="$class_console___lab2_1_1_vector.html#aa52cd0cec329d30fbd51538ab157e0ef" title="Обчислює суму елементів масиву." alt="" coords="763,309,940,335"/>
+<area shape="poly" id="edge16_Node000008_Node000010" title=" " alt="" coords="405,409,454,389,507,370,631,344,750,330,745,331,632,349,509,375,456,394,408,414"/>
+<area shape="rect" id="Node000011" href="$class_console___lab2_1_1_vector.html#a6d00bae96106240a47dce65e6c8b1c17" title="Визначає кількість повторень заданого елемента у масиві (лінійний пошук)." alt="" coords="518,384,702,425"/>
+<area shape="poly" id="edge11_Node000008_Node000011" title=" " alt="" coords="460,419,505,416,500,418,461,424"/>
+<area shape="rect" id="Node000012" href="$class_console___lab2_1_1_vector.html#a2800de4af133ed608b703cb14e940e35" title="Генерує елементи масиву випадковими числами." alt="" coords="508,449,711,475"/>
+<area shape="poly" id="edge12_Node000008_Node000012" title=" " alt="" coords="460,442,495,448,490,449,461,447"/>
+<area shape="rect" id="Node000013" href="$class_console___lab2_1_1_vector.html#acf3c2d68d9de8455cce0748ad9a59661" title="Знаходить максимальний елемент масиву та його індекс." alt="" coords="522,499,697,524"/>
+<area shape="poly" id="edge13_Node000008_Node000013" title=" " alt="" coords="415,451,509,485,535,494,529,494,507,490,414,456"/>
+<area shape="rect" id="Node000014" href="$class_console___lab2_1_1_service.html#aeb09a71a2500a415a0cf5750d6dbb12c" title="Виводить одновимірний масив на консоль." alt="" coords="518,548,701,589"/>
+<area shape="poly" id="edge14_Node000008_Node000014" title=" " alt="" coords="389,451,443,493,509,534,522,543,517,542,507,539,440,498,387,456"/>
+<area shape="rect" id="Node000015" href="$class_console___lab2_1_1_vector.html#a0142d0a08897a024da99967b4ac886ea" title="Сортує масив за спаданням за алгоритмом Шелла." alt="" coords="508,613,711,639"/>
+<area shape="poly" id="edge15_Node000008_Node000015" title=" " alt="" coords="377,451,399,485,429,525,466,565,509,599,522,608,517,606,507,603,463,569,425,528,395,488,375,456"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="709,305,750,311,745,312,709,310"/>
+</map>
