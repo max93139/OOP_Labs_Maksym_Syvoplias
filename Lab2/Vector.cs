@@ -1,6 +1,5 @@
 namespace Console_Lab2
 {
-     // тут: Generate, ShellSort, Sum, Average
     /// <summary>
     /// Клас для роботи з одновимірним масивом .
     /// </summary>
