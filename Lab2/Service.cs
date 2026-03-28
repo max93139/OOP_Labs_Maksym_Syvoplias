@@ -12,7 +12,7 @@ namespace Console_Lab2
         /// </summary>
         public void RunMenu()
         {
-            Vector vector = new Vector();
+            Vector vector = new Vector();//мають бути атрибутами клсу сервіс
             Matrix matrix = new Matrix();
 
             string choice;
@@ -91,102 +91,170 @@ namespace Console_Lab2
 
         /// <summary>
         /// Блок коду для роботи з вектором.
+        /// Координує виконання всіх операцій над вектором.
         /// </summary>
         /// <param name="vector">Екземпляр класу Vector.</param>
         public void VectorBlock(Vector vector)
         {
-            int size = 0;
-            bool isValidSize = false;
+            InitVector(vector);
 
-            while (!isValidSize)
+            int maxElement = FindMax(vector, out int maxIndex);
+
+            SortVector(vector);
+            PrintSortedVector(vector);
+            PrintVectorStats(vector, maxElement, maxIndex);
+            CountOccurrences(vector);
+        }
+
+        /// <summary>
+        /// Зчитує з консолі ціле число в допустимому діапазоні.
+        /// </summary>
+        /// <param name="prompt">Текст запиту.</param>
+        /// <param name="errorMessage">Повідомлення при некоректному введенні.</param>
+        /// <param name="minValue">Мінімально допустиме значення.</param>
+        /// <param name="maxValue">Максимально допустиме значення.</param>
+        /// <returns>Введене ціле число.</returns>
+        private int ReadInt(string prompt, string errorMessage, int minValue = int.MinValue, int maxValue = int.MaxValue)
+        {
+            int value;
+            while (true)
             {
-                Console.Write("Введіть розмір масиву: ");
-                if (int.TryParse(Console.ReadLine(), out size) && size > 0)
+                Console.Write(prompt);
+                if (int.TryParse(Console.ReadLine(), out value) && value >= minValue && value <= maxValue)
                 {
-                    isValidSize = true;
+                    return value;
                 }
                 else
                 {
-                    Console.WriteLine("Помилка! Введіть додатне ціле число.");
+                    Console.WriteLine(errorMessage);
                 }
             }
+        }
 
+        /// <summary>
+        /// Генерує вектор заданого розміру.
+        /// </summary>
+        /// <param name="vector">Екземпляр класу Vector.</param>
+        /// <param name="size">Розмір вектора.</param>
+        private void GenerateVector(Vector vector, int size)
+        {
             vector.Generate(size);
+        }
 
+        /// <summary>
+        /// Зчитує розмір від користувача та ініціалізує вектор.
+        /// </summary>
+        /// <param name="vector">Екземпляр класу Vector.</param>
+        private void InitVector(Vector vector)
+        {
+            int size = ReadInt("Введіть розмір масиву: ", "Помилка! Введіть додатне ціле число.", 1);
+            GenerateVector(vector, size);
             PrintVector(vector.Elements);
+        }
 
-            // Знаходимо максимум та його індекс до сортування
-            int maxIndex;
-            int maxElement = vector.Max(out maxIndex);
+        /// <summary>
+        /// Знаходить максимальний елемент вектора та його індекс до сортування.
+        /// </summary>
+        /// <param name="vector">Екземпляр класу Vector.</param>
+        /// <param name="maxIndex">Індекс максимального елемента до сортування.</param>
+        /// <returns>Максимальний елемент.</returns>
+        private int FindMax(Vector vector, out int maxIndex)
+        {
+            return vector.Max(out maxIndex);
+        }
 
+        /// <summary>
+        /// Сортує вектор.
+        /// </summary>
+        /// <param name="vector">Екземпляр класу Vector.</param>
+        private void SortVector(Vector vector)
+        {
             vector.ShellSort();
+        }
+
+        /// <summary>
+        /// Виводить відсортований вектор.
+        /// </summary>
+        /// <param name="vector">Екземпляр класу Vector.</param>
+        private void PrintSortedVector(Vector vector)
+        {
             Console.WriteLine("Після сортування:");
             PrintVector(vector.Elements);
+        }
 
+        /// <summary>
+        /// Виводить суму, середнє та максимум вектора.
+        /// </summary>
+        /// <param name="vector">Екземпляр класу Vector.</param>
+        /// <param name="maxElement">Максимальний елемент (знайдений до сортування).</param>
+        /// <param name="maxIndex">Індекс максимального елемента до сортування.</param>
+        private void PrintVectorStats(Vector vector, int maxElement, int maxIndex)
+        {
             Console.WriteLine("Сума: " + vector.Sum());
             Console.WriteLine("Середнє: " + vector.Average());
             Console.WriteLine($"Максимум: {maxElement} (Індекс до сортування: {maxIndex})");
+        }
 
-            int value = 0;
-            bool isValidValue = false;
-
-            while (!isValidValue)
-            {
-                Console.Write("Введіть число для пошуку повторень: ");
-                if (int.TryParse(Console.ReadLine(), out value))
-                {
-                    isValidValue = true;
-                }
-                else
-                {
-                    Console.WriteLine("Помилка! Введіть ціле число.");
-                }
-            }
-
+        /// <summary>
+        /// Зчитує значення та виводить кількість його повторень у векторі.
+        /// </summary>
+        /// <param name="vector">Екземпляр класу Vector.</param>
+        private void CountOccurrences(Vector vector)
+        {
+            int value = ReadInt("Введіть число для пошуку повторень: ", "Помилка! Введіть ціле число.");
             Console.WriteLine("Кількість повторень: " + vector.CountOccurrences(value));
         }
 
         /// <summary>
-        /// Блок коду для роботи з матрицею (генерація, виведення бюджету та зарплати за місяць).
+        /// Блок коду для роботи з матрицею.
+        /// Координує виконання всіх операцій над матрицею.
         /// </summary>
         /// <param name="matrix">Екземпляр класу Matrix.</param>
         public void MatrixBlock(Matrix matrix)
         {
-            int employees = 0;
-            bool isValidEmployees = false;
+            InitMatrix(matrix);
 
-            while (!isValidEmployees)
-            {
-                Console.Write("Введіть кількість співробітників: ");
-                if (int.TryParse(Console.ReadLine(), out employees) && employees > 0)
-                {
-                    isValidEmployees = true;
-                }
-                else
-                {
-                    Console.WriteLine("Помилка! Введіть додатне ціле число.");
-                }
-            }
+            int month = ReadMonth();
+            PrintMatrixStats(matrix, month);
+        }
 
-            matrix.Generate(employees);
+        /// <summary>
+        /// Зчитує кількість співробітників та ініціалізує матрицю.
+        /// </summary>
+        /// <param name="matrix">Екземпляр класу Matrix.</param>
+        private void InitMatrix(Matrix matrix)
+        {
+            int employees = ReadInt("Введіть кількість співробітників: ", "Помилка! Введіть додатне ціле число.", 1);
+            GenerateMatrix(matrix, employees);
             PrintMatrix(matrix.Data);
+        }
 
-            int month = 0;
-            bool isValidMonth = false;
+        /// <summary>
+        /// Генерує матрицю заданої кількості співробітників.
+        /// </summary>
+        /// <param name="matrix">Екземпляр класу Matrix.</param>
+        /// <param name="employees">Кількість співробітників.</param>
+        private void GenerateMatrix(Matrix matrix, int employees)
+        {
+            matrix.Generate(employees);
+        }
 
-            while (!isValidMonth)
-            {
-                Console.Write("Введіть номер місяця (1-12): ");
-                if (int.TryParse(Console.ReadLine(), out month) && month >= 1 && month <= 12)
-                {
-                    isValidMonth = true;
-                }
-                else
-                {
-                    Console.WriteLine("Помилка! Введіть число від 1 до 12.");
-                }
-            }
+        /// <summary>
+        /// Зчитує номер місяця від користувача (1–12).
+        /// </summary>
+        /// <returns>Валідний номер місяця.</returns>
+        private int ReadMonth()
+        {
+            return ReadInt("Введіть номер місяця (1-12): ", "Помилка! Введіть число від 1 до 12.", 1, 12);
+        }
 
+        /// <summary>
+        /// Виводить зарплату, середню зарплату за місяць та річний бюджет.
+        /// </summary>
+        /// <param name="matrix">Екземпляр класу Matrix.</param>
+        /// <param name="month">Номер місяця.</param>
+        private void PrintMatrixStats(Matrix matrix, int month)
+        {
             Console.WriteLine("Зарплата за місяць: " + matrix.MonthSalary(month));
             Console.WriteLine("Середня зарплата за місяць: " + matrix.MonthAverageSalary(month));
             Console.WriteLine("Річний бюджет: " + matrix.TotalSum());

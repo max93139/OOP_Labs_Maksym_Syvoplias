@@ -7,9 +7,9 @@ namespace Console_Lab2
     {
         
         private int[] elements = new int[0];
-
+        //не вистачає кількості елементів масиву за умовою, порушення функціональних вимог
         /// <summary>
-        /// Елементи вектора.
+        /// Елементи вектора. // Відкритий геттер для доступу до елементів масиву.
         /// </summary>
         public int[] Elements => elements;
 
@@ -61,10 +61,10 @@ namespace Console_Lab2
         /// Обчислює суму елементів масиву.
         /// </summary>
         /// <returns>Сума елементів.</returns>
-        public int Sum ()
+        public int Sum()
         {
             int sum = 0;
-            for(int i = 0 ; i < elements.Length ; i++)
+            for (int i = 0; i < elements.Length; i++)
             {
                 sum += elements[i];
             }
@@ -74,7 +74,7 @@ namespace Console_Lab2
         /// Обчислює середнє арифметичне елементів масиву.
         /// </summary>
         /// <returns>Середнє арифметичне, заокруглене до 2 знаків.</returns>
-        public double Average ()
+        public double Average()
         {
             return Math.Round((double)Sum() / elements.Length, 2);
         }
@@ -83,7 +83,7 @@ namespace Console_Lab2
         /// </summary>
         /// <param name="index">Індекс максимального елемента (або -1, якщо масив порожній).</param>
         /// <returns>Значення максимального елемента.</returns>
-        public int Max (out int index)
+        public int Max(out int index)
         {
             if (elements.Length == 0)
             {
@@ -93,16 +93,15 @@ namespace Console_Lab2
 
             int max = elements[0];
             index = 0;
-            for(int i = 1 ; i < elements.Length; i++)
+            for (int i = 1; i < elements.Length; i++)
             {
-                int currentMax = Math.Max(max, elements[i]);
-                if (currentMax > max)
+                if (elements[i] > max)
                 {
-                    max = currentMax;
+                    max = elements[i];
                     index = i;
                 }
             }
-            return max ;
+            return max;
         }
         /// <summary>
         /// Визначає кількість повторень заданого елемента у масиві (лінійний пошук).

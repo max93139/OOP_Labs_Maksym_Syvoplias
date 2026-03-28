@@ -75,8 +75,14 @@ namespace Console_Lab2
         /// <returns>Середня місячна зарплата.</returns>
         public double MonthAverageSalary(int month)
         {
-            if (rows == 0) return 0;
-            return Math.Round((double)MonthSalary(month) / rows, 2);
+            if (rows == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                return Math.Round((double)MonthSalary(month) / rows, 2);
+            }
         }
     }
 }
