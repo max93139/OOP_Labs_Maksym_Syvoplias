@@ -5,11 +5,11 @@ namespace Console_Lab2
     /// </summary>
     class Vector
     {
-        
+        private int length;
         private int[] elements = new int[0];
         //не вистачає кількості елементів масиву за умовою, порушення функціональних вимог
         /// <summary>
-        /// Елементи вектора. // Відкритий геттер для доступу до елементів масиву.
+        /// Елементи вектора. Відкритий геттер для доступу до елементів масиву.
         /// </summary>
         public int[] Elements => elements;
 
@@ -19,9 +19,10 @@ namespace Console_Lab2
         /// <param name="elementsLength">Кількість елементів для генерації.</param>
         public void Generate(int elementsLength)
         {
-            elements = new int[elementsLength];
+            length = elementsLength;
+            elements = new int[length];
             Random rand = new Random();
-            for (int i = 0; i < elements.Length; i++)
+            for (int i = 0; i < length; i++)
             {
                 elements[i] = rand.Next(-50 , 51); // Генерація випадкових чисел 
             }
@@ -32,7 +33,7 @@ namespace Console_Lab2
         /// </summary>
         public void ShellSort() //https://www.geeksforgeeks.org/dsa/shell-sort/
         {
-            int n = elements.Length;
+            int n = length;
 
             // Start with a large gap, then reduce it step by step
             for (int gap = n / 2; gap > 0; gap /= 2)
@@ -64,7 +65,7 @@ namespace Console_Lab2
         public int Sum()
         {
             int sum = 0;
-            for (int i = 0; i < elements.Length; i++)
+            for (int i = 0; i < length; i++)
             {
                 sum += elements[i];
             }
@@ -76,7 +77,7 @@ namespace Console_Lab2
         /// <returns>Середнє арифметичне, заокруглене до 2 знаків.</returns>
         public double Average()
         {
-            return Math.Round((double)Sum() / elements.Length, 2);
+            return length == 0 ? 0 : Math.Round((double)Sum() / length, 2);
         }
         /// <summary>
         /// Знаходить максимальний елемент масиву та його індекс.
@@ -85,7 +86,7 @@ namespace Console_Lab2
         /// <returns>Значення максимального елемента.</returns>
         public int Max(out int index)
         {
-            if (elements.Length == 0)
+            if (length == 0)
             {
                 index = -1;
                 return 0;
@@ -93,7 +94,7 @@ namespace Console_Lab2
 
             int max = elements[0];
             index = 0;
-            for (int i = 1; i < elements.Length; i++)
+            for (int i = 1; i < length; i++)
             {
                 if (elements[i] > max)
                 {
@@ -111,7 +112,7 @@ namespace Console_Lab2
         public int CountOccurrences(int value)
         {
             int count = 0;
-            for (int i = 0; i < elements.Length; i++)
+            for (int i = 0; i < length; i++)
             {
                 if (elements[i] == value)
                 {

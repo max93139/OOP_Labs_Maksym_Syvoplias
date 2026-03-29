@@ -7,14 +7,14 @@ namespace Console_Lab2
     /// </summary>
     class Service
     {
+        private Vector vector = new Vector();
+        private Matrix matrix = new Matrix();
+
         /// <summary>
         /// Запускає головний цикл меню програми.
         /// </summary>
         public void RunMenu()
         {
-            Vector vector = new Vector();//мають бути атрибутами клсу сервіс
-            Matrix matrix = new Matrix();
-
             string choice;
 
             do 
@@ -30,11 +30,11 @@ namespace Console_Lab2
                 switch (choice) // перевіряємо вибір
                 {
                     case "1":
-                        VectorBlock(vector); // запускаємо вектор
+                        VectorBlock(); // запускаємо вектор
                         break;
 
                     case "2":
-                        MatrixBlock(matrix); // запускаємо матрицю
+                        MatrixBlock(); // запускаємо матрицю
                         break;
 
                     case "0":
@@ -93,17 +93,16 @@ namespace Console_Lab2
         /// Блок коду для роботи з вектором.
         /// Координує виконання всіх операцій над вектором.
         /// </summary>
-        /// <param name="vector">Екземпляр класу Vector.</param>
-        public void VectorBlock(Vector vector)
+        public void VectorBlock()
         {
-            InitVector(vector);
+            InitVector();
 
-            int maxElement = FindMax(vector, out int maxIndex);
+            int maxElement = FindMax(out int maxIndex);
 
-            SortVector(vector);
-            PrintSortedVector(vector);
-            PrintVectorStats(vector, maxElement, maxIndex);
-            CountOccurrences(vector);
+            SortVector();
+            PrintSortedVector();
+            PrintVectorStats(maxElement, maxIndex);
+            CountOccurrences();
         }
 
         /// <summary>
@@ -134,9 +133,8 @@ namespace Console_Lab2
         /// <summary>
         /// Генерує вектор заданого розміру.
         /// </summary>
-        /// <param name="vector">Екземпляр класу Vector.</param>
         /// <param name="size">Розмір вектора.</param>
-        private void GenerateVector(Vector vector, int size)
+        private void GenerateVector(int size)
         {
             vector.Generate(size);
         }
@@ -144,21 +142,19 @@ namespace Console_Lab2
         /// <summary>
         /// Зчитує розмір від користувача та ініціалізує вектор.
         /// </summary>
-        /// <param name="vector">Екземпляр класу Vector.</param>
-        private void InitVector(Vector vector)
+        private void InitVector()
         {
             int size = ReadInt("Введіть розмір масиву: ", "Помилка! Введіть додатне ціле число.", 1);
-            GenerateVector(vector, size);
+            GenerateVector(size);
             PrintVector(vector.Elements);
         }
 
         /// <summary>
         /// Знаходить максимальний елемент вектора та його індекс до сортування.
         /// </summary>
-        /// <param name="vector">Екземпляр класу Vector.</param>
         /// <param name="maxIndex">Індекс максимального елемента до сортування.</param>
         /// <returns>Максимальний елемент.</returns>
-        private int FindMax(Vector vector, out int maxIndex)
+        private int FindMax(out int maxIndex)
         {
             return vector.Max(out maxIndex);
         }
@@ -166,8 +162,7 @@ namespace Console_Lab2
         /// <summary>
         /// Сортує вектор.
         /// </summary>
-        /// <param name="vector">Екземпляр класу Vector.</param>
-        private void SortVector(Vector vector)
+        private void SortVector()
         {
             vector.ShellSort();
         }
@@ -175,8 +170,7 @@ namespace Console_Lab2
         /// <summary>
         /// Виводить відсортований вектор.
         /// </summary>
-        /// <param name="vector">Екземпляр класу Vector.</param>
-        private void PrintSortedVector(Vector vector)
+        private void PrintSortedVector()
         {
             Console.WriteLine("Після сортування:");
             PrintVector(vector.Elements);
@@ -185,10 +179,9 @@ namespace Console_Lab2
         /// <summary>
         /// Виводить суму, середнє та максимум вектора.
         /// </summary>
-        /// <param name="vector">Екземпляр класу Vector.</param>
         /// <param name="maxElement">Максимальний елемент (знайдений до сортування).</param>
         /// <param name="maxIndex">Індекс максимального елемента до сортування.</param>
-        private void PrintVectorStats(Vector vector, int maxElement, int maxIndex)
+        private void PrintVectorStats(int maxElement, int maxIndex)
         {
             Console.WriteLine("Сума: " + vector.Sum());
             Console.WriteLine("Середнє: " + vector.Average());
@@ -198,43 +191,56 @@ namespace Console_Lab2
         /// <summary>
         /// Зчитує значення та виводить кількість його повторень у векторі.
         /// </summary>
-        /// <param name="vector">Екземпляр класу Vector.</param>
-        private void CountOccurrences(Vector vector)
+        private void CountOccurrences()
         {
-            int value = ReadInt("Введіть число для пошуку повторень: ", "Помилка! Введіть ціле число.");
-            Console.WriteLine("Кількість повторень: " + vector.CountOccurrences(value));
+            while (true)
+            {
+                Console.Write("Введіть число для пошуку повторень (або '*' для виходу): ");
+                string input = Console.ReadLine() ?? string.Empty;
+
+                if (input == "*")
+                {
+                    break;
+                }
+
+                if (int.TryParse(input, out int value))
+                {
+                    Console.WriteLine("Кількість повторень: " + vector.CountOccurrences(value));
+                }
+                else
+                {
+                    Console.WriteLine("Помилка! Введіть ціле число або '*'.");
+                }
+            }
         }
 
         /// <summary>
         /// Блок коду для роботи з матрицею.
         /// Координує виконання всіх операцій над матрицею.
         /// </summary>
-        /// <param name="matrix">Екземпляр класу Matrix.</param>
-        public void MatrixBlock(Matrix matrix)
+        public void MatrixBlock()
         {
-            InitMatrix(matrix);
+            InitMatrix();
 
             int month = ReadMonth();
-            PrintMatrixStats(matrix, month);
+            PrintMatrixStats(month);
         }
 
         /// <summary>
         /// Зчитує кількість співробітників та ініціалізує матрицю.
         /// </summary>
-        /// <param name="matrix">Екземпляр класу Matrix.</param>
-        private void InitMatrix(Matrix matrix)
+        private void InitMatrix()
         {
             int employees = ReadInt("Введіть кількість співробітників: ", "Помилка! Введіть додатне ціле число.", 1);
-            GenerateMatrix(matrix, employees);
+            GenerateMatrix(employees);
             PrintMatrix(matrix.Data);
         }
 
         /// <summary>
         /// Генерує матрицю заданої кількості співробітників.
         /// </summary>
-        /// <param name="matrix">Екземпляр класу Matrix.</param>
         /// <param name="employees">Кількість співробітників.</param>
-        private void GenerateMatrix(Matrix matrix, int employees)
+        private void GenerateMatrix(int employees)
         {
             matrix.Generate(employees);
         }
@@ -251,9 +257,8 @@ namespace Console_Lab2
         /// <summary>
         /// Виводить зарплату, середню зарплату за місяць та річний бюджет.
         /// </summary>
-        /// <param name="matrix">Екземпляр класу Matrix.</param>
         /// <param name="month">Номер місяця.</param>
-        private void PrintMatrixStats(Matrix matrix, int month)
+        private void PrintMatrixStats(int month)
         {
             Console.WriteLine("Зарплата за місяць: " + matrix.MonthSalary(month));
             Console.WriteLine("Середня зарплата за місяць: " + matrix.MonthAverageSalary(month));
