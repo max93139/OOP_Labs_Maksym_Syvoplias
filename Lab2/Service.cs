@@ -59,7 +59,9 @@ namespace Console_Lab2
         {
             Console.WriteLine("Вектор:");
             for (int i = 0; i < data.Length; i++)
+            {
                 Console.Write(data[i] + " ");
+            }
             Console.WriteLine();
         }
 
@@ -202,8 +204,7 @@ namespace Console_Lab2
                 {
                     break;
                 }
-
-                if (int.TryParse(input, out int value))
+                else if (int.TryParse(input, out int value))
                 {
                     Console.WriteLine("Кількість повторень: " + vector.CountOccurrences(value));
                 }
@@ -222,8 +223,25 @@ namespace Console_Lab2
         {
             InitMatrix();
 
-            int month = ReadMonth();
-            PrintMatrixStats(month);
+            while (true)
+            {
+                Console.Write("Введіть номер місяця (1-12) (або '*' для виходу): ");
+                string input = Console.ReadLine() ?? string.Empty;
+
+                if (input == "*")
+                {
+                    break;
+                }
+                else if (int.TryParse(input, out int month) && month >= 1 && month <= 12)
+                {
+                    PrintMatrixStats(month);
+                    Console.WriteLine(); 
+                }
+                else
+                {
+                    Console.WriteLine("Помилка! Введіть число від 1 до 12 або '*'.");
+                }
+            }
         }
 
         /// <summary>
@@ -245,14 +263,7 @@ namespace Console_Lab2
             matrix.Generate(employees);
         }
 
-        /// <summary>
-        /// Зчитує номер місяця від користувача (1–12).
-        /// </summary>
-        /// <returns>Валідний номер місяця.</returns>
-        private int ReadMonth()
-        {
-            return ReadInt("Введіть номер місяця (1-12): ", "Помилка! Введіть число від 1 до 12.", 1, 12);
-        }
+
 
         /// <summary>
         /// Виводить зарплату, середню зарплату за місяць та річний бюджет.
