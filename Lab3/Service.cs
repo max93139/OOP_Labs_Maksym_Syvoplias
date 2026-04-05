@@ -1,3 +1,4 @@
+//Для перевірки і виправлення помилок використовувався Antigravity з моделью  Cloude Opus 4.6
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -145,17 +146,7 @@ namespace Lab3
                     }
                     else
                     {
-                        WriteToConsole("  Номер залікової книжки (0 — назад): ");
-                        string recordBook = ReadFromConsole();
-
-                        if (recordBook.Trim() == "0")
-                        {
-                            result = null;
-                        }
-                        else
-                        {
-                            result = new Student(name, program, workload.Value, recordBook, studentNumber);
-                        }
+                        result = new Student(name, program, workload.Value, studentNumber);
                     }
                 }
             }
@@ -249,7 +240,7 @@ namespace Lab3
         /// <summary>Запитати кількість кредитів ЄКТС (1–60). Повертає null при 0 (скасування).</summary>
         private int? ReadCredits()
         {
-            const int maxCredits = 60;
+            const int maxCredits = 30;
             int? result = null;
             bool valid = false;
 
@@ -285,13 +276,13 @@ namespace Lab3
 
 
         /// <summary>
-        /// Запитує у користувача номер студента для проведення заданої дії.
+        /// Запитує у користувача номер студента за допомогою власного текстового запиту.
         /// Виводить список і повертає номер (або -1 у разі помилки списку, 0 — скасування).
         /// </summary>
         /// <param name="dept">Кафедра, що містить студентів.</param>
-        /// <param name="action">Назва дії для підказки.</param>
+        /// <param name="prompt">Текст запиту, який виводиться користувачеві.</param>
         /// <returns>Вибраний номер або спеціальний код.</returns>
-        private int ReadStudentIndex(Department dept, string action)
+        private int ReadStudentIndex(Department dept, string prompt)
         {
             int result;
 
@@ -303,7 +294,7 @@ namespace Lab3
             else
             {
                 PrintStudentList(dept);
-                result = ReadInt($"  Виберіть номер студента для [{action}] (0 — назад до меню): ");
+                result = ReadInt(prompt);
             }
 
             return result;
@@ -318,7 +309,7 @@ namespace Lab3
             WriteToConsole("\n Список студентів ");
             for (int i = 0; i < dept.Students.Count; i++)
             {
-                WriteToConsole($"  {i + 1}. {dept.Students[i].Name} ({dept.Students[i].RecordBookNumber})");
+                WriteToConsole($"  {i + 1}. {dept.Students[i].Name}");
             }
         }
 
@@ -329,12 +320,6 @@ namespace Lab3
         /// <returns>Відформатований рядок.</returns>
         private string FormatDepartment(Department dept)
         {
-            string accreditation;
-            if (dept.AccreditationLevel == '\0')
-                accreditation = "не проводилась";
-            else
-                accreditation = dept.AccreditationLevel.ToString();
-
             string disciplines;
             if (dept.Disciplines.Count > 0)
                 disciplines = string.Join(", ", dept.Disciplines);
@@ -344,7 +329,6 @@ namespace Lab3
             return $"Кафедра: {dept.Name}\n" +
                    $"Напрям: {dept.EducationProgram}\n" +
                    $"Студентів: {dept.StudentCount}/{dept.MaxStudents}\n" +
-                   $"Акредитація: {accreditation}\n" +
                    $"Дисципліни: {disciplines}";
         }
 
@@ -356,7 +340,7 @@ namespace Lab3
         private string FormatStudent(Student s)
         {
             return $"  #{s.StudentNumber} {s.Name} | Напрям: {s.EducationProgram} " +
-                   $"| Кредити: {s.WorkloadLevel} | Залікова: {s.RecordBookNumber} " +
+                   $"| Кредити: {s.WorkloadLevel} " +
                    $"| Рейтинг: {s.Rating:F2} | Оцінки: [{string.Join(", ", s.Grades)}]";
         }
 
@@ -399,23 +383,36 @@ namespace Lab3
 
                 switch (choice.Trim())
                 {
-                    //  1. Створити кафедру
+                    //  Створити кафедру
                     case "1":
                         department = ReadDepartmentFromConsole();
                         nextStudentNumber = 1;
-                        WriteToConsole($"   Кафедру «{department.Name}» створено.");
+                        WriteToConsole($"   Кафедру «{department.Name} створено.");
 
-                        WriteToConsole("\n  Введіть дисципліни через кому: ");
-                        string[] parts1 = ReadFromConsole().Split(',');
-                        foreach (string d in parts1)
-                            department.AddDiscipline(d.Trim());
-                        WriteToConsole($"   Дисципліни: {string.Join(", ", department.Disciplines)}");
+                        WriteToConsole("\n  Додавання дисциплін. Введіть 0 для завершення");
+                        string disciplineName;
+                        do
+                        {
+                            WriteToConsole("  Введіть назву дисципліни (0 — завершити): ");
+                            disciplineName = ReadFromConsole();
 
-                        department.MaxStudents = ReadInt("  Максимальна кількість студентів: ");
-                        WriteToConsole($"   Встановлено: {department.MaxStudents}");
+                            if (disciplineName != "0")
+                            {
+                                if (!string.IsNullOrWhiteSpace(disciplineName))
+                                {
+                                    department.AddDiscipline(disciplineName);
+                                }
+                                else
+                                {
+                                    WriteToConsole("   Назва не може бути порожньою.");
+                                }
+                            }
+                        } while (disciplineName != "0");
+
+                        WriteToConsole($"   Дисципліни: {(department.Disciplines.Count > 0 ? string.Join(", ", department.Disciplines) : "немає")}");
                         break;
 
-                    //  2. Додати студента
+                    //  Додати студента
                     case "2":
                     {
                         Student? newStudent = ReadStudentFromConsole(nextStudentNumber, department);
@@ -427,26 +424,30 @@ namespace Lab3
                         {
                             if (department.AddStudent(newStudent))
                             {
+                                WriteToConsole("   Вкажіть причину додавання студента (вступ, поновлення, переведення тощо): ");
+                                string reason = ReadFromConsole();
                                 nextStudentNumber++;
-                                WriteToConsole($"   Студента «{newStudent.Name}» додано. Всього: {department.StudentCount}/{department.MaxStudents}");
+                                WriteToConsole($"   Студента «{newStudent.Name} додано (Причина: {reason}). Всього: {department.StudentCount}/{department.MaxStudents}");
                             }
                             else
                             {
-                                WriteToConsole("   Досягнуто максимальну кількість студентів!");
+                                WriteToConsole("   Досягнуто максимальну кількість студентів або невірна спеціальність!");
                             }
                         }
                         break;
                     }
-                    //  3. Видалити студента
+                    //  Видалити студента
                     case "3":
                     {
-                        int idx = ReadStudentIndex(department, "видалити");
+                        int idx = ReadStudentIndex(department, "  Виберіть номер студента для видалення (0 — назад до меню): ");
                         if (idx >= 1)
                         {
+                            WriteToConsole("   Вкажіть причину видалення студента (переїхав, перевівся, відрахування тощо): ");
+                            string reason = ReadFromConsole();
                             Student? removed = department.RemoveStudentByNumber(idx);
                             if (removed != null)
                             {
-                                WriteToConsole($"   Студента «{removed.Name}» видалено. Залишилось: {department.StudentCount}");
+                                WriteToConsole($"   Студента «{removed.Name} видалено (Причина: {reason}). Залишилось: {department.StudentCount}");
                             }
                             else
                             {
@@ -459,14 +460,14 @@ namespace Lab3
                         break;
                     }
 
-                    //  4. Додати дисципліну
+                    //  Додати дисципліну
                     case "4":
                         WriteToConsole("\n[4] Назва нової дисципліни: ");
                         department.AddDiscipline(ReadFromConsole());
                         WriteToConsole($"   Дисципліни: {string.Join(", ", department.Disciplines)}");
                         break;
 
-                    //  5. Видалити дисципліну
+                    //  Видалити дисципліну
                     case "5":
                     {
                         var discs = department.Disciplines;
@@ -483,20 +484,20 @@ namespace Lab3
                             string discName = ReadFromConsole();
                             if (department.RemoveDiscipline(discName))
                             {
-                                WriteToConsole($"   «{discName}» видалено.");
+                                WriteToConsole($"   «{discName} видалено.");
                             }
                             else
                             {
-                                WriteToConsole($"   Дисципліну «{discName}» не знайдено.");
+                                WriteToConsole($"   Дисципліну «{discName} не знайдено.");
                             }
                         }
                         break;
                     }
 
-                    //  6. Розрахувати рейтинг студента
+                    //  Розрахувати рейтинг студента
                     case "6":
                     {
-                        int idx = ReadStudentIndex(department, "розрахувати рейтинг");
+                        int idx = ReadStudentIndex(department, "  Виберіть номер студента для розрахунку рейтингу (0 — назад до меню): ");
                         if (idx >= 1)
                         {
                             Student? s = department.GetStudentByNumber(idx);
@@ -507,7 +508,7 @@ namespace Lab3
                             else
                             {
                                 double r = s.CalculateRating();
-                                WriteToConsole($"  Рейтинг «{s.Name}»: {r:F2} балів");
+                                WriteToConsole($"  Рейтинг «{s.Name}: {r:F2} балів");
                             }
                         }
                         else
@@ -516,10 +517,10 @@ namespace Lab3
                         break;
                     }
 
-                    //  7. Переглянути оцінки студента
+                    //  Переглянути оцінки студента
                     case "7":
                     {
-                        int idx = ReadStudentIndex(department, "переглянути оцінки");
+                        int idx = ReadStudentIndex(department, "  Виберіть номер студента для перегляду оцінок (0 — назад до меню): ");
                         if (idx >= 1)
                         {
                             Student? s = department.GetStudentByNumber(idx);
@@ -532,11 +533,11 @@ namespace Lab3
                                 var gs = s.ViewGrades();
                                 if (gs.Count == 0)
                                 {
-                                    WriteToConsole($"  У «{s.Name}» оцінок немає.");
+                                    WriteToConsole($"  У «{s.Name} оцінок немає.");
                                 }
                                 else
                                 {
-                                    WriteToConsole($"  Оцінки «{s.Name}»: {string.Join(", ", gs)}");
+                                    WriteToConsole($"  Оцінки «{s.Name}: {string.Join(", ", gs)}");
                                 }
                             }
                         }
@@ -546,10 +547,10 @@ namespace Lab3
                         break;
                     }
 
-                    //  8. Додати оцінку студенту
+                    //  Додати оцінку студенту
                     case "8":
                     {
-                        int idx = ReadStudentIndex(department, "додати оцінку");
+                        int idx = ReadStudentIndex(department, "  Виберіть номер студента для додавання оцінки (0 — назад до меню): ");
                         if (idx >= 1)
                         {
                             Student? s = department.GetStudentByNumber(idx);
@@ -559,7 +560,7 @@ namespace Lab3
                             }
                             else
                             {
-                                int grade = ReadInt($"  Оцінка для «{s.Name}» (0–100): ");
+                                int grade = ReadInt($"  Оцінка для «{s.Name} (0–100): ");
                                 double currentRating = s.CalculateRating();
                                 if (s.Grades.Count > 0 && currentRating + grade > 100)
                                 {
@@ -584,12 +585,12 @@ namespace Lab3
                         break;
                     }
 
-                    //  9. Зберегти дані у файл та показати поточний стан
+                    //  Зберегти дані у файл та показати поточний стан
                     case "9":
                         WriteToConsole("\n[9] Збереження даних...");
                         string fileContent = BuildFileContent(department);
                         WriteToFile(fileContent);
-                        WriteToConsole($"   Дані збережено у файл «{filePath}».");
+                        WriteToConsole($"   Дані збережено у файл «{filePath}.");
 
                         WriteToConsole("\n" + FormatDepartment(department));
 
@@ -605,33 +606,64 @@ namespace Lab3
                         }
                         break;
 
-                    //  Акредитація (додатково)
-                    case "acc":
-                        WriteToConsole("\n[Акредитація] Генерація оцінки акредитації...");
-                        int before = department.StudentCount;
-                        char grade2 = department.RunAccreditation();
-                        int after = department.StudentCount;
-                        WriteToConsole($"  Оцінка акредитації: {grade2}");
-                        switch (grade2)
+
+                    //  Змінити спеціальність студента
+                    case "10":
+                    {
+                        int idx = ReadStudentIndex(department, "  Виберіть номер студента для зміни спеціальності (0 — назад до меню): ");
+                        if (idx >= 1)
                         {
-                            case 'A':
-                                WriteToConsole($"   Оцінка A: кількість студентів зросла на 20% ({before} → {after}).");
-                                break;
-                            case 'B':
-                                WriteToConsole($"   Оцінка B: кількість студентів не змінилась ({after}).");
-                                break;
-                            case 'E':
-                                WriteToConsole($"   Оцінка E: кількість студентів зменшилась на 10% ({before} → {after}).");
-                                break;
-                            case 'F':
-                                WriteToConsole($"   Оцінка F: ЛІЦЕНЗІЮ АНУЛЬОВАНО! Кількість студентів зменшилась на 50% ({before} → {after}).");
-                                break;
+                            Student? s = department.GetStudentByNumber(idx);
+                            if (s == null)
+                            {
+                                WriteToConsole("   Невірний номер.");
+                            }
+                            else
+                            {
+                                string? newProgram = ReadProgramFromList(department);
+                                if (newProgram == null)
+                                {
+                                    WriteToConsole("  ← Зміну спеціальності скасовано.");
+                                }
+                                else
+                                {
+                                    s.ChangeSpecialty(newProgram);
+                                    WriteToConsole($"   Спеціальність студента «{s.Name} змінено на «{newProgram}.");
+                                }
+                            }
+                        }
+                        else
+                        {
                         }
                         break;
+                    }
 
-                    //  0 / 10. Вихід
+                    //  Змінити обсяг навчального навантаження
+                    case "11":
+                    {
+                        int idx = ReadStudentIndex(department, "  Виберіть номер студента для зміни навантаження (0 — назад до меню): ");
+                        if (idx >= 1)
+                        {
+                            Student? s = department.GetStudentByNumber(idx);
+                            if (s == null)
+                            {
+                                WriteToConsole("   Невірний номер.");
+                            }
+                            else
+                            {
+                                int newWorkload = ReadInt($"  Новий обсяг кредитів ЄКТС для «{s.Name}: ");
+                                s.ChangeWorkload(newWorkload);
+                                WriteToConsole($"   Обсяг навантаження студента «{s.Name} змінено на {s.WorkloadLevel} кредитів.");
+                            }
+                        }
+                        else
+                        {
+                        }
+                        break;
+                    }
+
+                    //  Вихід
                     case "0":
-                    case "10":
                         WriteToConsole("\nДо побачення!");
                         running = false;
                         break;
@@ -649,8 +681,7 @@ namespace Lab3
         private void PrintMenu()
         {
 
-            WriteToConsole("        СИСТЕМА УПРАВЛІННЯ КАФЕДРОЮ   ");
-            WriteToConsole(" Use Case сценарій:                   ");
+            WriteToConsole("СИСТЕМА УПРАВЛІННЯ КАФЕДРОЮ");
             WriteToConsole("  1   — Створити кафедру              ");
             WriteToConsole("  2   — Додати студента               ");
             WriteToConsole("  3   — Видалити студента             ");
@@ -660,7 +691,8 @@ namespace Lab3
             WriteToConsole("  7   — Переглянути оцінки студента   ");
             WriteToConsole("  8   — Додати оцінку студенту        ");
             WriteToConsole("  9   — Зберегти дані у файл          ");
-            WriteToConsole("  acc — Провести акредитацію          ");
+            WriteToConsole("  10  — Змінити спеціальність студента");
+            WriteToConsole("  11  — Змінити навантаження студента ");
             WriteToConsole("  0   — Вихід                         ");
             Console.Write("Ваш вибір: ");
         }

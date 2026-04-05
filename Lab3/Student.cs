@@ -1,3 +1,4 @@
+//Для перевірки і виправлення помилок використовувався Antigravity з моделью  Cloude Opus 4.6
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,6 @@ namespace Lab3
         private string educationProgram; // Напрям підготовки
         private List<int> grades;        // Список оцінок
         private int workloadLevel;       // Рівень навчального навантаження
-        private string recordBookNumber; // Номер залікової книжки
         private double rating;           // Рейтинг успішності
         private int studentNumber;       // Номер студента
 
@@ -27,7 +27,6 @@ namespace Lab3
             educationProgram = "";
             grades           = new List<int>();
             workloadLevel    = 0;
-            recordBookNumber = "";
             rating           = 0.0;
             studentNumber    = 0;
         }
@@ -38,15 +37,13 @@ namespace Lab3
         /// <param name="name">Ім'я студента.</param>
         /// <param name="educationProgram">Напрям підготовки.</param>
         /// <param name="workloadLevel">Рівень навчального навантаження (кредити).</param>
-        /// <param name="recordBookNumber">Номер залікової книжки.</param>
         /// <param name="studentNumber">Порядковий номер студента в списку (за замовчуванням 0).</param>
         public Student(string name, string educationProgram,
-                       int workloadLevel, string recordBookNumber, int studentNumber = 0)
+                       int workloadLevel, int studentNumber = 0)
         {
             this.name             = name;
             this.educationProgram = educationProgram;
             this.workloadLevel    = workloadLevel;
-            this.recordBookNumber = recordBookNumber;
             this.studentNumber    = studentNumber;
             this.grades           = new List<int>();
             this.rating           = 0.0;
@@ -62,7 +59,6 @@ namespace Lab3
             this.educationProgram = other.educationProgram;
             this.grades           = new List<int>(other.grades);
             this.workloadLevel    = other.workloadLevel;
-            this.recordBookNumber = other.recordBookNumber;
             this.rating           = other.rating;
             this.studentNumber    = other.studentNumber;
         }
@@ -103,14 +99,6 @@ namespace Lab3
             set => workloadLevel = value;
         }
 
-        /// <summary>
-        /// Отримує або встановлює номер залікової книжки.
-        /// </summary>
-        public string RecordBookNumber
-        {
-            get => recordBookNumber;
-            set => recordBookNumber = value;
-        }
 
         /// <summary>
         /// Отримує поточний рейтинг студента (середній бал).
@@ -157,6 +145,27 @@ namespace Lab3
 
         /// <summary>Повертає копію списку оцінок (без можливості зовнішнього редагування).</summary>
         public List<int> ViewGrades() => new List<int>(grades);
+
+        /// <summary>Змінити спеціальність (напрям підготовки).</summary>
+        /// <param name="newSpecialty">Новий напрям підготовки.</param>
+        public void ChangeSpecialty(string newSpecialty)
+        {
+            if (!string.IsNullOrWhiteSpace(newSpecialty))
+            {
+                educationProgram = newSpecialty;
+            }
+        }
+
+        /// <summary>Змінити обсяг навчального навантаження.</summary>
+        /// <param name="newWorkload">Нове значення кредитів.</param>
+        public void ChangeWorkload(int newWorkload)
+        {
+            if (newWorkload >= 0)
+            {
+                workloadLevel = newWorkload;
+            }
+        }
+
         /// <summary>Обчислити і зберегти рейтинг успішності.</summary>
         /// <returns>Розрахований рейтинг (середня оцінка).</returns>
         public double CalculateRating()

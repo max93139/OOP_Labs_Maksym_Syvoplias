@@ -1,3 +1,4 @@
+//Для перевірки і виправлення помилок використовувався Antigravity з моделью  Cloude Opus 4.6
 namespace Console_Lab2
 {
     /// <summary>

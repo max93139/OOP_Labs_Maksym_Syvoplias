@@ -1,3 +1,4 @@
+//Для перевірки і виправлення помилок використовувався Antigravity з моделью  Cloude Opus 4.6
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,6 @@ namespace Lab3
         private string educationProgram;       // Напрям підготовки
         private List<string> disciplines;      // Перелік дисциплін
         private int maxStudents;               // Максимальна кількість студентів
-        private char accreditationLevel;       // Рівень акредитації (A, B, E, F)
         private List<Student> students;        // Список студентів кафедри
 
         /// <summary>
@@ -28,7 +28,6 @@ namespace Lab3
             educationProgram = "";
             disciplines      = new List<string>();
             maxStudents      = 0;
-            accreditationLevel = '\0';
             students         = new List<Student>();
         }
 
@@ -46,9 +45,9 @@ namespace Lab3
             this.name             = name;
             this.studentCount     = studentCount;
             this.educationProgram = educationProgram;
-            this.disciplines      = new List<string>(disciplines);
+            this.disciplines      = new List<string>(disciplines
+            );
             this.maxStudents      = maxStudents;
-            this.accreditationLevel = '\0';
             this.students         = new List<Student>();
         }
 
@@ -63,7 +62,6 @@ namespace Lab3
             this.educationProgram  = other.educationProgram;
             this.disciplines       = new List<string>(other.disciplines);
             this.maxStudents       = other.maxStudents;
-            this.accreditationLevel = other.accreditationLevel;
             // Deep copy студентів
             this.students = other.students.Select(s => new Student(s)).ToList();
         }
@@ -113,14 +111,6 @@ namespace Lab3
             set => maxStudents = value;
         }
 
-        /// <summary>
-        /// Отримує або встановлює рівень акредитації кафедри (A, B, E, F).
-        /// </summary>
-        public char AccreditationLevel
-        {
-            get => accreditationLevel;
-            set => accreditationLevel = value;
-        }
 
         /// <summary>
         /// Отримує список студентів (тільки для читання). Захищений від зовнішніх змін.
@@ -130,12 +120,13 @@ namespace Lab3
         //  Відкриті методи
 
         /// <summary>Додати студента до кафедри.</summary>
-        /// <returns>true — успішно; false — досягнуто ліміт.</returns>
+        /// <returns>true — успішно; false — досягнуто ліміт або невідповідна спеціальність.</returns>
         public bool AddStudent(Student student)
         {
             bool result;
 
-            if (studentCount >= maxStudents)
+            // Ця частина з перевіркою (!disciplines.Contains) була додана Gemini 3.1 Pro
+            if (studentCount >= maxStudents || !disciplines.Contains(student.EducationProgram))
             {
                 result = false;
             }
@@ -207,51 +198,6 @@ namespace Lab3
         public bool RemoveDiscipline(string discipline) =>
             disciplines.Remove(discipline);
 
-        /// <summary>
-        /// Алгоритм зміни кількості студентів за результатами акредитації.
-        /// Генерує оцінку А/B/E/F та змінює studentCount відповідно до умов задачі.
-        /// </summary>
-        /// <returns>Результат акредитації (A, B, E або F).</returns>
-        public char RunAccreditation()
-        {
-            // Генерація оцінки акредитації
-            char[] grades = { 'A', 'B', 'E', 'F' };
-            Random rnd = new Random();
-            accreditationLevel = grades[rnd.Next(grades.Length)];
-
-            ApplyAccreditationResult(accreditationLevel);
-            return accreditationLevel;
-        }
-
-        /// <summary>
-        /// Застосувати алгоритм зміни кількості студентів за результатом акредитації.
-        /// </summary>
-        /// <param name="grade">Оцінка акредитації (A, B, E, F).</param>
-        private void ApplyAccreditationResult(char grade)
-        {
-            switch (grade)
-            {
-                case 'A':
-                    // Збільшення на 20%, але не більше maxStudents
-                    studentCount = Math.Min(maxStudents, (int)(studentCount * 1.20));
-                    break;
-                case 'B':
-                    // Кількість студентів не змінюється
-                    break;
-                case 'E':
-                    // Зменшення на 10%
-                    studentCount = (int)(studentCount * 0.90);
-                    break;
-                case 'F':
-                    // Зменшення на 50%
-                    studentCount = (int)(studentCount * 0.50);
-                    break;
-            }
-
-            // Синхронізуємо фізичний список студентів з оновленим лічильником
-            while (students.Count > studentCount)
-                students.RemoveAt(students.Count - 1);
-        }
 
 
     }

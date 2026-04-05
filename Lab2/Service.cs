@@ -59,9 +59,7 @@ namespace Console_Lab2
         {
             Console.WriteLine("Вектор:");
             for (int i = 0; i < data.Length; i++)
-            {
                 Console.Write(data[i] + " ");
-            }
             Console.WriteLine();
         }
 
@@ -195,24 +193,8 @@ namespace Console_Lab2
         /// </summary>
         private void CountOccurrences()
         {
-            while (true)
-            {
-                Console.Write("Введіть число для пошуку повторень (або '*' для виходу): ");
-                string input = Console.ReadLine() ?? string.Empty;
-
-                if (input == "*")
-                {
-                    break;
-                }
-                else if (int.TryParse(input, out int value))
-                {
-                    Console.WriteLine("Кількість повторень: " + vector.CountOccurrences(value));
-                }
-                else
-                {
-                    Console.WriteLine("Помилка! Введіть ціле число або '*'.");
-                }
-            }
+            int value = ReadInt("Введіть число для пошуку повторень: ", "Помилка! Введіть ціле число.");
+            Console.WriteLine("Кількість повторень: " + vector.CountOccurrences(value));
         }
 
         /// <summary>
@@ -223,25 +205,8 @@ namespace Console_Lab2
         {
             InitMatrix();
 
-            while (true)
-            {
-                Console.Write("Введіть номер місяця (1-12) (або '*' для виходу): ");
-                string input = Console.ReadLine() ?? string.Empty;
-
-                if (input == "*")
-                {
-                    break;
-                }
-                else if (int.TryParse(input, out int month) && month >= 1 && month <= 12)
-                {
-                    PrintMatrixStats(month);
-                    Console.WriteLine(); 
-                }
-                else
-                {
-                    Console.WriteLine("Помилка! Введіть число від 1 до 12 або '*'.");
-                }
-            }
+            int month = ReadMonth();
+            PrintMatrixStats(month);
         }
 
         /// <summary>
@@ -263,7 +228,14 @@ namespace Console_Lab2
             matrix.Generate(employees);
         }
 
-
+        /// <summary>
+        /// Зчитує номер місяця від користувача (1–12).
+        /// </summary>
+        /// <returns>Валідний номер місяця.</returns>
+        private int ReadMonth()
+        {
+            return ReadInt("Введіть номер місяця (1-12): ", "Помилка! Введіть число від 1 до 12.", 1, 12);
+        }
 
         /// <summary>
         /// Виводить зарплату, середню зарплату за місяць та річний бюджет.
