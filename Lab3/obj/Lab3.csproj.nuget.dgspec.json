@@ -10,11 +10,11 @@
         "projectUniqueName": "/Users/mac/Desktop/C#/UNI/Labs OOP Maksym Syvoplias/Lab3/Lab3.csproj",
         "projectName": "Lab3",
         "projectPath": "/Users/mac/Desktop/C#/UNI/Labs OOP Maksym Syvoplias/Lab3/Lab3.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
+        "packagesPath": "/tmp/.nuget/packages/",
         "outputPath": "/Users/mac/Desktop/C#/UNI/Labs OOP Maksym Syvoplias/Lab3/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "/tmp/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
