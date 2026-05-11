@@ -1,9 +1,5 @@
 ---
-trigger: always_on
----
-
----
-trigger: Always On 
+trigger: manual
 ---
 
 # Programming Style Rules (C, C++, C#)

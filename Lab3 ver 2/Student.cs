@@ -2,22 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.IO;
 
 namespace Lab3
 {
     /// <summary>
-    /// Статус конкурсної роботи
-    /// </summary>
-    public enum WorkStatus
-    {
-        Submitted,
-        Accepted,
-        Rejected
-    }
-
-    /// <summary>
     /// Клас "Студент" — зберігає дані про студента та реалізує бізнес-логіку.
+    /// Використовує Service для введення/виведення даних.
     /// </summary>
     public class Student
     {
@@ -29,7 +19,6 @@ namespace Lab3
         private double rating;           // Рейтинг успішності
         private int studentNumber;       // Номер студента
         private string admissionReason;  // Причина додавання/вступу
-        private CompetitiveWork? submittedWork; // Подана конкурсна робота (модель 1:1)
 
         /// <summary>
         /// Ініціалізує новий екземпляр класу <see cref="Student"/> зі значеннями за замовчуванням.
@@ -167,39 +156,7 @@ namespace Lab3
             }
         }
 
-        /// <summary>
-        /// Отримує подану конкурсну роботу (якщо є).
-        /// </summary>
-        public CompetitiveWork? SubmittedWork
-        {
-            get
-            {
-                return submittedWork;
-            }
-        }
-
         // Відкриті методи
-
-        /// <summary>
-        /// Подати конкурсну роботу (реалізує зв'язок 1:1)
-        /// </summary>
-        public bool SubmitCompetitiveWork(string title, string theme)
-        {
-            bool result;
-
-            if (this.submittedWork != null)
-            {
-                // Студент вже подав роботу (модель 1:1)
-                result = false;
-            }
-            else
-            {
-                this.submittedWork = new CompetitiveWork(title, theme, this);
-                result = true;
-            }
-
-            return result;
-        }
 
         /// <summary>
         /// Додати оцінку. Оцінка дійсна, якщо вона не перевищує 100 балів.
@@ -281,160 +238,160 @@ namespace Lab3
         }
 
         /// <summary>
-        /// Вкладений клас КонкурснаРобота — творчий результат студента, який оцінюється в межах конкурсу.
+        /// Форматує детальну інформацію про студента у вигляді рядка.
         /// </summary>
-        public class CompetitiveWork
+        /// <returns>Відформатований рядок з даними студента.</returns>
+        public string ToFormattedString()
         {
-            /// <summary>Назва конкурсної роботи.</summary>
-            public string Title { get; private set; }
+            return $"  #{studentNumber} {name}  Спеціальність : {educationProgram} " +
+                   $" Кредити: {workloadLevel} " +
+                   $" Рейтинг: {rating:F2}  Оцінки: [{string.Join(", ", grades)}] " +
+                   $" Причина: {(!string.IsNullOrEmpty(admissionReason) ? admissionReason : "не вказано")}";
+        }
 
-            /// <summary>Тематика (назва) конкурсу.</summary>
-            public string Theme { get; private set; }
+        /// <summary>
+        /// Зчитує кількість кредитів ЄКТС (1-30) з консолі через Service.
+        /// Повертає null при 0 (скасування).
+        /// </summary>
+        /// <param name="svc">Сервіс для вводу/виводу.</param>
+        /// <returns>Кількість кредитів або null при скасуванні.</returns>
+        public static int? ReadCredits(Service svc)
+        {
+            const int maxCredits = 30;
+            int? result = null;
+            bool valid = false;
 
-            /// <summary>Дата подання роботи.</summary>
-            public DateTime SubmissionDate { get; private set; }
-
-            /// <summary>Оцінка / рейтинг роботи (null, якщо ще не оцінено).</summary>
-            public int? Score { get; private set; }
-
-            /// <summary>Статус роботи (подано, прийнято, відхилено).</summary>
-            public WorkStatus Status { get; private set; }
-
-            /// <summary>Призове місце (null, якщо не присвоєно).</summary>
-            public int? PrizePlace { get; private set; }
-
-            /// <summary>Автор роботи (посилання на студента).</summary>
-            public Student Author { get; private set; }
-
-            /// <summary>
-            /// Ініціалізує нову конкурсну роботу зі статусом "Подано" та поточною датою.
-            /// </summary>
-            /// <param name="title">Назва роботи.</param>
-            /// <param name="theme">Тематика конкурсу.</param>
-            /// <param name="author">Автор (студент).</param>
-            public CompetitiveWork(string title, string theme, Student author)
+            while (!valid)
             {
-                Title = title;
-                Theme = theme;
-                SubmissionDate = DateTime.Now;
-                Status = WorkStatus.Submitted;
-                Author = author;
-                Score = null;
-                PrizePlace = null;
-            }
+                svc.WriteToConsole($"  Кількість кредитів ЄКТС (1–{maxCredits}, 0 — назад): ");
 
-            /// <summary>Перевірити відповідність назви роботи тематиці конкурсу.</summary>
-            /// <param name="themesFilePath">Шлях до файлу з тематиками.</param>
-            /// <returns>Список рядків-тем, у яких знайдено збіги ключових слів з назви роботи.</returns>
-            public List<string> CheckThemeRelevance(string themesFilePath)
-            {
-                List<string> matchedThemes = new List<string>();
-
-                if (!File.Exists(themesFilePath))
+                if (int.TryParse(svc.ReadFromConsole(), out int credits))
                 {
-                    // Файл не знайдено — повертаємо порожній список
-                }
-                else
-                {
-                    string[] fileThemes = File.ReadAllLines(themesFilePath);
-                    string[] titleWords = Title.Split(new[] { ' ', ',', '.', '!', '?', '-', ':' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    foreach (string line in fileThemes)
+                    if (credits == 0)
                     {
-                        bool lineMatched = false;
-                        foreach (string word in titleWords)
-                        {
-                            if (line.Contains(word, StringComparison.OrdinalIgnoreCase))
-                            {
-                                matchedThemes.Add(line);
-                                lineMatched = true;
-                                break; // Збіг у цьому рядку вже знайдено
-                            }
-                            else
-                            {
-                                // Слово не збігається — продовжуємо пошук
-                            }
-                        }
-
-                        if (!lineMatched)
-                        {
-                            // Жодного збігу у цьому рядку
-                        }
-                        else
-                        {
-                            // Рядок вже доданий
-                        }
+                        result = null;
+                        valid = true;
+                    }
+                    else if (credits >= 1 && credits <= maxCredits)
+                    {
+                        result = credits;
+                        valid = true;
+                    }
+                    else
+                    {
+                        svc.WriteToConsole($"   Введіть число від 0 до {maxCredits}.");
                     }
                 }
-
-                return matchedThemes;
-            }
-
-            /// <summary>Призначити оцінку конкурсній роботі.</summary>
-            /// <param name="score">Оцінка.</param>
-            public void EvaluateWork(int score)
-            {
-                Score = score;
-            }
-
-            /// <summary>Змінити статус конкурсної роботи.</summary>
-            /// <param name="status">Новий статус.</param>
-            public void AssignStatus(WorkStatus status)
-            {
-                Status = status;
-            }
-
-            /// <summary>Присвоїти призове місце конкурсній роботі.</summary>
-            /// <param name="place">Номер призового місця.</param>
-            public void AssignPrizePlace(int place)
-            {
-                PrizePlace = place;
-            }
-
-            /// <summary>Повертає форматований рядок з деталями конкурсної роботи.</summary>
-            /// <returns>Рядок із повною інформацією про роботу.</returns>
-            public string ViewDetails()
-            {
-                string scoreText = "";
-                if (Score.HasValue)
+                else
                 {
-                    scoreText = Score.Value.ToString();
+                    svc.WriteToConsole($"   Введіть число від 0 до {maxCredits}.");
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Фабричний метод: зчитує дані нового студента з консолі через Service.
+        /// </summary>
+        /// <param name="svc">Сервіс для вводу/виводу.</param>
+        /// <param name="studentNumber">Номер, що буде присвоєно студенту.</param>
+        /// <param name="dept">Кафедра для вибору спеціальності.</param>
+        /// <returns>Новий студент або null при скасуванні.</returns>
+        public static Student? ReadFromConsole(Service svc, int studentNumber, Department dept)
+        {
+            Student? result;
+
+            svc.WriteToConsole("  Ім'я студента (0 — назад): ");
+            string name = svc.ReadFromConsole();
+
+            if (name.Trim() == "0")
+            {
+                result = null;
+            }
+            else
+            {
+                string? program = dept.ReadProgramFromList(svc);
+
+                if (program == null)
+                {
+                    result = null;
                 }
                 else
                 {
-                    scoreText = "Не оцінено";
-                }
+                    int? workload = ReadCredits(svc);
 
-                string placeText = "";
-                if (PrizePlace.HasValue)
-                {
-                    placeText = PrizePlace.Value.ToString();
+                    if (workload == null)
+                    {
+                        result = null;
+                    }
+                    else
+                    {
+                        result = new Student(name, program, workload.Value, studentNumber);
+                    }
                 }
-                else
-                {
-                    placeText = "Немає";
-                }
-
-                return $"Назва: {Title}\n" +
-                       $"Тема конкурсу: {Theme}\n" +
-                       $"Дата подання: {SubmissionDate.ToString("dd.MM.yyyy")}\n" +
-                       $"Оцінка: {scoreText}\n" +
-                       $"Статус: {Status}\n" +
-                       $"Призове місце: {placeText}\n" +
-                       $"Автор: {Author.Name}";
             }
 
-            /// <summary>Змінити назву конкурсної роботи.</summary>
-            /// <param name="newTitle">Нова назва.</param>
-            public void ChangeTitle(string newTitle)
+            return result;
+        }
+
+        /// <summary>
+        /// Обробляє процес додавання оцінок через Service.
+        /// </summary>
+        /// <param name="svc">Сервіс для вводу/виводу.</param>
+        public void HandleAddGrades(Service svc)
+        {
+            bool addingGrades = true;
+            while (addingGrades)
             {
-                if (!string.IsNullOrWhiteSpace(newTitle))
+                int grade = svc.ReadInt($"  Оцінка для «{name} (0–100, -1 — завершити): ");
+                if (grade == -1)
                 {
-                    Title = newTitle;
+                    addingGrades = false;
+                    continue;
                 }
                 else
                 {
-                    // Порожній рядок ігнорується, щоб не зіпсувати дані
+                    // Продовжуємо перевірку оцінки
+                }
+
+                if (AddGrade(grade))
+                {
+                    svc.WriteToConsole($"   Оцінку {grade} додано. Новий рейтинг: {rating:F2}");
+                }
+                else
+                {
+                    svc.WriteToConsole("   Недійсна оцінка. Допустимо: 0–100.");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Обробляє зміну навантаження через Service.
+        /// </summary>
+        /// <param name="svc">Сервіс для вводу/виводу.</param>
+        public void HandleChangeWorkload(Service svc)
+        {
+            bool success = false;
+            while (!success)
+            {
+                int newWorkload = svc.ReadInt($"  Новий обсяг кредитів ЄКТС для «{name} (1-30, 0 — скасувати): ");
+                if (newWorkload == 0)
+                {
+                    svc.WriteToConsole("   Зміну навантаження скасовано.");
+                    break;
+                }
+                else
+                {
+                    if (ChangeWorkload(newWorkload))
+                    {
+                        svc.WriteToConsole($"   Обсяг навантаження студента «{name} змінено на {workloadLevel} кредитів.");
+                        success = true;
+                    }
+                    else
+                    {
+                        svc.WriteToConsole("   Некоректний обсяг кредитів. Допустимо: 1–30.");
+                    }
                 }
             }
         }

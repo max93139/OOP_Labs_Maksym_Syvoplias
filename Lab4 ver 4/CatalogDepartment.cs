@@ -1,4 +1,4 @@
-//Для перевірки і виправлення помилок використовувався Antigravity з моделью Claude Sonnet 4.6
+// Використовувався Antigravity з моделью Claude Sonnet 4.6
 using System;
 using System.Collections;
 using System.Collections.Generic;
