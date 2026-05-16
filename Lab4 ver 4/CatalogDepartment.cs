@@ -6,19 +6,95 @@ using System.Collections.Generic;
 namespace Lab4
 {
     /// <summary>
-    /// Компаратор кафедр за кількістю студентів та кількістю дисциплін.
-    /// Реалізує IComparer для багатокритерійного порівняння.
-    /// Спочатку порівнюємо за кількістю студентів, потім — за кількістю дисциплін.
+    /// Клас «Каталог кафедр» — зберігає масив об'єктів Department.
+    /// Відповідно до вимог, реалізує 4 інтерфейси у цьому ж класі:
+    /// - IComparable: порівняння двох каталогів за сумарною кількістю студентів
+    /// - IComparer: порівняння двох кафедр за студентами і дисциплінами
+    /// - IEnumerable та IEnumerator: перебір кафедр у порядку зростання студентів
     /// </summary>
-    public class DepartmentByStudentsAndDisciplinesComparer : IComparer<Department>
+    public class CatalogDepartment : IComparable<CatalogDepartment>, IComparer<Department>, IEnumerable<Department>, IEnumerator<Department>
     {
+        private Department[] departments;
+        private int departmentCount;
+        private string catalogName;
+
+        // Поля для реалізації IEnumerator
+        private Department[] sortedSnapshot;
+        private int currentIndex = -1;
+
+        /// <summary>
+        /// Ініціалізує порожній каталог із заданою назвою та максимальною місткістю.
+        /// </summary>
+        /// <param name="name">Назва каталогу.</param>
+        /// <param name="capacity">Максимальна кількість кафедр у каталозі.</param>
+        public CatalogDepartment(string name, int capacity)
+        {
+            catalogName     = name;
+            departments     = new Department[capacity];
+            departmentCount = 0;
+            sortedSnapshot  = new Department[0];
+        }
+
+        /// <summary>Отримує кількість кафедр у каталозі.</summary>
+        public int DepartmentCount
+        {
+            get { return departmentCount; }
+        }
+
+        /// <summary>Отримує назву каталогу.</summary>
+        public string CatalogName
+        {
+            get { return catalogName; }
+        }
+
+        // Методи колекції
+
+        /// <summary>
+        /// Додає кафедру до каталогу, якщо є вільне місце.
+        /// </summary>
+        /// <param name="department">Кафедра для додавання.</param>
+        /// <returns>true — додано; false — каталог заповнено.</returns>
+        public bool AddDepartment(Department department)
+        {
+            bool result;
+            if (departmentCount >= departments.Length)
+            {
+                result = false;
+            }
+            else
+            {
+                departments[departmentCount] = department;
+                departmentCount++;
+                result = true;
+            }
+            return result;
+        }
+
+        // Реалізація IComparable<CatalogDepartment>
+
+        /// <summary>
+        /// Порівнює поточний каталог з іншим за загальною кількістю студентів.
+        /// </summary>
+        public int CompareTo(CatalogDepartment? other)
+        {
+            if (other == null)
+            {
+                return 1;
+            }
+            else
+            {
+                int totalThis  = CalculateTotalStudents();
+                int totalOther = other.CalculateTotalStudents();
+                return totalThis.CompareTo(totalOther);
+            }
+        }
+
+        // Реалізація IComparer<Department>
+
         /// <summary>
         /// Порівнює дві кафедри спочатку за кількістю студентів,
         /// а при рівності — за кількістю дисциплін.
         /// </summary>
-        /// <param name="first">Перша кафедра для порівняння.</param>
-        /// <param name="second">Друга кафедра для порівняння.</param>
-        /// <returns>Від'ємне — перша менша; 0 — рівні; додатнє — перша більша.</returns>
         public int Compare(Department? first, Department? second)
         {
             if (first == null && second == null)
@@ -46,115 +122,60 @@ namespace Lab4
                 }
             }
         }
-    }
 
-    /// <summary>
-    /// Клас «Каталог кафедр» — зберігає масив об'єктів Department та надає:
-    /// - порівняння двох каталогів за сумарною кількістю студентів (IComparable),
-    /// - сортування кафедр за студентами і дисциплінами (IComparer через окремий клас),
-    /// - перебір кафедр у порядку зростання студентів (IEnumerable / IEnumerator).
-    /// </summary>
-    public class CatalogDepartment : IComparable<CatalogDepartment>, IEnumerable<Department>
-    {
-        private Department[] departments;
-        private int departmentCount;
-        private string catalogName;
+        // Реалізація IEnumerable<Department>
 
         /// <summary>
-        /// Ініціалізує порожній каталог із заданою назвою та максимальною місткістю.
-        /// </summary>
-        /// <param name="name">Назва каталогу (для виводу при порівнянні).</param>
-        /// <param name="capacity">Максимальна кількість кафедр у каталозі.</param>
-        public CatalogDepartment(string name, int capacity)
-        {
-            catalogName     = name;
-            departments     = new Department[capacity];
-            departmentCount = 0;
-        }
-
-        /// <summary>Отримує кількість кафедр у каталозі.</summary>
-        public int DepartmentCount
-        {
-            get { return departmentCount; }
-        }
-
-        /// <summary>Отримує назву каталогу.</summary>
-        public string CatalogName
-        {
-            get { return catalogName; }
-        }
-
-        /// <summary>
-        /// Повертає компаратор для порівняння кафедр за студентами і дисциплінами.
-        /// </summary>
-        public static IComparer<Department> ByStudentsAndDisciplines
-        {
-            get { return new DepartmentByStudentsAndDisciplinesComparer(); }
-        }
-
-        // Методи колекції
-
-        /// <summary>
-        /// Додає кафедру до каталогу, якщо є вільне місце.
-        /// </summary>
-        /// <param name="department">Кафедра для додавання.</param>
-        /// <returns>true — додано; false — каталог заповнено.</returns>
-        public bool AddDepartment(Department department)
-        {
-            bool result;
-            if (departmentCount >= departments.Length)
-            {
-                result = false;
-            }
-            else
-            {
-                departments[departmentCount] = department;
-                departmentCount++;
-                result = true;
-            }
-            return result;
-        }
-
-        // Реалізація IComparable
-
-        /// <summary>
-        /// Порівнює поточний каталог з іншим за загальною кількістю студентів.
-        /// Реалізує IComparable для сортування каталогів між собою.
-        /// </summary>
-        /// <param name="other">Інший каталог для порівняння.</param>
-        /// <returns>Від'ємне — поточний менший; 0 — рівні; додатнє — поточний більший.</returns>
-        public int CompareTo(CatalogDepartment? other)
-        {
-            if (other == null)
-            {
-                return 1;
-            }
-            else
-            {
-                int totalThis  = CalculateTotalStudents();
-                int totalOther = other.CalculateTotalStudents();
-                return totalThis.CompareTo(totalOther);
-            }
-        }
-
-        // Реалізація IEnumerable
-
-        /// <summary>
-        /// Повертає перелічувач кафедр, впорядкованих за зростанням кількості студентів.
-        /// Реалізує IEnumerable для підтримки foreach.
+        /// Повертає перелічувач (сам об'єкт), готуючи відсортований список.
         /// </summary>
         public IEnumerator<Department> GetEnumerator()
         {
-            Department[] sorted = BuildSortedSnapshot();
-            return new DepartmentEnumerator(sorted);
+            sortedSnapshot = BuildSortedSnapshot();
+            Reset();
+            return this;
         }
 
-        /// <summary>
-        /// Неузагальнена версія GetEnumerator для сумісності з IEnumerable.
-        /// </summary>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        // Реалізація IEnumerator<Department>
+
+        /// <summary>Повертає поточну кафедру під час ітерації.</summary>
+        public Department Current
+        {
+            get
+            {
+                if (currentIndex < 0 || currentIndex >= sortedSnapshot.Length)
+                {
+                    throw new InvalidOperationException("Перелічувач знаходиться поза межами колекції.");
+                }
+                return sortedSnapshot[currentIndex];
+            }
+        }
+
+        object IEnumerator.Current
+        {
+            get { return Current; }
+        }
+
+        /// <summary>Переміщує перелічувач до наступного елемента.</summary>
+        public bool MoveNext()
+        {
+            currentIndex++;
+            return currentIndex < sortedSnapshot.Length;
+        }
+
+        /// <summary>Скидає перелічувач на початкову позицію.</summary>
+        public void Reset()
+        {
+            currentIndex = -1;
+        }
+
+        public void Dispose()
+        {
+            // Немає ресурсів для звільнення
         }
 
         // Handle-методи (оркестрація через Service)
@@ -162,8 +183,6 @@ namespace Lab4
         /// <summary>
         /// Додає передану кафедру до каталогу та повідомляє про результат.
         /// </summary>
-        /// <param name="svc">Сервіс для виводу.</param>
-        /// <param name="department">Кафедра для додавання.</param>
         public void HandleAddDepartment(Service svc, Department department)
         {
             if (string.IsNullOrWhiteSpace(department.EntityName))
@@ -182,10 +201,9 @@ namespace Lab4
         }
 
         /// <summary>
-        /// Виводить усі кафедри каталогу через foreach (IEnumerable / IEnumerator).
+        /// Виводить усі кафедри каталогу через foreach.
         /// Кафедри відображаються впорядковано за кількістю студентів.
         /// </summary>
-        /// <param name="svc">Сервіс для виводу.</param>
         public void HandleShowCatalog(Service svc)
         {
             svc.WriteToConsole($"\n[Каталог: {catalogName}] Кафедри впорядковано за к-стю студентів:");
@@ -207,11 +225,8 @@ namespace Lab4
         }
 
         /// <summary>
-        /// Порівнює поточний каталог з іншим (IComparable) за сумарною кількістю студентів
-        /// та виводить результат порівняння.
+        /// Порівнює поточний каталог з іншим (IComparable).
         /// </summary>
-        /// <param name="svc">Сервіс для виводу.</param>
-        /// <param name="other">Каталог для порівняння з поточним.</param>
         public void HandleCompareTo(Service svc, CatalogDepartment other)
         {
             int totalThis  = CalculateTotalStudents();
@@ -240,7 +255,6 @@ namespace Lab4
         /// Виводить кафедри каталогу, відсортовані за IComparer
         /// (спочатку за кількістю студентів, при рівності — за кількістю дисциплін).
         /// </summary>
-        /// <param name="svc">Сервіс для виводу.</param>
         public void HandleSortByStudentsAndDisciplines(Service svc)
         {
             svc.WriteToConsole($"\n[IComparer] Каталог «{catalogName}» — сортування за студентами і дисциплінами:");
@@ -251,7 +265,7 @@ namespace Lab4
             else
             {
                 List<Department> sortedList = BuildDepartmentList();
-                sortedList.Sort(ByStudentsAndDisciplines);
+                sortedList.Sort(this); // Використовує поточний клас як IComparer
 
                 for (int i = 0; i < sortedList.Count; i++)
                 {
@@ -264,10 +278,6 @@ namespace Lab4
 
         // Приватні допоміжні методи
 
-        /// <summary>
-        /// Підраховує загальну кількість студентів по всіх кафедрах каталогу.
-        /// Використовується у CompareTo та HandleCompareTo.
-        /// </summary>
         public int CalculateTotalStudents()
         {
             int total = 0;
@@ -278,10 +288,6 @@ namespace Lab4
             return total;
         }
 
-        /// <summary>
-        /// Будує відсортований за StudentCount знімок масиву кафедр для IEnumerator.
-        /// Не змінює оригінальний масив.
-        /// </summary>
         private Department[] BuildSortedSnapshot()
         {
             Department[] snapshot = new Department[departmentCount];
@@ -293,9 +299,6 @@ namespace Lab4
             return snapshot;
         }
 
-        /// <summary>
-        /// Будує список кафедр для сортування через IComparer.
-        /// </summary>
         private List<Department> BuildDepartmentList()
         {
             List<Department> list = new List<Department>();
@@ -306,9 +309,6 @@ namespace Lab4
             return list;
         }
 
-        /// <summary>
-        /// Сортує масив кафедр за зростанням StudentCount методом вставки (in-place).
-        /// </summary>
         private static void SortByStudentCount(Department[] array)
         {
             for (int i = 1; i < array.Length; i++)
@@ -322,72 +322,6 @@ namespace Lab4
                 }
                 array[j + 1] = key;
             }
-        }
-    }
-
-    /// <summary>
-    /// Перелічувач кафедр. Реалізує IEnumerator для перебору кафедр у foreach.
-    /// Отримує готовий відсортований масив від CatalogDepartment.
-    /// </summary>
-    public class DepartmentEnumerator : IEnumerator<Department>
-    {
-        private readonly Department[] sortedDepartments;
-        private int currentIndex;
-
-        /// <summary>
-        /// Ініціалізує перелічувач із відсортованим масивом кафедр.
-        /// </summary>
-        /// <param name="sortedDepartments">Масив кафедр, впорядкований за кількістю студентів.</param>
-        public DepartmentEnumerator(Department[] sortedDepartments)
-        {
-            this.sortedDepartments = sortedDepartments;
-            currentIndex           = -1;
-        }
-
-        /// <summary>
-        /// Повертає поточну кафедру. Кидає виняток, якщо перелік не розпочато або вичерпано.
-        /// </summary>
-        public Department Current
-        {
-            get
-            {
-                if (currentIndex < 0 || currentIndex >= sortedDepartments.Length)
-                {
-                    throw new InvalidOperationException("Перелічувач знаходиться поза межами колекції.");
-                }
-                else
-                {
-                    return sortedDepartments[currentIndex];
-                }
-            }
-        }
-
-        /// <summary>Неузагальнена версія Current для сумісності з IEnumerator.</summary>
-        object IEnumerator.Current
-        {
-            get { return Current; }
-        }
-
-        /// <summary>
-        /// Переміщує перелічувач до наступного елемента.
-        /// </summary>
-        /// <returns>true — є наступний елемент; false — перелік вичерпано.</returns>
-        public bool MoveNext()
-        {
-            currentIndex++;
-            return currentIndex < sortedDepartments.Length;
-        }
-
-        /// <summary>Скидає перелічувач на початкову позицію (перед першим елементом).</summary>
-        public void Reset()
-        {
-            currentIndex = -1;
-        }
-
-        /// <summary>Звільняє ресурси перелічувача (немає некерованих ресурсів).</summary>
-        public void Dispose()
-        {
-            // Немає некерованих ресурсів для звільнення
         }
     }
 }

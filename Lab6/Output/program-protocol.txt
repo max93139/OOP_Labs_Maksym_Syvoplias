@@ -1,0 +1,24 @@
+Smart car Synergy Capsule (SC-2040-01) started.
+Doors are open and boarding is allowed.
+hybrid electric engine started with 420 kW available.
+Chassis clearance changed to 18,5 cm.
+Pulse: 112,0 bpm
+Blood pressure: 138,0 mmHg
+Eye fatigue: 42,0 %
+Driver medical monitoring: 64,0. Medical monitoring allows normal movement.
+Road risk forecast: 52,0. Critical state is possible. Defensive route selected.
+Transformation module activated Water mode.
+Body shape changed to Hydrodynamic boat capsule.
+Engine mode changed to Eco.
+Voice assistant: Recognized command EnableAutopilot.
+Climate balanced at 24,0 C.
+Threat detected: wet road and tired driver.
+Airbags prepared.
+Passenger compartment locked.
+Autopilot controls steering direction.
+Route changed to hospital street with low traffic density.
+adaptive all-wheel drive adapted to wet asphalt.
+Direction changed to 0 degrees.
+Transmission shifted to gear 2.
+Night mode enabled.
+Self-learning model saved 15 driving episodes.

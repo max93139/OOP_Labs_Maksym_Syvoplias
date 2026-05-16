@@ -1,0 +1,2 @@
+Driver medical monitoring: 64,0
+Road risk forecast: 52,0
