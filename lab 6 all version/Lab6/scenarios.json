@@ -1,0 +1,53 @@
+[
+  {
+    "ScenarioNumber": 1,
+    "ScenarioName": "Комфортна наземна поїздка (суха погода)",
+    "TransformationMode": "Ground",
+    "RoadCondition": "сухий асфальт",
+    "StabilizationSurface": "сухий асфальт",
+    "HasPedestrian": false,
+    "HasRoadWorks": false,
+    "VoiceCommand": "check",
+    "VehicleSpeedKmh": 60.0,
+    "DriverPulse": 72.0,
+    "DriverPressure": 118.0,
+    "DriverEyeFatigue": 5.0,
+    "SmartSystemMaxRisk": 22.0,
+    "SmartSystemSensitivity": 48.0,
+    "SmartSystemMaxPower": 450.0
+  },
+  {
+    "ScenarioNumber": 2,
+    "ScenarioName": "Трансформація у водний режим (подолання річки)",
+    "TransformationMode": "Water",
+    "RoadCondition": "вологий асфальт",
+    "StabilizationSurface": "вологий асфальт",
+    "HasPedestrian": false,
+    "HasRoadWorks": true,
+    "VoiceCommand": "Enable autopilot",
+    "VehicleSpeedKmh": 25.0,
+    "DriverPulse": 95.0,
+    "DriverPressure": 130.0,
+    "DriverEyeFatigue": 35.0,
+    "SmartSystemMaxRisk": 25.0,
+    "SmartSystemSensitivity": 58.0,
+    "SmartSystemMaxPower": 720.0
+  },
+  {
+    "ScenarioNumber": 3,
+    "ScenarioName": "Повітряний режим польоту (екстрене ухилення)",
+    "TransformationMode": "Air",
+    "RoadCondition": "ожеледиця",
+    "StabilizationSurface": "ожеледиця",
+    "HasPedestrian": true,
+    "HasRoadWorks": true,
+    "VoiceCommand": "protect passengers",
+    "VehicleSpeedKmh": 120.0,
+    "DriverPulse": 120.0,
+    "DriverPressure": 150.0,
+    "DriverEyeFatigue": 80.0,
+    "SmartSystemMaxRisk": 28.0,
+    "SmartSystemSensitivity": 65.0,
+    "SmartSystemMaxPower": 950.0
+  }
+]
