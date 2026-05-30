@@ -18,7 +18,7 @@ public sealed class SelfLearningModule : SmartDevice
     {
         if (currentEpisodeCount < 0 || newEpisodeCount < 0)
         {
-            throw new SmartCarException(SmartCarException.AiModuleFailure, "Критична помилка ШІ: Некоректні параметри навчання епізодів. Внутрішня помилка обчислювального блоку нейромережі!");
+            throw new AiModuleFailureException("Критична помилка ШІ: Некоректні параметри навчання епізодів. Внутрішня помилка обчислювального блоку нейромережі!");
         }
         else
         {

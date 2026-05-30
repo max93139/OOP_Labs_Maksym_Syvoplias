@@ -26,7 +26,7 @@ public sealed class ComputerVisionModule : SmartDevice
     {
         if (cameraCount < 4)
         {
-            throw new SmartCarException(SmartCarException.ContextInterpretation, $"Критична помилка комп'ютерного зору: Активно лише {cameraCount} камер(и) (мінімум 4). Дорожній контекст заблоковано!");
+            throw new ContextInterpretationException($"Критична помилка комп'ютерного зору: Активно лише {cameraCount} камер(и) (мінімум 4). Дорожній контекст заблоковано!");
         }
         else
         {

@@ -25,13 +25,13 @@ public sealed class DriverHealthDiagnostics : SmartDevice
         {
             if (reading.Name == "Pulse" && reading.Value > 115.0)
             {
-                throw new SmartCarException(SmartCarException.DriverImpairment, $"Критичний збій здоров'я водія! Пульс: {reading.Value:F1} bpm перевищує безпечний поріг. Водій недієздатний!");
+                throw new DriverImpairmentException($"Критичний збій здоров'я водія! Пульс: {reading.Value:F1} bpm перевищує безпечний поріг. Водій недієздатний!");
             }
             else
             {
                 if (reading.Name == "Pulse" && reading.Value < 40.0)
                 {
-                    throw new SmartCarException(SmartCarException.ProfileMismatch, $"Помилка біометричної автентифікації: Аномальний пульс {reading.Value:F1} bpm не збігається зі збереженим профілем водія!");
+                    throw new ProfileMismatchException($"Помилка біометричної автентифікації: Аномальний пульс {reading.Value:F1} bpm не збігається зі збереженим профілем водія!");
                 }
                 else
                 {

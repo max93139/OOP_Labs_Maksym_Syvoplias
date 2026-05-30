@@ -67,7 +67,7 @@ public sealed class TransformationModule
     {
         if (depth > 2.0)
         {
-            throw new SmartCarException(SmartCarException.WaterExitDepth, $"Критична загроза безпеці: Спроба виходу з водного режиму на великій глибині ({depth:F1} м). Ризик затоплення коліс та систем керування!");
+            throw new WaterExitDepthException($"Критична загроза безпеці: Спроба виходу з водного режиму на великій глибині ({depth:F1} м). Ризик затоплення коліс та систем керування!");
         }
         else
         {

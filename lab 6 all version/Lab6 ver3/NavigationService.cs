@@ -18,7 +18,7 @@ public sealed class NavigationService : SmartDevice
     {
         if (accidentProbability < 0.0 || accidentProbability > 100.0)
         {
-            throw new SmartCarException(SmartCarException.NavigationConflict, "Конфлікт системи навігації: Отримано некоректні координати або несумісні карти після оновлення ПЗ!");
+            throw new NavigationConflictException("Конфлікт системи навігації: Отримано некоректні координати або несумісні карти після оновлення ПЗ!");
         }
         else
         {

@@ -24,13 +24,13 @@ public sealed class VoiceSystem : SmartDevice
 
         if (string.IsNullOrWhiteSpace(normalizedPhrase) || normalizedPhrase.Contains("дурниц", StringComparison.Ordinal) || normalizedPhrase.Contains("nonsense", StringComparison.Ordinal))
         {
-            throw new SmartCarException(SmartCarException.InvalidVoiceCommand, $"Голосова помилка: Невідома або некоректна команда \"{phrase}\".");
+            throw new InvalidVoiceCommandException($"Голосова помилка: Невідома або некоректна команда \"{phrase}\".");
         }
         else
         {
             if (normalizedPhrase.Contains(" і ", StringComparison.Ordinal) || normalizedPhrase.Contains(" та ", StringComparison.Ordinal) || normalizedPhrase.Contains(" and ", StringComparison.Ordinal))
             {
-                throw new SmartCarException(SmartCarException.TooManyCommands, "Помилка управління: Виявлено надмірну кількість паралельних команд! Система не може виконувати кілька дій одночасно.");
+                throw new TooManyCommandsException("Помилка управління: Виявлено надмірну кількість паралельних команд! Система не може виконувати кілька дій одночасно.");
             }
             else
             {

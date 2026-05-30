@@ -125,7 +125,7 @@ public sealed class SmartCar
                 // Звичайний настрій
             }
 
-            // Симулюємо помилку профілю у Сценарії 2 (змінимо перше показання на аномальний пульс 35 bpm)
+            // Симулюємо ProfileMismatchException у Сценарії 2 (змінимо перше показання на аномальний пульс 35 bpm)
             if (data.ScenarioNumber == 2)
             {
                 FixedSensor anomalousPulse = new FixedSensor("Pulse", 35.0, "bpm");
@@ -136,18 +136,18 @@ public sealed class SmartCar
                     new FixedSensor("Eye fatigue", data.DriverEyeFatigue, "%")
                 };
                 DriverStateSensor tempSensor = new DriverStateSensor(anomalousSensors);
-                smartSystem.MonitorDriver(); // Це викине доменний виняток профілю при читанні
+                smartSystem.MonitorDriver(); // Це викине ProfileMismatchException при читанні
             }
             else
             {
-                // Для Сценарію 3 пульс дорівнює 120 bpm, що викине доменний виняток недієздатності
+                // Для Сценарію 3 пульс дорівнює 120 bpm, що викине DriverImpairmentException
             }
 
             healthResult = smartSystem.MonitorDriver();
             results.Add(healthResult);
             LogLine(healthResult.ToProtocolLine(), service, protocolLines);
         }
-        catch (SmartCarException ex) when (ex.IsType(SmartCarException.DriverImpairment))
+        catch (DriverImpairmentException ex)
         {
             LogLine($"\n[УВАГА]: Перехоплено виняток: {ex.Message}", service, protocolLines);
             
@@ -158,7 +158,7 @@ public sealed class SmartCar
             healthResult = new ScenarioResult("Медичний моніторинг водія", 100.0, "ЕКСТРЕНИЙ РЕЖИМ: Автопілот активовано примусово!");
             results.Add(healthResult);
         }
-        catch (SmartCarException ex) when (ex.IsType(SmartCarException.ProfileMismatch))
+        catch (ProfileMismatchException ex)
         {
             LogLine($"\n[УВАГА]: Перехоплено виняток: {ex.Message}", service, protocolLines);
             LogLine("[СИСТЕМА БЕЗПЕКИ]: Біометричний профіль не підтверджено! Двигун заблоковано, відправлено запит власнику.", service, protocolLines);
@@ -180,7 +180,7 @@ public sealed class SmartCar
                 // Немає загрози зіткнення
             }
 
-            // Симулюємо помилку інтерпретації контексту, якщо пристроїв камери мало (наприклад, у Сценарії 2 передамо 3 камери)
+            // Симулюємо ContextInterpretationException, якщо пристроїв камери мало (наприклад, у Сценарії 2 передамо 3 камери)
             int cameraCount = (data.ScenarioNumber == 2) ? 3 : 6;
             
             // Якщо камери заблоковані, це викине виняток в RecognizeObjects
@@ -190,7 +190,7 @@ public sealed class SmartCar
             results.Add(forecastResult);
             LogLine(forecastResult.ToProtocolLine(), service, protocolLines);
         }
-        catch (SmartCarException ex) when (ex.IsType(SmartCarException.ContextInterpretation))
+        catch (ContextInterpretationException ex)
         {
             LogLine($"\n[УВАГА]: Перехоплено виняток: {ex.Message}", service, protocolLines);
             LogLine("[КОМП'ЮТЕРНИЙ ЗОР]: Камери забруднено! Переходимо на ультразвукові та радарні датчики резервного сканування.", service, protocolLines);
@@ -201,7 +201,7 @@ public sealed class SmartCar
         // 4. Трансформація кузова
         try
         {
-            // Симулюємо помилку виходу з водного режиму, якщо в Сценарії 2 ми намагаємося вимкнути водний режим на глибині (наприклад, глибина 3.5м)
+            // Симулюємо WaterExitDepthException, якщо в Сценарії 2 ми намагаємося вимкнути водний режим на глибині (наприклад, глибина 3.5м)
             if (data.ScenarioNumber == 2)
             {
                 LogLine(transformationModule.ExitWaterMode(3.5), service, protocolLines);
@@ -214,7 +214,7 @@ public sealed class SmartCar
                 }
             }
         }
-        catch (SmartCarException ex) when (ex.IsType(SmartCarException.WaterExitDepth))
+        catch (WaterExitDepthException ex)
         {
             LogLine($"\n[УВАГА]: Перехоплено виняток: {ex.Message}", service, protocolLines);
             LogLine("[ТРАНСФОРМАЦІЯ]: Спроба відхилена! Гідродинамічний корпус залишається активованим до досягнення мілководдя.", service, protocolLines);
@@ -225,7 +225,8 @@ public sealed class SmartCar
         // 5. Голосове керування
         try
         {
-            // Симулюємо невалідну голосову команду або надмірну кількість команд.
+            // Симулюємо InvalidVoiceCommandException (якщо в сценарії 1 відправити команду "nonsense" або пусту)
+            // Симулюємо TooManyCommandsException (якщо в сценарії 2 відправити команду "Увімкнути автопілот і Змінити клімат")
             string voiceCommand = data.VoiceCommand;
             if (data.ScenarioNumber == 1)
             {
@@ -245,12 +246,12 @@ public sealed class SmartCar
 
             LogLine(smartSystem.HandleVoiceCommand(voiceCommand), service, protocolLines);
         }
-        catch (SmartCarException ex) when (ex.IsType(SmartCarException.InvalidVoiceCommand))
+        catch (InvalidVoiceCommandException ex)
         {
             LogLine($"\n[УВАГА]: Перехоплено виняток: {ex.Message}", service, protocolLines);
             LogLine("[ГОЛОСОВИЙ АСИСТЕНТ]: Невідома команда. Будь ласка, повторіть ваш запит чіткіше.", service, protocolLines);
         }
-        catch (SmartCarException ex) when (ex.IsType(SmartCarException.TooManyCommands))
+        catch (TooManyCommandsException ex)
         {
             LogLine($"\n[УВАГА]: Перехоплено виняток: {ex.Message}", service, protocolLines);
             LogLine("[ГОЛОСОВИЙ АСИСТЕНТ]: Отримано кілька паралельних команд. Виконуємо лише першу дію.", service, protocolLines);
@@ -278,7 +279,7 @@ public sealed class SmartCar
         // 8. Автопілот та побудова безпечного адаптивного маршруту
         try
         {
-            // Симулюємо конфлікт навігації при відхиленні ймовірності аварії
+            // Симулюємо NavigationConflictException при відхиленні ймовірності аварії
             double risk = forecastResult.Value;
             if (data.ScenarioNumber == 3)
             {
@@ -290,7 +291,7 @@ public sealed class SmartCar
                 LogLine(line, service, protocolLines);
             }
         }
-        catch (SmartCarException ex) when (ex.IsType(SmartCarException.NavigationConflict))
+        catch (NavigationConflictException ex)
         {
             LogLine($"\n[УВАГА]: Перехоплено виняток: {ex.Message}", service, protocolLines);
             
@@ -317,7 +318,7 @@ public sealed class SmartCar
             int newEpisodes = 5;
             if (data.ScenarioNumber == 3)
             {
-                // Передамо від'ємну кількість епізодів для виклику помилки модуля ШІ
+                // Передамо від'ємну кількість епізодів для виклику AiModuleFailureException
                 currentEpisodes = -10;
             }
 
@@ -340,7 +341,7 @@ public sealed class SmartCar
                 }
             }
         }
-        catch (SmartCarException ex) when (ex.IsType(SmartCarException.AiModuleFailure))
+        catch (AiModuleFailureException ex)
         {
             LogLine($"\n[УВАГА]: Перехоплено виняток: {ex.Message}", service, protocolLines);
             LogLine("[ШТУЧНИЙ ІНТЕЛЕКТ]: Самонавчання призупинено. Відновлюємо попередню стабільну модель нейромережі.", service, protocolLines);
