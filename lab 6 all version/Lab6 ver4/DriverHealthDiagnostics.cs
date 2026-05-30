@@ -1,17 +1,71 @@
+using System;
+using System.Collections.Generic;
+
 namespace Lab6;
 
 /// <summary>
-/// Аналізує ризики для здоров'я водія на основі показань сенсорів.
+///  Аналізує ризики для здоров'я водія на основі показань сенсорів.
 /// </summary>
-public sealed class DriverHealthDiagnostics : SmartDevice
+public sealed class DriverHealthDiagnostics
 {
-    private const double WARNING_SCORE = 65.0;
+    private double _warningScore;
+    private string _systemName;
 
     /// <summary>
-    /// Ініціалізує новий модуль медичної діагностики водія.
+    /// Конструктор за замовчуванням (Canonical Class Template).
     /// </summary>
-    public DriverHealthDiagnostics() : base("Модуль діагностики здоров'я водія", 0.10)
+    public DriverHealthDiagnostics()
     {
+        _warningScore = 65.0;
+        _systemName = "Active Health Monitoring System";
+    }
+
+    /// <summary>
+    /// Конструктор з повним набором конфігурацій.
+    /// </summary>
+    public DriverHealthDiagnostics(double warningScore, string systemName)
+    {
+        _warningScore = warningScore;
+        _systemName = systemName;
+    }
+
+    /// <summary>
+    /// Конструктор копіювання (Canonical Class Template).
+    /// </summary>
+    public DriverHealthDiagnostics(DriverHealthDiagnostics other)
+    {
+        _warningScore = other.WarningScore;
+        _systemName = other.SystemName;
+    }
+
+    /// <summary>
+    /// Повертає поріг попередження.
+    /// </summary>
+    public double WarningScore
+    {
+        get
+        {
+            return _warningScore;
+        }
+        set
+        {
+            _warningScore = value;
+        }
+    }
+
+    /// <summary>
+    /// Повертає назву системи діагностики.
+    /// </summary>
+    public string SystemName
+    {
+        get
+        {
+            return _systemName;
+        }
+        set
+        {
+            _systemName = value;
+        }
     }
 
     /// <summary>
@@ -23,21 +77,7 @@ public sealed class DriverHealthDiagnostics : SmartDevice
 
         foreach (SensorReading reading in readings)
         {
-            if (reading.Name == "Pulse" && reading.Value > 115.0)
-            {
-                throw new DriverImpairmentException($"Критичний збій здоров'я водія! Пульс: {reading.Value:F1} bpm перевищує безпечний поріг. Водій недієздатний!");
-            }
-            else
-            {
-                if (reading.Name == "Pulse" && reading.Value < 40.0)
-                {
-                    throw new ProfileMismatchException($"Помилка біометричної автентифікації: Аномальний пульс {reading.Value:F1} bpm не збігається зі збереженим профілем водія!");
-                }
-                else
-                {
-                    score += CalculateReadingRisk(reading);
-                }
-            }
+            score += CalculateReadingRisk(reading);
         }
 
         return Math.Min(score, 100.0);
@@ -50,7 +90,7 @@ public sealed class DriverHealthDiagnostics : SmartDevice
     {
         string recommendation;
 
-        if (riskScore >= WARNING_SCORE)
+        if (riskScore >= _warningScore)
         {
             recommendation = "Медичний моніторинг рекомендує автопілот і спокійний маршрут.";
         }
@@ -64,22 +104,24 @@ public sealed class DriverHealthDiagnostics : SmartDevice
 
     private double CalculateReadingRisk(SensorReading reading)
     {
-        double risk = reading.Name switch
+        double risk;
+        if (reading.Name == "Pulse")
         {
-            "Pulse" => Math.Max(0.0, reading.Value - 80.0) * 0.8,
-            "Blood pressure" => Math.Max(0.0, reading.Value - 120.0) * 0.5,
-            "Eye fatigue" => reading.Value * 0.7,
-            _ => 0.0
-        };
+            risk = Math.Max(0.0, reading.Value - 80.0) * 0.8;
+        }
+        else if (reading.Name == "Blood pressure")
+        {
+            risk = Math.Max(0.0, reading.Value - 120.0) * 0.5;
+        }
+        else if (reading.Name == "Eye fatigue")
+        {
+            risk = reading.Value * 0.7;
+        }
+        else
+        {
+            risk = 0.0;
+        }
 
         return risk;
-    }
-
-    /// <summary>
-    /// Повертає статус модуля медичної діагностики.
-    /// </summary>
-    public override string GetStatus()
-    {
-        return $"Модуль '{DeviceName}' відстежує життєві показники водія. Енергоспоживання: {PowerConsumption} кВт.";
     }
 }

@@ -1,30 +1,27 @@
+using System;
 using System.Collections.Generic;
 
 namespace Lab6;
 
 /// <summary>
-/// Представляє розумний автомобіль як головний скомпонований об'єкт у Версії 4.
-/// Він виступає повністю автономним агентом, що реалізує взаємодію через події та делегати.
+/// Представляє розумний автомобіль як головний скомпонований об'єкт.
+/// Він успадковує SmartDevice та реалізує взаємодію через потік-безпечні події та делегати (Events & Thread Safety).
 /// </summary>
-public sealed class SmartCar
+public sealed class SmartCar : SmartDevice
 {
     /// <summary>
-    /// Делегат для обробки критичних подій розумного автомобіля.
+    /// Делегат для обробки критичних подій розумного автомобіля з передачею контексту.
     /// </summary>
-    /// <param name="eventMessage">Локалізоване повідомлення про виявлену подію.</param>
-    public delegate void SmartCarEventHandler(string eventMessage);
+    public delegate void SmartCarEventHandler(object sender, SmartCarEventArgs e);
 
-    private readonly Body body;
-    private readonly Engine engine;
-    private readonly Chassis chassis;
-    private readonly TransformationModule transformationModule;
-    private readonly SmartSystem smartSystem;
+    private VehicleIdentity _identity;
+    private readonly Body _body;
+    private readonly Engine _engine;
+    private readonly Chassis _chassis;
+    private readonly TransformationModule _transformationModule;
+    private readonly SmartSystem _smartSystem;
 
-    // Тимчасові поля для доступу до логера в обробниках подій
-    private Service? currentService;
-    private List<string>? currentProtocol;
-
-    // Оголошення 5 доменних подій на основі нашого кастомного делегата
+    // Оголошення 5 доменних подій на основі нашого кастомного потік-безпечного делегата
     public event SmartCarEventHandler? OnDriverImpaired;
     public event SmartCarEventHandler? OnCollisionImminent;
     public event SmartCarEventHandler? OnGpsSignalLost;
@@ -32,24 +29,60 @@ public sealed class SmartCar
     public event SmartCarEventHandler? OnSuddenHealthDrop;
 
     /// <summary>
-    /// Ініціалізує новий розумний автомобіль зі скомпонованих та агрегованих частин та налаштовує події.
+    /// Конструктор за замовчуванням (True Composition).
+    /// </summary>
+    public SmartCar() : base("Розумний автомобіль", 1.20)
+    {
+        _identity = new VehicleIdentity("SC-2040-01", "Synergy Capsule", 4);
+        _body = new Body("carbon composite", "silver");
+        _engine = new Engine("electric", 420);
+        _chassis = new Chassis("active air suspension", 1830.0, "adaptive all-wheel", "electromagnetic", 96.5, "electronic", 0.92, "електрична двоступенева", 2);
+        _transformationModule = new TransformationModule("Ground");
+        _smartSystem = new SmartSystem();
+
+        RegisterDefaultHandlers();
+    }
+
+    /// <summary>
+    /// Конструктор з повним набором конфігурацій для скомпонованих та агрегованих частин (True Composition).
     /// </summary>
     public SmartCar(
         VehicleIdentity identity,
-        Body body,
-        Engine engine,
-        Chassis chassis,
-        TransformationModule transformationModule,
-        SmartSystem smartSystem)
+        string bodyMaterial, string bodyColor,
+        string engineType, int enginePower,
+        string suspensionType, double chassisMass,
+        string driveType, string brakeType, double brakeEfficiency,
+        string steeringType, double steeringSensitivity, string transmissionType, int gearCount,
+        string transformationMode,
+        SmartSystem smartSystem) : base("Розумний автомобіль", 1.20)
     {
-        Identity = identity;
-        this.body = body;
-        this.engine = engine;
-        this.chassis = chassis;
-        this.transformationModule = transformationModule;
-        this.smartSystem = smartSystem;
+        _identity = new VehicleIdentity(identity);
+        _body = new Body(bodyMaterial, bodyColor);
+        _engine = new Engine(engineType, enginePower);
+        _chassis = new Chassis(suspensionType, chassisMass, driveType, brakeType, brakeEfficiency, steeringType, steeringSensitivity, transmissionType, gearCount);
+        _transformationModule = new TransformationModule(transformationMode);
+        _smartSystem = smartSystem; // Агрегація
 
-        // Підписка на події в конструкторі
+        RegisterDefaultHandlers();
+    }
+
+    /// <summary>
+    /// Конструктор копіювання (Глибоке копіювання).
+    /// </summary>
+    public SmartCar(SmartCar other) : base(other.DeviceName, other.PowerConsumption)
+    {
+        _identity = new VehicleIdentity(other.Identity);
+        _body = new Body(other.BodyComponent);
+        _engine = new Engine(other.EngineComponent);
+        _chassis = new Chassis(other.ChassisComponent);
+        _transformationModule = new TransformationModule(other.TransformationComponent);
+        _smartSystem = new SmartSystem(other.SmartSystemComponent);
+
+        RegisterDefaultHandlers();
+    }
+
+    private void RegisterDefaultHandlers()
+    {
         OnDriverImpaired += HandleDriverImpairedEvent;
         OnCollisionImminent += HandleCollisionImminentEvent;
         OnGpsSignalLost += HandleGpsSignalLostEvent;
@@ -57,94 +90,99 @@ public sealed class SmartCar
         OnSuddenHealthDrop += HandleSuddenHealthDropEvent;
     }
 
-    /// <summary>
-    /// Повертає ідентифікаційні дані розумного автомобіля.
-    /// </summary>
-    public VehicleIdentity Identity { get; }
+    public VehicleIdentity Identity
+    {
+        get => _identity;
+        set => _identity = value;
+    }
+
+    public Body BodyComponent => _body;
+    public Engine EngineComponent => _engine;
+    public Chassis ChassisComponent => _chassis;
+    public TransformationModule TransformationComponent => _transformationModule;
+    public SmartSystem SmartSystemComponent => _smartSystem;
 
     /// <summary>
     /// Самостійно виконує повний цикл автономного руху за сценарієм, взаємодіючи з підсистемами, обробляючи винятки та викликаючи події.
     /// </summary>
     public IReadOnlyList<ScenarioResult> RunAutonomousCycle(ScenarioData data, Service service, List<string> protocolLines)
     {
-        currentService = service;
-        currentProtocol = protocolLines;
         List<ScenarioResult> results = new List<ScenarioResult>();
 
         LogLine("================================================================================", service, protocolLines);
         LogLine($"СЦЕНАРІЙ {data.ScenarioNumber}: {data.ScenarioName}", service, protocolLines);
+        LogLine($"АВТОМОБІЛЬ: {_identity.Model} (ID: {_identity.Identifier}, Пасажиромісткість: {_identity.PassengerCapacity})", service, protocolLines);
         LogLine("================================================================================", service, protocolLines);
 
         // 1. Активація автомобіля
+        ExecuteActivation(service, protocolLines);
+
+        // 2. Моніторинг здоров'я водія та перевірка біометрії
+        ScenarioResult healthResult = MonitorDriverHealth(data, service, protocolLines);
+        results.Add(healthResult);
+
+        // 3. Прогноз дорожніх ризиків
+        ScenarioResult forecastResult = ForecastRisks(data, healthResult.Value, service, protocolLines);
+        results.Add(forecastResult);
+
+        // 4. Трансформація кузова
+        ExecuteTransformation(data, service, protocolLines);
+
+        // 5. Голосове керування
+        ProcessVoiceInteraction(data.VoiceCommand, service, protocolLines);
+
+        // 6. Балансування клімату
+        AdjustCabinClimate(service, protocolLines);
+
+        // 7. Система безпеки та захист
+        ApplyActiveSafetyMeasures(data, service, protocolLines);
+
+        // 8. Автопілот та побудова безпечного адаптивного маршруту
+        PerformAutonomousNavigation(forecastResult.Value, service, protocolLines);
+
+        // 9. Стабілізація руху шасі з розрахунком передачі трансмісії
+        ExecuteChassisStabilization(data.StabilizationSurface, data.VehicleSpeedKmh, service, protocolLines);
+
+        // 10. Самонавчання ШІ
+        PerformAILearningCycle(data, service, protocolLines);
+
+        LogLine("", service, protocolLines);
+        return results;
+    }
+
+    private void ExecuteActivation(Service service, List<string> protocolLines)
+    {
         foreach (string line in Activate())
         {
             LogLine(line, service, protocolLines);
         }
+    }
 
-        // 2. Моніторинг здоров'я водія та перевірка біометрії
+    private ScenarioResult MonitorDriverHealth(ScenarioData data, Service service, List<string> protocolLines)
+    {
         ScenarioResult healthResult;
         try
         {
-            IReadOnlyList<SensorReading> readings = smartSystem.DriverStateSensor.ReadDriverState();
+            IReadOnlyList<SensorReading> readings = _smartSystem.DriverStateSensor.ReadDriverState();
             foreach (SensorReading reading in readings)
             {
-                string translatedName;
-                switch (reading.Name)
+                string translatedName = reading.Name switch
                 {
-                    case "Pulse":
-                    {
-                        translatedName = "Пульс";
-                        break;
-                    }
-                    case "Blood pressure":
-                    {
-                        translatedName = "Артеріальний тиск";
-                        break;
-                    }
-                    case "Eye fatigue":
-                    {
-                        translatedName = "Втома очей";
-                        break;
-                    }
-                    default:
-                    {
-                        translatedName = reading.Name;
-                        break;
-                    }
-                }
+                    "Pulse" => "Пульс",
+                    "Blood pressure" => "Артеріальний тиск",
+                    "Eye fatigue" => "Втома очей",
+                    _ => reading.Name
+                };
                 LogLine($"{translatedName}: {reading.Value:F1} {reading.Unit}", service, protocolLines);
             }
 
             // Симулюємо зміну настрою водія при втомі очей більше 30%
             if (data.DriverEyeFatigue >= 30.0)
             {
-                OnDriverMoodChanged?.Invoke($"Камера розпізнавання обличчя зафіксувала високу втому очей водія ({data.DriverEyeFatigue:F1}%).");
-            }
-            else
-            {
-                // Звичайний настрій
+                OnDriverMoodChanged?.Invoke(this, new SmartCarEventArgs($"Камера розпізнавання обличчя зафіксувала високу втому очей водія ({data.DriverEyeFatigue:F1}%).", service, protocolLines));
             }
 
-            // Симулюємо ProfileMismatchException у Сценарії 2 (змінимо перше показання на аномальний пульс 35 bpm)
-            if (data.ScenarioNumber == 2)
-            {
-                FixedSensor anomalousPulse = new FixedSensor("Pulse", 35.0, "bpm");
-                List<ISensor> anomalousSensors = new List<ISensor>
-                {
-                    anomalousPulse,
-                    new FixedSensor("Blood pressure", data.DriverPressure, "mmHg"),
-                    new FixedSensor("Eye fatigue", data.DriverEyeFatigue, "%")
-                };
-                DriverStateSensor tempSensor = new DriverStateSensor(anomalousSensors);
-                smartSystem.MonitorDriver(); // Це викине ProfileMismatchException при читанні
-            }
-            else
-            {
-                // Для Сценарію 3 пульс дорівнює 120 bpm, що викине DriverImpairmentException
-            }
-
-            healthResult = smartSystem.MonitorDriver();
-            results.Add(healthResult);
+            healthResult = _smartSystem.MonitorDriver();
             LogLine(healthResult.ToProtocolLine(), service, protocolLines);
         }
         catch (DriverImpairmentException ex)
@@ -152,42 +190,40 @@ public sealed class SmartCar
             LogLine($"\n[УВАГА]: Перехоплено виняток: {ex.Message}", service, protocolLines);
             
             // Викликаємо події раптового колапсу здоров'я та недієздатності
-            OnSuddenHealthDrop?.Invoke($"Медичні датчики зафіксували небезпечний пульс водія: {data.DriverPulse:F1} bpm.");
-            OnDriverImpaired?.Invoke("Водій повністю недієздатний за медичними показниками!");
+            OnSuddenHealthDrop?.Invoke(this, new SmartCarEventArgs($"Медичні датчики зафіксували небезпечний пульс водія: {data.DriverPulse:F1} bpm.", service, protocolLines));
+            OnDriverImpaired?.Invoke(this, new SmartCarEventArgs("Водій повністю недієздатний за медичними показниками!", service, protocolLines));
 
             healthResult = new ScenarioResult("Медичний моніторинг водія", 100.0, "ЕКСТРЕНИЙ РЕЖИМ: Автопілот активовано примусово!");
-            results.Add(healthResult);
         }
         catch (ProfileMismatchException ex)
         {
             LogLine($"\n[УВАГА]: Перехоплено виняток: {ex.Message}", service, protocolLines);
             LogLine("[СИСТЕМА БЕЗПЕКИ]: Біометричний профіль не підтверджено! Двигун заблоковано, відправлено запит власнику.", service, protocolLines);
+            LogLine(_engine.Stop(), service, protocolLines);
             healthResult = new ScenarioResult("Медичний моніторинг водія", 0.0, "БЛОКУВАННЯ: Профіль водія не відповідає власнику!");
-            results.Add(healthResult);
         }
+        return healthResult;
+    }
 
-        // 3. Прогноз дорожніх ризиків
+    private ScenarioResult ForecastRisks(ScenarioData data, double healthRiskValue, Service service, List<string> protocolLines)
+    {
         ScenarioResult forecastResult;
         try
         {
             // Симулюємо неминуче зіткнення при наявності пішохода
             if (data.HasPedestrian)
             {
-                OnCollisionImminent?.Invoke("Виявлено пішохода безпосередньо перед автомобілем на небезпечній відстані!");
-            }
-            else
-            {
-                // Немає загрози зіткнення
+                OnCollisionImminent?.Invoke(this, new SmartCarEventArgs("Виявлено пішохода безпосередньо перед автомобілем на небезпечній відстані!", service, protocolLines));
             }
 
-            // Симулюємо ContextInterpretationException, якщо пристроїв камери мало (наприклад, у Сценарії 2 передамо 3 камери)
-            int cameraCount = (data.ScenarioNumber == 2) ? 3 : 6;
-            
-            // Якщо камери заблоковані, це викине виняток в RecognizeObjects
-            IReadOnlyList<string> objects = smartSystem.ComputerVisionModule.RecognizeObjects(cameraCount, data.RoadCondition, data.HasPedestrian, data.HasRoadWorks);
-            
-            forecastResult = smartSystem.ForecastRoadRisk(healthResult.Value, data.RoadCondition, data.HasPedestrian, data.HasRoadWorks);
-            results.Add(forecastResult);
+            IReadOnlyList<string> objects = _smartSystem.ComputerVisionModule.RecognizeObjects(data.CameraCount, data.RoadCondition, data.HasPedestrian, data.HasRoadWorks);
+
+            forecastResult = _smartSystem.ForecastRoadRisk(
+                healthRiskValue,
+                data.RoadCondition,
+                data.HasPedestrian,
+                data.HasRoadWorks
+            );
             LogLine(forecastResult.ToProtocolLine(), service, protocolLines);
         }
         catch (ContextInterpretationException ex)
@@ -195,56 +231,47 @@ public sealed class SmartCar
             LogLine($"\n[УВАГА]: Перехоплено виняток: {ex.Message}", service, protocolLines);
             LogLine("[КОМП'ЮТЕРНИЙ ЗОР]: Камери забруднено! Переходимо на ультразвукові та радарні датчики резервного сканування.", service, protocolLines);
             forecastResult = new ScenarioResult("Прогноз дорожніх ризиків", 25.0, "РЕЗЕРВНИЙ РЕЖИМ: Сканування через радари активоване.");
-            results.Add(forecastResult);
         }
+        return forecastResult;
+    }
 
-        // 4. Трансформація кузова
+    private void ExecuteTransformation(ScenarioData data, Service service, List<string> protocolLines)
+    {
         try
         {
-            // Симулюємо WaterExitDepthException, якщо в Сценарії 2 ми намагаємося вимкнути водний режим на глибині (наприклад, глибина 3.5м)
-            if (data.ScenarioNumber == 2)
+            foreach (string line in Transform(data.TransformationMode))
             {
-                LogLine(transformationModule.ExitWaterMode(3.5), service, protocolLines);
+                LogLine(line, service, protocolLines);
             }
-            else
+
+            if (data.TransformationMode == "Water" && data.DepthMeters > 2.0)
             {
-                foreach (string line in Transform(data.TransformationMode))
-                {
-                    LogLine(line, service, protocolLines);
-                }
+                LogLine(_transformationModule.ExitWaterMode(data.DepthMeters), service, protocolLines);
             }
         }
         catch (WaterExitDepthException ex)
         {
             LogLine($"\n[УВАГА]: Перехоплено виняток: {ex.Message}", service, protocolLines);
             LogLine("[ТРАНСФОРМАЦІЯ]: Спроба відхилена! Гідродинамічний корпус залишається активованим до досягнення мілководдя.", service, protocolLines);
-            // Залишаємо водний режим
-            LogLine(transformationModule.ActivateMode("Water"), service, protocolLines);
+            LogLine(_transformationModule.ActivateMode("Water"), service, protocolLines);
         }
+    }
 
-        // 5. Голосове керування
+    private void ProcessVoiceInteraction(string voiceCommand, Service service, List<string> protocolLines)
+    {
         try
         {
-            // Симулюємо InvalidVoiceCommandException (якщо в сценарії 1 відправити команду "nonsense" або пусту)
-            // Симулюємо TooManyCommandsException (якщо в сценарії 2 відправити команду "Увімкнути автопілот і Змінити клімат")
-            string voiceCommand = data.VoiceCommand;
-            if (data.ScenarioNumber == 1)
+            string cmd = voiceCommand;
+            if (cmd.Equals("nonsense", StringComparison.OrdinalIgnoreCase) || cmd.Equals("дурниця", StringComparison.OrdinalIgnoreCase))
             {
-                voiceCommand = "дурниця";
+                throw new InvalidVoiceCommandException("Голосовий інтерфейс: Отримано некоректну або невідому команду.");
             }
-            else
+            if (cmd.Contains("і") || cmd.Contains("and"))
             {
-                if (data.ScenarioNumber == 2)
-                {
-                    voiceCommand = "Увімкнути автопілот і Змінити клімат";
-                }
-                else
-                {
-                    // Сценарій 3 залишається стандартним
-                }
+                throw new TooManyCommandsException("Голосовий інтерфейс: Виявлено більше ніж одну паралельну команду в одній фразі!");
             }
 
-            LogLine(smartSystem.HandleVoiceCommand(voiceCommand), service, protocolLines);
+            LogLine(_smartSystem.HandleVoiceCommand(cmd), service, protocolLines);
         }
         catch (InvalidVoiceCommandException ex)
         {
@@ -256,36 +283,32 @@ public sealed class SmartCar
             LogLine($"\n[УВАГА]: Перехоплено виняток: {ex.Message}", service, protocolLines);
             LogLine("[ГОЛОСОВИЙ АСИСТЕНТ]: Отримано кілька паралельних команд. Виконуємо лише першу дію.", service, protocolLines);
         }
+    }
 
-        // 6. Балансування клімату
-        LogLine(smartSystem.BalanceClimate(), service, protocolLines);
+    private void AdjustCabinClimate(Service service, List<string> protocolLines)
+    {
+        LogLine(_smartSystem.BalanceClimate(), service, protocolLines);
+    }
 
-        // 7. Система безпеки та захист
-        string threatName;
-        if (data.HasPedestrian)
-        {
-            threatName = "загроза зіткнення та втомлений водій";
-        }
-        else
-        {
-            threatName = "мокра дорога та втомлений водій";
-        }
-
-        foreach (string line in smartSystem.ProtectPassengers(threatName))
+    private void ApplyActiveSafetyMeasures(ScenarioData data, Service service, List<string> protocolLines)
+    {
+        string threatName = data.HasPedestrian ? "загроза зіткнення та втомлений водій" : "мокра дорога та втомлений водій";
+        foreach (string line in _smartSystem.ProtectPassengers(threatName))
         {
             LogLine(line, service, protocolLines);
         }
+    }
 
-        // 8. Автопілот та побудова безпечного адаптивного маршруту
+    private void PerformAutonomousNavigation(double riskValue, Service service, List<string> protocolLines)
+    {
         try
         {
-            // Симулюємо NavigationConflictException при відхиленні ймовірності аварії
-            double risk = forecastResult.Value;
-            if (data.ScenarioNumber == 3)
+            double risk = riskValue;
+            if (risk > 100.0)
             {
-                // Спеціально передаємо некоректне значення ризику (> 100), щоб викликати конфлікт карт
-                risk = 120.0;
+                throw new NavigationConflictException("Критичний конфлікт навігаційних супутників: отримано недостовірний відсоток ризику!");
             }
+
             foreach (string line in EnableAutopilot(risk))
             {
                 LogLine(line, service, protocolLines);
@@ -295,101 +318,87 @@ public sealed class SmartCar
         {
             LogLine($"\n[УВАГА]: Перехоплено виняток: {ex.Message}", service, protocolLines);
             
-            // Викликаємо подію втрати зв'язку GPS
-            OnGpsSignalLost?.Invoke("Навігаційні супутники не відповідають через внутрішній збій синхронізації.");
+            // Викликаємо подій втрати зв'язку GPS
+            OnGpsSignalLost?.Invoke(this, new SmartCarEventArgs("Навігаційні супутники не відповідають через внутрішній збій синхронізації.", service, protocolLines));
 
-            // Викликаємо резервний офлайн-автопілот
             foreach (string line in EnableAutopilot(50.0))
             {
                 LogLine(line, service, protocolLines);
             }
         }
+    }
 
-        // 9. Стабілізація руху шасі з розрахунком передачі трансмісії
-        foreach (string line in Stabilize(data.StabilizationSurface, data.VehicleSpeedKmh))
+    private void ExecuteChassisStabilization(string surface, double speedKmh, Service service, List<string> protocolLines)
+    {
+        foreach (string line in Stabilize(surface, speedKmh))
         {
             LogLine(line, service, protocolLines);
         }
+    }
 
-        // 10. Самонавчання ШІ
+    private void PerformAILearningCycle(ScenarioData data, Service service, List<string> protocolLines)
+    {
         try
         {
-            int currentEpisodes = 15;
-            int newEpisodes = 5;
-            if (data.ScenarioNumber == 3)
-            {
-                // Передамо від'ємну кількість епізодів для виклику AiModuleFailureException
-                currentEpisodes = -10;
-            }
-
             if (data.ScenarioNumber == 3)
             {
                 LogLine("Активовано нічний режим польоту.", service, protocolLines);
-                LogLine(smartSystem.SaveExperience(currentEpisodes, newEpisodes), service, protocolLines);
+            }
+            else if (data.ScenarioNumber == 2)
+            {
+                LogLine("Активовано режим сутінків.", service, protocolLines);
             }
             else
             {
-                if (data.ScenarioNumber == 2)
-                {
-                    LogLine("Активовано режим сутінків.", service, protocolLines);
-                    LogLine(smartSystem.SaveExperience(10, 5), service, protocolLines);
-                }
-                else
-                {
-                    LogLine("Режим день: стандартне освітлення.", service, protocolLines);
-                    LogLine(smartSystem.SaveExperience(5, 5), service, protocolLines);
-                }
+                LogLine("Режим день: стандартне освітлення.", service, protocolLines);
             }
+
+            LogLine(_smartSystem.SaveExperience(data.CurrentEpisodes, data.NewEpisodes), service, protocolLines);
         }
         catch (AiModuleFailureException ex)
         {
             LogLine($"\n[УВАГА]: Перехоплено виняток: {ex.Message}", service, protocolLines);
             LogLine("[ШТУЧНИЙ ІНТЕЛЕКТ]: Самонавчання призупинено. Відновлюємо попередню стабільну модель нейромережі.", service, protocolLines);
         }
-
-        LogLine("", service, protocolLines);
-        
-        // Очищаємо тимчасові посилання
-        currentService = null;
-        currentProtocol = null;
-
-        return results;
     }
 
-    // Обробники 5 критичних доменних подій
-    private void HandleDriverImpairedEvent(string msg)
+    // Обробники 5 критичних доменних подій, які використовують потік-безпечний SmartCarEventArgs
+    private void HandleDriverImpairedEvent(object sender, SmartCarEventArgs e)
     {
-        LogLine($"\n[ПОДІЯ - БЛОКУВАННЯ]: {msg}", currentService!, currentProtocol!);
-        LogLine("[ОБРОБНИК ПОДІЇ]: Системи керма повністю заблоковані. Автомобіль рухається виключно в автономному режимі.", currentService!, currentProtocol!);
+        LogLine($"\n[ПОДІЯ - БЛОКУВАННЯ]: {e.Message}", e.LoggingService, e.ProtocolLines);
+        LogLine("[ОБРОБНИК ПОДІЇ]: Системи керма повністю заблоковані. Автомобіль рухається виключно в автономному режимі.", e.LoggingService, e.ProtocolLines);
+        LogLine(_chassis.ActivateEmergencyBraking(), e.LoggingService, e.ProtocolLines);
+        LogLine(_engine.Stop(), e.LoggingService, e.ProtocolLines);
     }
 
-    private void HandleCollisionImminentEvent(string msg)
+    private void HandleCollisionImminentEvent(object sender, SmartCarEventArgs e)
     {
-        LogLine($"\n[ПОДІЯ - РИЗИК ЗІТКНЕННЯ]: {msg}", currentService!, currentProtocol!);
-        LogLine("[ОБРОБНИК ПОДІЇ]: ЕКСТРЕНЕ ГАЛЬМУВАННЯ! Переднатягувачі ременів затягнуті на 250N. Подушки безпеки приведені в секундну готовність. Координати передано екстреним службам.", currentService!, currentProtocol!);
+        LogLine($"\n[ПОДІЯ - РИЗИК ЗІТКНЕННЯ]: {e.Message}", e.LoggingService, e.ProtocolLines);
+        LogLine("[ОБРОБНИК ПОДІЇ]: ЕКСТРЕНЕ ГАЛЬМУВАННЯ! Переднатягувачі ременів затягнуті на 250N. Подушки безпеки приведені в секундну готовність. Координати передано екстреним службам.", e.LoggingService, e.ProtocolLines);
+        LogLine(_chassis.ActivateEmergencyBraking(), e.LoggingService, e.ProtocolLines);
     }
 
-    private void HandleGpsSignalLostEvent(string msg)
+    private void HandleGpsSignalLostEvent(object sender, SmartCarEventArgs e)
     {
-        LogLine($"\n[ПОДІЯ - GPS]: {msg}", currentService!, currentProtocol!);
-        LogLine("[ОБРОБНИК ПОДІЇ]: Зв'язок втрачено. Активовано інерціальний блок орієнтації на базі гіроскопів та резервні офлайн-карти.", currentService!, currentProtocol!);
+        LogLine($"\n[ПОДІЯ - GPS]: {e.Message}", e.LoggingService, e.ProtocolLines);
+        LogLine("[ОБРОБНИК ПОДІЇ]: Зв'язок втрачено. Активовано інерціальний блок орієнтації на базі гіроскопів та резервні офлайн-карти.", e.LoggingService, e.ProtocolLines);
     }
 
-    private void HandleDriverMoodChangedEvent(string msg)
+    private void HandleDriverMoodChangedEvent(object sender, SmartCarEventArgs e)
     {
-        LogLine($"\n[ПОДІЯ - НАСТРІЙ ВОДІЯ]: {msg}", currentService!, currentProtocol!);
-        LogLine("[ОБРОБНИК ПОДІЇ]: Зміна підсвітки салону на релаксуючу бірюзову та запуск аудіоплейлиста \"Антистрес\" для стабілізації стану водія.", currentService!, currentProtocol!);
+        LogLine($"\n[ПОДІЯ - НАСТРІЙ ВОДІЯ]: {e.Message}", e.LoggingService, e.ProtocolLines);
+        LogLine("[ОБРОБНИК ПОДІЇ]: Зміна підсвітки салону на релаксуючу бірюзову та запуск аудіоплейлиста \"Антистрес\" для стабілізації стану водія.", e.LoggingService, e.ProtocolLines);
+        LogLine(_smartSystem.EmotionalSupportModule.ActivateChromotherapy(), e.LoggingService, e.ProtocolLines);
+        LogLine(_smartSystem.EmotionalSupportModule.TurnOnRelaxMusic(), e.LoggingService, e.ProtocolLines);
     }
 
-    private void HandleSuddenHealthDropEvent(string msg)
+    private void HandleSuddenHealthDropEvent(object sender, SmartCarEventArgs e)
     {
-        LogLine($"\n[ПОДІЯ - ЗДОРОВ'Я ВОДІЯ]: {msg}", currentService!, currentProtocol!);
-        LogLine("[ОБРОБНИК ПОДІЇ]: Увага! Знижуємо температуру клімату до 20°C, інтенсивність вентиляції збільшена до 50 м³/год, здійснюється безпечне автоматичне паркування на узбіччі та виклик швидкої допомоги.", currentService!, currentProtocol!);
+        LogLine($"\n[ПОДІЯ - ЗДОРОВ'Я ВОДІЯ]: {e.Message}", e.LoggingService, e.ProtocolLines);
+        LogLine("[ОБРОБНИК ПОДІЇ]: Увага! Знижуємо температуру клімату до 20°C, інтенсивність вентиляції збільшена до 50 м³/год, здійснюється безпечне автоматичне паркування на узбіччі та виклик швидкої допомоги.", e.LoggingService, e.ProtocolLines);
+        LogLine(_smartSystem.ClimateControlSystem.BalanceClimate(), e.LoggingService, e.ProtocolLines); // Balance air inside
     }
 
-    /// <summary>
-    /// Допоміжний метод для одночасного логування в консоль та накопичення рядків протоколу.
-    /// </summary>
     private void LogLine(string line, Service service, List<string> protocolLines)
     {
         service.WriteConsole(line);
@@ -397,15 +406,17 @@ public sealed class SmartCar
     }
 
     /// <summary>
-    /// Активує автомобіль і готує системи руху.
+    /// Активує автомобіль і готує системи руху, а також виконує початкове калібрування.
     /// </summary>
     public IReadOnlyList<string> Activate()
     {
+        var calibrationRisk = _smartSystem.ForecastRoadRisk(0.0);
         return new List<string>
         {
-            body.OpenDoors(),
-            engine.Start(),
-            chassis.ChangeClearance(18.5)
+            _body.OpenDoors(),
+            _engine.Start(),
+            _chassis.ChangeClearance(18.5),
+            $"[Калібрування ШІ]: {calibrationRisk.Name} - {calibrationRisk.Value:F1}% ({calibrationRisk.Message})"
         };
     }
 
@@ -416,9 +427,10 @@ public sealed class SmartCar
     {
         return new List<string>
         {
-            transformationModule.ActivateMode(mode),
-            body.ChangeShape(mode),
-            engine.ChangeMode("Eco")
+            _transformationModule.ActivateMode(mode),
+            _body.ChangeShape(mode),
+            _engine.ChangeMode("Eco"),
+            _chassis.ShiftGear(mode.Equals("Water", StringComparison.OrdinalIgnoreCase) ? 1 : 2)
         };
     }
 
@@ -429,8 +441,8 @@ public sealed class SmartCar
     {
         return new List<string>
         {
-            chassis.ActivateAutopilot(),
-            smartSystem.BuildRoute(riskValue)
+            _chassis.ActivateAutopilot(),
+            _smartSystem.BuildRoute(riskValue)
         };
     }
 
@@ -439,6 +451,14 @@ public sealed class SmartCar
     /// </summary>
     public IReadOnlyList<string> Stabilize(string surfaceName, double speedKmh)
     {
-        return chassis.StabilizeMovement(surfaceName, speedKmh);
+        return _chassis.StabilizeMovement(surfaceName, speedKmh);
+    }
+
+    /// <summary>
+    /// Повертає поточний статус розумного автомобіля.
+    /// </summary>
+    public override string GetStatus()
+    {
+        return $"Розумний автомобіль '{Identity.Model}' функціонує в автономному режимі. Енергоспоживання: {PowerConsumption} кВт.";
     }
 }

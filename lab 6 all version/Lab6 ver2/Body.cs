@@ -1,3 +1,5 @@
+using System;
+
 namespace Lab6;
 
 /// <summary>
@@ -5,43 +7,81 @@ namespace Lab6;
 /// </summary>
 public sealed class Body
 {
+    private const double WATER_FRONTAL_AREA = 1.65;
+    private const double WATER_DRAG_COEFF = 0.18;
+    private const double AIR_FRONTAL_AREA = 4.20;
+    private const double AIR_DRAG_COEFF = 0.08;
+    private const double GROUND_FRONTAL_AREA = 2.10;
+    private const double GROUND_DRAG_COEFF = 0.22;
+
+    private string _material;
+    private string _color;
+    private bool _isSealed;
+    private string _shape;
+
     /// <summary>
-    /// Ініціалізує новий кузов.
+    /// Конструктор за замовчуванням.
     /// </summary>
-    public Body(string material, string color)
+    public Body()
     {
-        Material = material;
-        Color = color;
-        IsSealed = true;
-        Shape = "Road capsule";
+        _material = "carbon composite";
+        _color = "silver";
+        _isSealed = true;
+        _shape = "Road capsule";
     }
 
     /// <summary>
-    /// Повертає матеріал кузова.
+    /// Конструктор з усіма параметрами.
     /// </summary>
-    public string Material { get; }
+    public Body(string material, string color)
+    {
+        _material = material;
+        _color = color;
+        _isSealed = true;
+        _shape = "Road capsule";
+    }
 
     /// <summary>
-    /// Повертає колір кузова.
+    /// Конструктор копіювання.
     /// </summary>
-    public string Color { get; }
+    public Body(Body other)
+    {
+        _material = other.Material;
+        _color = other.Color;
+        _isSealed = other.IsSealed;
+        _shape = other.Shape;
+    }
 
-    /// <summary>
-    /// Повертає значення, що показує герметичність кузова.
-    /// </summary>
-    public bool IsSealed { get; private set; }
+    public string Material
+    {
+        get => _material;
+        set => _material = value;
+    }
 
-    /// <summary>
-    /// Повертає поточну форму кузова.
-    /// </summary>
-    public string Shape { get; private set; }
+    public string Color
+    {
+        get => _color;
+        set => _color = value;
+    }
+
+    public bool IsSealed
+    {
+        get => _isSealed;
+        set => _isSealed = value;
+    }
+
+    public string Shape
+    {
+        get => _shape;
+        set => _shape = value;
+    }
 
     /// <summary>
     /// Відкриває пасажирські двері та знімає герметизацію салону.
     /// </summary>
     public string OpenDoors()
     {
-        IsSealed = false;
+        _isSealed = false;
         return "Двері відчинено, посадка дозволена.";
     }
 
@@ -55,40 +95,29 @@ public sealed class Body
 
         if (mode.Equals("Water", StringComparison.OrdinalIgnoreCase))
         {
-            Shape = "Гідродинамічна човнова капсула";
-            IsSealed = true;
-            frontalAreaSquareMeters = 1.65;
-            shapeDragCoefficient = 0.18;
+            _shape = "Гідродинамічна човнова капсула";
+            _isSealed = true;
+            frontalAreaSquareMeters = WATER_FRONTAL_AREA;
+            shapeDragCoefficient = WATER_DRAG_COEFF;
+        }
+        else if (mode.Equals("Air", StringComparison.OrdinalIgnoreCase))
+        {
+            _shape = "Крилатий політний модуль";
+            _isSealed = true;
+            frontalAreaSquareMeters = AIR_FRONTAL_AREA;
+            shapeDragCoefficient = AIR_DRAG_COEFF;
         }
         else
         {
-            if (mode.Equals("Air", StringComparison.OrdinalIgnoreCase))
-            {
-                Shape = "Крилатий політний модуль";
-                IsSealed = true;
-                frontalAreaSquareMeters = 4.20;
-                shapeDragCoefficient = 0.08;
-            }
-            else
-            {
-                Shape = "Дорожня капсула";
-                IsSealed = true;
-                frontalAreaSquareMeters = 2.10;
-                shapeDragCoefficient = 0.22;
-            }
+            _shape = "Дорожня капсула";
+            _isSealed = true;
+            frontalAreaSquareMeters = GROUND_FRONTAL_AREA;
+            shapeDragCoefficient = GROUND_DRAG_COEFF;
         }
 
         double dragAreaProduct = frontalAreaSquareMeters * shapeDragCoefficient;
-        string sealStatus;
-        if (IsSealed)
-        {
-            sealStatus = "100% водонепроникний герметичний корпус під тиском";
-        }
-        else
-        {
-            sealStatus = "негерметичний";
-        }
+        string sealStatus = _isSealed ? "100% водонепроникний герметичний корпус під тиском" : "негерметичний";
 
-        return $"Форму кузова змінено на {Shape}. Площа лобового перерізу: {frontalAreaSquareMeters:F2} м², коефіцієнт лобового опору (Cd*A): {dragAreaProduct:F3} м². Статус герметизації: {sealStatus}.";
+        return $"Форму кузова змінено на {_shape}. Площа лобового перерізу: {frontalAreaSquareMeters:F2} м², коефіцієнт лобового опору (Cd*A): {dragAreaProduct:F3} м². Статус герметизації: {sealStatus}.";
     }
 }

@@ -1,3 +1,5 @@
+using System;
+
 namespace Lab6;
 
 /// <summary>
@@ -5,32 +7,73 @@ namespace Lab6;
 /// </summary>
 public sealed class TransformationModule
 {
+    private string _mode;
+    private string _status;
+
+    /// <summary>
+    /// Конструктор за замовчуванням (Canonical Class Template).
+    /// </summary>
+    public TransformationModule()
+    {
+        _mode = "Ground";
+        _status = "Stopped";
+    }
+
     /// <summary>
     /// Ініціалізує новий модуль трансформації.
     /// </summary>
     public TransformationModule(string mode)
     {
-        Mode = mode;
-        Status = "Stopped";
+        _mode = mode;
+        _status = "Stopped";
+    }
+
+    /// <summary>
+    /// Конструктор копіювання (Canonical Class Template).
+    /// </summary>
+    public TransformationModule(TransformationModule other)
+    {
+        _mode = other.Mode;
+        _status = other.Status;
     }
 
     /// <summary>
     /// Повертає вибраний режим трансформації ("Ground", "Water", "Air").
     /// </summary>
-    public string Mode { get; private set; }
+    public string Mode
+    {
+        get
+        {
+            return _mode;
+        }
+        set
+        {
+            _mode = value;
+        }
+    }
 
     /// <summary>
     /// Повертає стан модуля ("Stopped", "Active" тощо).
     /// </summary>
-    public string Status { get; private set; }
+    public string Status
+    {
+        get
+        {
+            return _status;
+        }
+        set
+        {
+            _status = value;
+        }
+    }
 
     /// <summary>
     /// Активує вибраний режим на основі його назви.
     /// </summary>
     public string ActivateMode(string mode)
     {
-        Mode = mode;
-        Status = "Active";
+        _mode = mode;
+        _status = "Active";
 
         string modeString;
         switch (mode.ToLowerInvariant())
@@ -61,19 +104,19 @@ public sealed class TransformationModule
     }
 
     /// <summary>
-    /// Безпечно вимикає водний режим, перевіряючи поточну глибину водойми.
+    /// Виходить з водного режиму, перевіряючи безпечну глибину.
     /// </summary>
-    public string ExitWaterMode(double depth)
+    public string ExitWaterMode(double depthMeters)
     {
-        if (depth > 2.0)
+        if (depthMeters > 2.0)
         {
-            throw new WaterExitDepthException($"Критична загроза безпеці: Спроба виходу з водного режиму на великій глибині ({depth:F1} м). Ризик затоплення коліс та систем керування!");
+            throw new WaterExitDepthException($"Неможливо безпечно вийти з водного режиму: поточна глибина {depthMeters:F1} м перевищує безпечний поріг 2.0 м!");
         }
         else
         {
-            Mode = "Ground";
-            Status = "Active";
-            return "Успішно вимкнено водний режим на мілководді. Активовано наземну конфігурацію.";
+            _mode = "Ground";
+            _status = "Active";
+            return $"Успішний вихід з водного режиму на глибині {depthMeters:F1} м.";
         }
     }
 }

@@ -1,16 +1,72 @@
+using System;
+
 namespace Lab6;
 
 /// <summary>
 /// Прогнозує критичні ситуації на основі об'єднаних значень ризику.
 /// </summary>
-public sealed class PredictionModule : SmartDevice
+public sealed class PredictionModule
 {
+    private double _accuracyWeight;
+    private string _modelName;
+
     /// <summary>
-    /// Ініціалізує новий модуль прогнозування дорожніх ризиків.
+    /// Конструктор за замовчуванням (Canonical Class Template).
     /// </summary>
-    public PredictionModule() : base("Модуль прогнозування дорожніх ризиків", 0.30)
+    public PredictionModule()
     {
+        _accuracyWeight = 0.95;
+        _modelName = "Bayesian Predictive Model";
     }
+
+    /// <summary>
+    /// Конструктор з повним набором конфігурацій.
+    /// </summary>
+    public PredictionModule(double accuracyWeight, string modelName)
+    {
+        _accuracyWeight = accuracyWeight;
+        _modelName = modelName;
+    }
+
+    /// <summary>
+    /// Конструктор копіювання (Canonical Class Template).
+    /// </summary>
+    public PredictionModule(PredictionModule other)
+    {
+        _accuracyWeight = other.AccuracyWeight;
+        _modelName = other.ModelName;
+    }
+
+    /// <summary>
+    /// Повертає або встановлює вагу точності.
+    /// </summary>
+    public double AccuracyWeight
+    {
+        get
+        {
+            return _accuracyWeight;
+        }
+        set
+        {
+            _accuracyWeight = value;
+        }
+    }
+
+    /// <summary>
+    /// Повертає або встановлює назву моделі.
+    /// </summary>
+    public string ModelName
+    {
+        get
+        {
+            return _modelName;
+        }
+        set
+        {
+            _modelName = value;
+        }
+    }
+
     /// <summary>
     /// Обчислює ймовірність аварії.
     /// </summary>
@@ -37,13 +93,5 @@ public sealed class PredictionModule : SmartDevice
         }
 
         return forecast;
-    }
-
-    /// <summary>
-    /// Повертає статус модуля прогнозування.
-    /// </summary>
-    public override string GetStatus()
-    {
-        return $"Модуль '{DeviceName}' аналізує ймовірність інцидентів. Енергоспоживання: {PowerConsumption} кВт.";
     }
 }

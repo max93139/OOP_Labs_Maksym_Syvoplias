@@ -1,3 +1,5 @@
+using System;
+
 namespace Lab6;
 
 /// <summary>
@@ -5,103 +7,137 @@ namespace Lab6;
 /// </summary>
 public sealed class BrakeSystem
 {
-    private double brakeTemperatureCelsius;
-    private double wearPercent;
+    private const double DEFAULT_SPEED_MPS = 27.78;
+    private const double EMERGENCY_SPEED_MPS = 36.11;
+    private const double VEHICLE_MASS_KG = 1830.0;
+    private const double FRONT_AXLE_SHARE = 0.70;
+    private const double DISC_MASS_KG = 8.0;
+    private const double HEAT_CAPACITY = 500.0;
+    private const double TEMP_LIMIT = 350.0;
+
+    private double _brakeTemperatureCelsius;
+    private double _wearPercent;
+    private string _brakeType;
+    private double _efficiencyPercent;
 
     /// <summary>
-    /// Ініціалізує нову гальмівну систему з початковими фізичними параметрами.
+    /// Конструктор за замовчуванням (Canonical Class Template).
+    /// </summary>
+    public BrakeSystem()
+    {
+        _brakeType = "electromagnetic";
+        _efficiencyPercent = 96.5;
+        _brakeTemperatureCelsius = 25.0;
+        _wearPercent = 12.5;
+    }
+
+    /// <summary>
+    ///  Конструктор з повними параметрами.
     /// </summary>
     public BrakeSystem(string brakeType, double efficiencyPercent)
     {
-        BrakeType = brakeType;
-        EfficiencyPercent = efficiencyPercent;
-        brakeTemperatureCelsius = 25.0;
-        wearPercent = 12.5;
+        _brakeType = brakeType;
+        _efficiencyPercent = efficiencyPercent;
+        _brakeTemperatureCelsius = 25.0;
+        _wearPercent = 12.5;
     }
 
     /// <summary>
-    /// Повертає тип гальм.
+    ///  Конструктор копіювання (Canonical Class Template).
     /// </summary>
-    public string BrakeType { get; }
+    public BrakeSystem(BrakeSystem other)
+    {
+        _brakeType = other.BrakeType;
+        _efficiencyPercent = other.EfficiencyPercent;
+        _brakeTemperatureCelsius = other.BrakeTemperatureCelsius;
+        _wearPercent = other.WearPercent;
+    }
+
+    public string BrakeType
+    {
+        get
+        {
+            return _brakeType;
+        }
+        set
+        {
+            _brakeType = value;
+        }
+    }
+
+    public double EfficiencyPercent
+    {
+        get
+        {
+            return _efficiencyPercent;
+        }
+        set
+        {
+            _efficiencyPercent = value;
+        }
+    }
+
+    public double BrakeTemperatureCelsius
+    {
+        get
+        {
+            return _brakeTemperatureCelsius;
+        }
+        set
+        {
+            _brakeTemperatureCelsius = value;
+        }
+    }
+
+    public double WearPercent
+    {
+        get
+        {
+            return _wearPercent;
+        }
+        set
+        {
+            _wearPercent = value;
+        }
+    }
 
     /// <summary>
-    /// Повертає ефективність гальм.
-    /// </summary>
-    public double EfficiencyPercent { get; }
-
-    /// <summary>
-    /// Активує звичайне гальмування та розраховує приріст температури гальмівних дисків.
+    ///  Активує звичайне гальмування та розраховує приріст температури гальмівних дисків.
     /// </summary>
     public string ActivateBraking()
     {
-        double speedMeterPerSecond = 27.78;
-        double vehicleMassKilograms = 1830.0;
-        double kineticEnergyJoules = 0.5 * vehicleMassKilograms * speedMeterPerSecond * speedMeterPerSecond;
-        double frontAxleBrakingShare = 0.70;
-        double energyPerDiscJoules = (kineticEnergyJoules * frontAxleBrakingShare) / 2.0;
-        double discMassKilograms = 8.0;
-        double specificHeatCapacityCastIron = 500.0;
+        double kineticEnergyJoules = 0.5 * VEHICLE_MASS_KG * DEFAULT_SPEED_MPS * DEFAULT_SPEED_MPS;
+        double energyPerDiscJoules = (kineticEnergyJoules * FRONT_AXLE_SHARE) / 2.0;
 
-        double temperatureIncrease = energyPerDiscJoules / (discMassKilograms * specificHeatCapacityCastIron);
-        brakeTemperatureCelsius += temperatureIncrease;
+        double temperatureIncrease = energyPerDiscJoules / (DISC_MASS_KG * HEAT_CAPACITY);
+        _brakeTemperatureCelsius += temperatureIncrease;
 
-        double fadingFactor;
-        if (brakeTemperatureCelsius > 350.0)
-        {
-            fadingFactor = Math.Max(0.4, 1.0 - (brakeTemperatureCelsius - 350.0) * 0.002);
-        }
-        else
-        {
-            fadingFactor = 1.0;
-        }
+        double fadingFactor = _brakeTemperatureCelsius > TEMP_LIMIT ? Math.Max(0.4, 1.0 - (_brakeTemperatureCelsius - TEMP_LIMIT) * 0.002) : 1.0;
+        double wearIncrease = 0.05 * (_brakeTemperatureCelsius / 100.0);
+        _wearPercent = Math.Min(100.0, _wearPercent + wearIncrease);
+        double activeEfficiency = _efficiencyPercent * fadingFactor;
 
-        double wearIncrease = 0.05 * (brakeTemperatureCelsius / 100.0);
-        wearPercent = Math.Min(100.0, wearPercent + wearIncrease);
-        double activeEfficiency = EfficiencyPercent * fadingFactor;
-
-        return $"Гальмування {BrakeType} активовано. Теплове навантаження: +{temperatureIncrease:F1}°C (поточна: {brakeTemperatureCelsius:F1}°C). Ефективність: {activeEfficiency:F1}% (знос: {wearPercent:F2}%).";
+        return $"Гальмування {_brakeType} активовано. Теплове навантаження: +{temperatureIncrease:F1}°C (поточна: {_brakeTemperatureCelsius:F1}°C). Ефективність: {activeEfficiency:F1}% (знос: {_wearPercent:F2}%).";
     }
 
     /// <summary>
-    /// Активує екстрене гальмування з підвищеним тепловим навантаженням та ABS.
+    ///  Активує екстрене гальмування з ABS.
     /// </summary>
     public string ActivateEmergencyBraking()
     {
-        double speedMeterPerSecond = 36.11;
-        double vehicleMassKilograms = 1830.0;
-        double kineticEnergyJoules = 0.5 * vehicleMassKilograms * speedMeterPerSecond * speedMeterPerSecond;
-        double frontAxleBrakingShare = 0.70;
-        double energyPerDiscJoules = (kineticEnergyJoules * frontAxleBrakingShare) / 2.0;
-        double discMassKilograms = 8.0;
-        double specificHeatCapacityCastIron = 500.0;
+        double kineticEnergyJoules = 0.5 * VEHICLE_MASS_KG * EMERGENCY_SPEED_MPS * EMERGENCY_SPEED_MPS;
+        double energyPerDiscJoules = (kineticEnergyJoules * FRONT_AXLE_SHARE) / 2.0;
 
-        double temperatureIncrease = energyPerDiscJoules / (discMassKilograms * specificHeatCapacityCastIron);
-        brakeTemperatureCelsius += temperatureIncrease;
+        double temperatureIncrease = energyPerDiscJoules / (DISC_MASS_KG * HEAT_CAPACITY);
+        _brakeTemperatureCelsius += temperatureIncrease;
 
-        double fadingFactor;
-        if (brakeTemperatureCelsius > 350.0)
-        {
-            fadingFactor = Math.Max(0.3, 1.0 - (brakeTemperatureCelsius - 350.0) * 0.003);
-        }
-        else
-        {
-            fadingFactor = 1.0;
-        }
+        double fadingFactor = _brakeTemperatureCelsius > TEMP_LIMIT ? Math.Max(0.3, 1.0 - (_brakeTemperatureCelsius - TEMP_LIMIT) * 0.003) : 1.0;
+        double wearIncrease = 0.15 * (_brakeTemperatureCelsius / 100.0);
+        _wearPercent = Math.Min(100.0, _wearPercent + wearIncrease);
+        double activeEfficiency = _efficiencyPercent * fadingFactor;
 
-        double wearIncrease = 0.15 * (brakeTemperatureCelsius / 100.0);
-        wearPercent = Math.Min(100.0, wearPercent + wearIncrease);
-        double activeEfficiency = EfficiencyPercent * fadingFactor;
+        string safetyStatus = activeEfficiency < 50.0 ? "ВИЯВЛЕНО КРИТИЧНЕ ЗНИЖЕННЯ ЕФЕКТИВНОСТІ! Шлях гальмування збільшено." : "ABS активна (18 імпульсів). Автомобіль стабільний.";
 
-        string safetyStatus;
-        if (activeEfficiency < 50.0)
-        {
-            safetyStatus = "ВИЯВЛЕНО КРИТИЧНЕ ЗНИЖЕННЯ ЕФЕКТИВНОСТІ! Шлях гальмування збільшено.";
-        }
-        else
-        {
-            safetyStatus = "ABS активна (18 імпульсів). Автомобіль стабільний.";
-        }
-
-        return $"Екстрене гальмування активовано! Теплове навантаження: +{temperatureIncrease:F1}°C (поточна: {brakeTemperatureCelsius:F1}°C). {safetyStatus} (знос: {wearPercent:F2}%).";
+        return $"Екстрене гальмування активовано! Теплове навантаження: +{temperatureIncrease:F1}°C (поточна: {_brakeTemperatureCelsius:F1}°C). {safetyStatus} (знос: {_wearPercent:F2}%).";
     }
 }

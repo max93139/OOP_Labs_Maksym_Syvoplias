@@ -1,3 +1,5 @@
+using System;
+
 namespace Lab6;
 
 /// <summary>
@@ -5,55 +7,125 @@ namespace Lab6;
 /// </summary>
 public sealed class SteeringSystem
 {
-    private double lateralAccelerationG;
+    private string _steeringType;
+    private double _sensitivity;
+    private int _directionDegrees;
+    private double _lateralAccelerationG;
+
+    /// <summary>
+    /// Конструктор за замовчуванням (Canonical Class Template).
+    /// </summary>
+    public SteeringSystem()
+    {
+        _steeringType = "electronic";
+        _sensitivity = 0.92;
+        _directionDegrees = 0;
+        _lateralAccelerationG = 0.0;
+    }
 
     /// <summary>
     /// Ініціалізує нову систему кермування з фізичною чутливістю.
     /// </summary>
     public SteeringSystem(string steeringType, double sensitivity)
     {
-        SteeringType = steeringType;
-        Sensitivity = sensitivity;
-        DirectionDegrees = 0;
-        lateralAccelerationG = 0.0;
+        _steeringType = steeringType;
+        _sensitivity = sensitivity;
+        _directionDegrees = 0;
+        _lateralAccelerationG = 0.0;
+    }
+
+    /// <summary>
+    /// Конструктор копіювання (Canonical Class Template).
+    /// </summary>
+    public SteeringSystem(SteeringSystem other)
+    {
+        _steeringType = other.SteeringType;
+        _sensitivity = other.Sensitivity;
+        _directionDegrees = other.DirectionDegrees;
+        _lateralAccelerationG = other.LateralAccelerationG;
     }
 
     /// <summary>
     /// Повертає тип кермування.
     /// </summary>
-    public string SteeringType { get; }
+    public string SteeringType
+    {
+        get
+        {
+            return _steeringType;
+        }
+        set
+        {
+            _steeringType = value;
+        }
+    }
 
     /// <summary>
     /// Повертає чутливість кермування.
     /// </summary>
-    public double Sensitivity { get; }
+    public double Sensitivity
+    {
+        get
+        {
+            return _sensitivity;
+        }
+        set
+        {
+            _sensitivity = value;
+        }
+    }
 
     /// <summary>
     /// Повертає поточний напрямок.
     /// </summary>
-    public int DirectionDegrees { get; private set; }
+    public int DirectionDegrees
+    {
+        get
+        {
+            return _directionDegrees;
+        }
+        set
+        {
+            _directionDegrees = value;
+        }
+    }
+
+    /// <summary>
+    /// Повертає бічне прискорення в одиницях G.
+    /// </summary>
+    public double LateralAccelerationG
+    {
+        get
+        {
+            return _lateralAccelerationG;
+        }
+        set
+        {
+            _lateralAccelerationG = value;
+        }
+    }
 
     /// <summary>
     /// Змінює напрямок руху та оцінює бічні перевантаження для стабілізації траєкторії.
     /// </summary>
     public string ChangeDirection(int directionDegrees)
     {
-        DirectionDegrees = directionDegrees;
+        _directionDegrees = directionDegrees;
 
         if (directionDegrees != 0)
         {
             double speedMeterPerSecond = 16.67;
             double radiusMeter = 50.0 / Math.Max(0.01, Math.Abs(Math.Sin(directionDegrees * Math.PI / 180.0)));
             double gravityConstant = 9.81;
-            lateralAccelerationG = ((speedMeterPerSecond * speedMeterPerSecond) / (radiusMeter * gravityConstant)) * Sensitivity;
+            _lateralAccelerationG = ((speedMeterPerSecond * speedMeterPerSecond) / (radiusMeter * gravityConstant)) * _sensitivity;
         }
         else
         {
-            lateralAccelerationG = 0.0;
+            _lateralAccelerationG = 0.0;
         }
 
         string stabilityWarning;
-        if (lateralAccelerationG > 0.8)
+        if (_lateralAccelerationG > 0.8)
         {
             stabilityWarning = "УВАГА: Бічна сила G перевищує безпечну межу! Активовано втручання ESP.";
         }
@@ -62,7 +134,7 @@ public sealed class SteeringSystem
             stabilityWarning = "Автомобіль стабільний. Нормальне бічне прискорення.";
         }
 
-        return $"Напрямок змінено на {DirectionDegrees} градусів. Бічне прискорення: {lateralAccelerationG:F2}g. {stabilityWarning}";
+        return $"Напрямок змінено на {_directionDegrees} градусів. Бічне прискорення: {_lateralAccelerationG:F2}g. {stabilityWarning}";
     }
 
     /// <summary>

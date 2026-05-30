@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace Lab6;
 
 /// <summary>
@@ -5,7 +8,65 @@ namespace Lab6;
 /// </summary>
 public sealed class DriverHealthDiagnostics
 {
-    private const double WARNING_SCORE = 65.0;
+    private double _warningScore;
+    private string _systemName;
+
+    /// <summary>
+    /// Конструктор за замовчуванням (Canonical Class Template).
+    /// </summary>
+    public DriverHealthDiagnostics()
+    {
+        _warningScore = 65.0;
+        _systemName = "Active Health Monitoring System";
+    }
+
+    /// <summary>
+    /// Конструктор з повним набором конфігурацій.
+    /// </summary>
+    public DriverHealthDiagnostics(double warningScore, string systemName)
+    {
+        _warningScore = warningScore;
+        _systemName = systemName;
+    }
+
+    /// <summary>
+    /// Конструктор копіювання (Canonical Class Template).
+    /// </summary>
+    public DriverHealthDiagnostics(DriverHealthDiagnostics other)
+    {
+        _warningScore = other.WarningScore;
+        _systemName = other.SystemName;
+    }
+
+    /// <summary>
+    /// Повертає поріг попередження.
+    /// </summary>
+    public double WarningScore
+    {
+        get
+        {
+            return _warningScore;
+        }
+        set
+        {
+            _warningScore = value;
+        }
+    }
+
+    /// <summary>
+    /// Повертає назву системи діагностики.
+    /// </summary>
+    public string SystemName
+    {
+        get
+        {
+            return _systemName;
+        }
+        set
+        {
+            _systemName = value;
+        }
+    }
 
     /// <summary>
     /// Обчислює компактний показник ризику для здоров'я.
@@ -29,7 +90,7 @@ public sealed class DriverHealthDiagnostics
     {
         string recommendation;
 
-        if (riskScore >= WARNING_SCORE)
+        if (riskScore >= _warningScore)
         {
             recommendation = "Медичний моніторинг рекомендує автопілот і спокійний маршрут.";
         }
@@ -43,13 +104,23 @@ public sealed class DriverHealthDiagnostics
 
     private double CalculateReadingRisk(SensorReading reading)
     {
-        double risk = reading.Name switch
+        double risk;
+        if (reading.Name == "Pulse")
         {
-            "Pulse" => Math.Max(0.0, reading.Value - 80.0) * 0.8,
-            "Blood pressure" => Math.Max(0.0, reading.Value - 120.0) * 0.5,
-            "Eye fatigue" => reading.Value * 0.7,
-            _ => 0.0
-        };
+            risk = Math.Max(0.0, reading.Value - 80.0) * 0.8;
+        }
+        else if (reading.Name == "Blood pressure")
+        {
+            risk = Math.Max(0.0, reading.Value - 120.0) * 0.5;
+        }
+        else if (reading.Name == "Eye fatigue")
+        {
+            risk = reading.Value * 0.7;
+        }
+        else
+        {
+            risk = 0.0;
+        }
 
         return risk;
     }

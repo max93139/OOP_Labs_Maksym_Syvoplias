@@ -3,19 +3,39 @@ using System.Collections.Generic;
 namespace Lab6;
 
 /// <summary>
-/// Створює налаштований демонстраційний граф об'єктів розумного автомобіля.
+/// Створює налаштований демонстраційний граф об'єктів розумного автомобіля з використанням конфігураційних параметрів.
 /// </summary>
 public sealed class SmartCarFactory
 {
+    private string _factoryName;
+
+    /// <summary>
+    /// Конструктор за замовчуванням.
+    /// </summary>
+    public SmartCarFactory()
+    {
+        _factoryName = "Центральна фабрика розумних автомобілів";
+    }
+
+    /// <summary>
+    /// Конструктор копіювання.
+    /// </summary>
+    public SmartCarFactory(SmartCarFactory other)
+    {
+        _factoryName = other.FactoryName;
+    }
+
+    public string FactoryName
+    {
+        get => _factoryName;
+        set => _factoryName = value;
+    }
+
     /// <summary>
     /// Створює розумний автомобіль з модулями, налаштованими під конкретні показання датчиків сценарію.
     /// </summary>
     public SmartCar CreateSmartCar(ScenarioData data)
     {
-        Body body = new Body("carbon composite", "silver");
-        Engine engine = new Engine("electric", 420);
-        Chassis chassis = CreateChassis();
-
         DriverStateSensor driverStateSensor = CreateDriverStateSensor(data.DriverPulse, data.DriverPressure, data.DriverEyeFatigue);
         SmartSystem smartSystem = CreateSmartSystem(
             data.SmartSystemMaxRisk,
@@ -24,10 +44,20 @@ public sealed class SmartCarFactory
             driverStateSensor
         );
 
-        TransformationModule transformationModule = new TransformationModule("Ground");
         VehicleIdentity identity = new VehicleIdentity("SC-2040-01", "Synergy Capsule", 4);
 
-        return new SmartCar(identity, body, engine, chassis, transformationModule, smartSystem);
+        // Передаємо параметри конфігурації замість готових об'єктів для дотримання принципу композиції!
+        return new SmartCar(
+            identity,
+            "carbon composite", "silver", // кузов
+            "electric", 420,             // двигун
+            "active air suspension", 1830.0, // шасі (підвіска та маса)
+            "adaptive all-wheel", "electromagnetic", 96.5, // колеса, гальма
+            "electronic", 0.92,          // рульове керування
+            "електрична двоступенева", 2, // трансмісія
+            "Ground",
+            smartSystem
+        );
     }
 
     /// <summary>
@@ -63,24 +93,13 @@ public sealed class SmartCarFactory
             new VoiceSystem(),
             climateControlSystem,
             new SafetySystem(),
-            new NavigationService(),
+            new NavigationModule(),
             new SelfLearningModule(),
-            driverStateSensor);
-    }
-
-    private Chassis CreateChassis()
-    {
-        WheelAssembly wheelAssembly = new WheelAssembly("adaptive all-wheel");
-        BrakeSystem brakeSystem = new BrakeSystem("electromagnetic", 96.5);
-        SteeringSystem steeringSystem = new SteeringSystem("electronic", 0.92);
-        Transmission transmission = new Transmission("електрична двоступенева", 2);
-
-        return new Chassis(
-            "active air suspension",
-            1830.0,
-            wheelAssembly,
-            brakeSystem,
-            steeringSystem,
-            transmission);
+            driverStateSensor,
+            new AIModule(),
+            new SpeechRecognitionModule(),
+            new RecommendationModule(),
+            new EmotionalSupportModule()
+        );
     }
 }

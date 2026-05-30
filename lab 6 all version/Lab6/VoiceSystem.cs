@@ -1,3 +1,5 @@
+using System;
+
 namespace Lab6;
 
 /// <summary>
@@ -5,14 +7,64 @@ namespace Lab6;
 /// </summary>
 public sealed class VoiceSystem
 {
-    private double commandConfidence;
+    private double _commandConfidence;
+    private string _systemName;
 
     /// <summary>
-    /// Ініціалізує нову голосову систему.
+    /// Конструктор за замовчуванням (Canonical Class Template).
     /// </summary>
     public VoiceSystem()
     {
-        commandConfidence = 1.0;
+        _commandConfidence = 1.0;
+        _systemName = "Active Voice Recognition Interface";
+    }
+
+    /// <summary>
+    /// Конструктор з повним набором конфігурацій.
+    /// </summary>
+    public VoiceSystem(double commandConfidence, string systemName)
+    {
+        _commandConfidence = commandConfidence;
+        _systemName = systemName;
+    }
+
+    /// <summary>
+    /// Конструктор копіювання (Canonical Class Template).
+    /// </summary>
+    public VoiceSystem(VoiceSystem other)
+    {
+        _commandConfidence = other.CommandConfidence;
+        _systemName = other.SystemName;
+    }
+
+    /// <summary>
+    /// Повертає впевненість розпізнавання останньої команди.
+    /// </summary>
+    public double CommandConfidence
+    {
+        get
+        {
+            return _commandConfidence;
+        }
+        set
+        {
+            _commandConfidence = value;
+        }
+    }
+
+    /// <summary>
+    /// Повертає назву голосової системи.
+    /// </summary>
+    public string SystemName
+    {
+        get
+        {
+            return _systemName;
+        }
+        set
+        {
+            _systemName = value;
+        }
     }
 
     /// <summary>
@@ -23,39 +75,34 @@ public sealed class VoiceSystem
         string normalizedPhrase = phrase.Trim().ToLowerInvariant();
         string intent;
 
-        if (normalizedPhrase.Contains("autopilot", StringComparison.Ordinal) || normalizedPhrase.Contains("self-drive", StringComparison.Ordinal))
+        if (normalizedPhrase.Contains("autopilot", StringComparison.Ordinal) || 
+            normalizedPhrase.Contains("self-drive", StringComparison.Ordinal))
         {
             intent = "EnableAutopilot";
-            commandConfidence = 0.98;
+            _commandConfidence = 0.98;
+        }
+        else if (normalizedPhrase.Contains("climate", StringComparison.Ordinal) || 
+                 normalizedPhrase.Contains("temperature", StringComparison.Ordinal))
+        {
+            intent = "ChangeClimate";
+            _commandConfidence = 0.95;
+        }
+        else if (normalizedPhrase.Contains("protect", StringComparison.Ordinal) || 
+                 normalizedPhrase.Contains("safety", StringComparison.Ordinal))
+        {
+            intent = "ActivateProtection";
+            _commandConfidence = 0.92;
+        }
+        else if (normalizedPhrase.Contains("diagnostics", StringComparison.Ordinal) || 
+                 normalizedPhrase.Contains("check", StringComparison.Ordinal))
+        {
+            intent = "ShowDiagnostics";
+            _commandConfidence = 0.90;
         }
         else
         {
-            if (normalizedPhrase.Contains("climate", StringComparison.Ordinal) || normalizedPhrase.Contains("temperature", StringComparison.Ordinal))
-            {
-                intent = "ChangeClimate";
-                commandConfidence = 0.95;
-            }
-            else
-            {
-                if (normalizedPhrase.Contains("protect", StringComparison.Ordinal) || normalizedPhrase.Contains("safety", StringComparison.Ordinal))
-                {
-                    intent = "ActivateProtection";
-                    commandConfidence = 0.92;
-                }
-                else
-                {
-                    if (normalizedPhrase.Contains("diagnostics", StringComparison.Ordinal) || normalizedPhrase.Contains("check", StringComparison.Ordinal))
-                    {
-                        intent = "ShowDiagnostics";
-                        commandConfidence = 0.90;
-                    }
-                    else
-                    {
-                        intent = "StartTrip";
-                        commandConfidence = 0.50;
-                    }
-                }
-            }
+            intent = "StartTrip";
+            _commandConfidence = 0.50;
         }
 
         return intent;
@@ -66,7 +113,7 @@ public sealed class VoiceSystem
     /// </summary>
     public string Speak(string message)
     {
-        return $"Голосовий асистент: {message} (впевненість розпізнавання: {commandConfidence:P1})";
+        return $"Голосовий асистент: {message} (впевненість розпізнавання: {_commandConfidence:P1})";
     }
 
     /// <summary>

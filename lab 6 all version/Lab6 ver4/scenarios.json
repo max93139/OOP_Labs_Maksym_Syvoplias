@@ -14,7 +14,11 @@
     "DriverEyeFatigue": 5.0,
     "SmartSystemMaxRisk": 22.0,
     "SmartSystemSensitivity": 48.0,
-    "SmartSystemMaxPower": 450.0
+    "SmartSystemMaxPower": 450.0,
+    "CameraCount": 6,
+    "DepthMeters": 0.0,
+    "CurrentEpisodes": 5,
+    "NewEpisodes": 5
   },
   {
     "ScenarioNumber": 2,
@@ -26,12 +30,16 @@
     "HasRoadWorks": true,
     "VoiceCommand": "Enable autopilot",
     "VehicleSpeedKmh": 25.0,
-    "DriverPulse": 95.0,
+    "DriverPulse": 35.0,
     "DriverPressure": 130.0,
     "DriverEyeFatigue": 35.0,
     "SmartSystemMaxRisk": 25.0,
     "SmartSystemSensitivity": 58.0,
-    "SmartSystemMaxPower": 720.0
+    "SmartSystemMaxPower": 720.0,
+    "CameraCount": 3,
+    "DepthMeters": 3.5,
+    "CurrentEpisodes": 10,
+    "NewEpisodes": 5
   },
   {
     "ScenarioNumber": 3,
@@ -48,6 +56,10 @@
     "DriverEyeFatigue": 80.0,
     "SmartSystemMaxRisk": 28.0,
     "SmartSystemSensitivity": 65.0,
-    "SmartSystemMaxPower": 950.0
+    "SmartSystemMaxPower": 950.0,
+    "CameraCount": 6,
+    "DepthMeters": 0.0,
+    "CurrentEpisodes": -10,
+    "NewEpisodes": 5
   }
 ]

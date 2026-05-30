@@ -1,3 +1,5 @@
+using System;
+
 namespace Lab6;
 
 /// <summary>
@@ -5,81 +7,111 @@ namespace Lab6;
 /// </summary>
 public sealed class Transmission
 {
-    private double engineRpm;
+    private const double WHEEL_RADIUS_METERS = 0.33;
+    private const double CONVERSION_FACTOR_KPH_TO_MPS = 3.6;
+    private const double MINUTES_IN_SECONDS = 60.0;
+    private const double TRANSMISSION_EFFICIENCY = 0.95;
+    private const double MAX_RPM_LIMIT = 5000.0;
+    private const double MIN_RPM_LIMIT = 1200.0;
+
+    private string _transmissionType;
+    private int _gearCount;
+    private int _currentGear;
+    private double _engineRpm;
 
     /// <summary>
-    /// Ініціалізує нову трансмісію.
+    /// Конструктор за замовчуванням.
     /// </summary>
-    public Transmission(string transmissionType, int gearCount)
+    public Transmission()
     {
-        TransmissionType = transmissionType;
-        GearCount = gearCount;
-        CurrentGear = 1;
-        engineRpm = 1000.0;
+        _transmissionType = "електрична двоступенева";
+        _gearCount = 2;
+        _currentGear = 1;
+        _engineRpm = 1000.0;
     }
 
     /// <summary>
-    /// Повертає тип трансмісії.
+    /// Конструктор з повними параметрами.
     /// </summary>
-    public string TransmissionType { get; }
+    public Transmission(string transmissionType, int gearCount)
+    {
+        _transmissionType = transmissionType;
+        _gearCount = gearCount;
+        _currentGear = 1;
+        _engineRpm = 1000.0;
+    }
 
     /// <summary>
-    /// Повертає кількість доступних передач.
+    /// Конструктор копіювання.
     /// </summary>
-    public int GearCount { get; }
+    public Transmission(Transmission other)
+    {
+        _transmissionType = other.TransmissionType;
+        _gearCount = other.GearCount;
+        _currentGear = other.CurrentGear;
+        _engineRpm = other.EngineRpm;
+    }
 
-    /// <summary>
-    /// Повертає поточну передачу.
-    /// </summary>
-    public int CurrentGear { get; private set; }
+    public string TransmissionType
+    {
+        get => _transmissionType;
+        set => _transmissionType = value;
+    }
+
+    public int GearCount
+    {
+        get => _gearCount;
+        set => _gearCount = value;
+    }
+
+    public int CurrentGear
+    {
+        get => _currentGear;
+        set => _currentGear = value;
+    }
+
+    public double EngineRpm
+    {
+        get => _engineRpm;
+        set => _engineRpm = value;
+    }
 
     /// <summary>
     /// Автоматично перемикає передачу на основі швидкості електрокара (2 передачі, 2-га вмикається після 80 км/год).
     /// </summary>
     public string ShiftGearBasedOnSpeed(double speedKmh)
     {
-        int targetGear;
-        if (speedKmh > 80.0)
-        {
-            targetGear = 2;
-        }
-        else
-        {
-            targetGear = 1;
-        }
+        int targetGear = speedKmh > 80.0 ? 2 : 1;
+        _currentGear = Math.Clamp(targetGear, 1, _gearCount);
 
-        CurrentGear = Math.Clamp(targetGear, 1, GearCount);
+        double vehicleSpeedMeterPerSecond = speedKmh / CONVERSION_FACTOR_KPH_TO_MPS; 
+        
+        // Використовуємо реалістичні передавальні числа для електромобіля!
+        double gearRatio = 2.2 / _currentGear;
+        double finalDriveRatio = 3.6;
 
-        double vehicleSpeedMeterPerSecond = speedKmh / 3.6; 
-        double gearRatio = 4.5 / CurrentGear;
-        double finalDriveRatio = 3.2;
-        double wheelRadiusMeter = 0.33;
-
-        engineRpm = (vehicleSpeedMeterPerSecond / (2.0 * Math.PI * wheelRadiusMeter)) * 60.0 * gearRatio * finalDriveRatio;
-        double torqueMultiplier = gearRatio * finalDriveRatio * 0.95;
+        _engineRpm = (vehicleSpeedMeterPerSecond / (2.0 * Math.PI * WHEEL_RADIUS_METERS)) * MINUTES_IN_SECONDS * gearRatio * finalDriveRatio;
+        double torqueMultiplier = gearRatio * finalDriveRatio * TRANSMISSION_EFFICIENCY;
 
         string engineStatus;
-        if (engineRpm > 5000.0)
+        if (_engineRpm > MAX_RPM_LIMIT)
         {
             engineStatus = "Попередження про надмірні оберти! Високе навантаження на двигун.";
         }
+        else if (_engineRpm < MIN_RPM_LIMIT)
+        {
+            engineStatus = "Попередження про низькі оберти! Рекомендовано знизити передачу.";
+        }
         else
         {
-            if (engineRpm < 1200.0)
-            {
-                engineStatus = "Попередження про низькі оберти! Рекомендовано знизити передачу.";
-            }
-            else
-            {
-                engineStatus = "Оптимальний робочий діапазон.";
-            }
+            engineStatus = "Оптимальний робочий діапазон.";
         }
 
-        return $"Трансмісія (електрокар) перемкнута на передачу {CurrentGear} (швидкість: {speedKmh:F1} км/год). Мультиплікатор моменту: {torqueMultiplier:F1}x, очікувані оберти RPM: {engineRpm:F0}. {engineStatus}";
+        return $"Трансмісія ({_transmissionType}) перемкнута на передачу {_currentGear} (швидкість: {speedKmh:F1} км/год). Мультиплікатор моменту: {torqueMultiplier:F1}x, очікувані оберти RPM: {_engineRpm:F0}. {engineStatus}";
     }
 
     /// <summary>
-    /// Перемикає трансмісію на передачу в допустимих межах за стандартною швидкістю.
+    /// Перемикає трансмісію на передачу в допустимих межах за стандартною швидкістю (вирішено проблему мертвого методу).
     /// </summary>
     public string ShiftGear(int requestedGear)
     {

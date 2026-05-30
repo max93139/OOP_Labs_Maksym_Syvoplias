@@ -1,3 +1,5 @@
+using System;
+
 namespace Lab6;
 
 /// <summary>
@@ -5,54 +7,130 @@ namespace Lab6;
 /// </summary>
 public sealed class Engine
 {
-    private double batteryStateOfChargePercent;
+    private const double DEFAULT_SOC = 85.0;
+    private const double STARTUP_ENERGY_DRAW_SOC = 0.85;
+    private const double ECO_EFFICIENCY = 0.92;
+    private const double SPORT_EFFICIENCY = 0.82;
+    private const double ACTIVE_EFFICIENCY = 0.88;
+    private const double EMERGENCY_EFFICIENCY = 0.78;
+
+    private string _engineType;
+    private int _powerKilowatts;
+    private string _state;
+    private double _batteryStateOfChargePercent;
 
     /// <summary>
-    /// Ініціалізує новий двигун з базовим зарядом батареї.
+    /// Конструктор за замовчуванням (Canonical Class Template).
+    /// </summary>
+    public Engine()
+    {
+        _engineType = "electric";
+        _powerKilowatts = 420;
+        _state = "Stopped";
+        _batteryStateOfChargePercent = DEFAULT_SOC;
+    }
+
+    /// <summary>
+    /// Конструктор з повним набором конфігурацій.
     /// </summary>
     public Engine(string engineType, int powerKilowatts)
     {
-        EngineType = engineType;
-        PowerKilowatts = powerKilowatts;
-        State = "Stopped";
-        batteryStateOfChargePercent = 85.0;
+        _engineType = engineType;
+        _powerKilowatts = powerKilowatts;
+        _state = "Stopped";
+        _batteryStateOfChargePercent = DEFAULT_SOC;
+    }
+
+    /// <summary>
+    /// Конструктор копіювання (Canonical Class Template).
+    /// </summary>
+    public Engine(Engine other)
+    {
+        _engineType = other.EngineType;
+        _powerKilowatts = other.PowerKilowatts;
+        _state = other.State;
+        _batteryStateOfChargePercent = other.BatteryStateOfChargePercent;
     }
 
     /// <summary>
     /// Повертає тип двигуна.
     /// </summary>
-    public string EngineType { get; }
+    public string EngineType
+    {
+        get
+        {
+            return _engineType;
+        }
+        set
+        {
+            _engineType = value;
+        }
+    }
 
     /// <summary>
     /// Повертає потужність двигуна в кіловатах.
     /// </summary>
-    public int PowerKilowatts { get; }
+    public int PowerKilowatts
+    {
+        get
+        {
+            return _powerKilowatts;
+        }
+        set
+        {
+            _powerKilowatts = value;
+        }
+    }
 
     /// <summary>
     /// Повертає поточний стан двигуна ("Stopped", "Active" тощо).
     /// </summary>
-    public string State { get; private set; }
+    public string State
+    {
+        get
+        {
+            return _state;
+        }
+        set
+        {
+            _state = value;
+        }
+    }
+
+    /// <summary>
+    /// Повертає поточний заряд батареї SoC.
+    /// </summary>
+    public double BatteryStateOfChargePercent
+    {
+        get
+        {
+            return _batteryStateOfChargePercent;
+        }
+        set
+        {
+            _batteryStateOfChargePercent = value;
+        }
+    }
 
     /// <summary>
     /// Запускає джерело руху, розраховуючи пускове навантаження на батарею.
     /// </summary>
     public string Start()
     {
-        State = "Active";
-        double startupEnergyDrawSoC = 0.85;
-        batteryStateOfChargePercent = Math.Max(0.0, batteryStateOfChargePercent - startupEnergyDrawSoC);
+        _state = "Active";
+        _batteryStateOfChargePercent = Math.Max(0.0, _batteryStateOfChargePercent - STARTUP_ENERGY_DRAW_SOC);
 
         string translatedType;
-        if (EngineType.Equals("electric", StringComparison.OrdinalIgnoreCase))
+        if (_engineType.Equals("electric", StringComparison.OrdinalIgnoreCase))
         {
             translatedType = "Електричний";
         }
         else
         {
-            translatedType = EngineType;
+            translatedType = _engineType;
         }
 
-        return $"{translatedType} двигун запущено. Доступна потужність: {PowerKilowatts} кВт. Заряд батареї SoC: {batteryStateOfChargePercent:F1}%.";
+        return $"{translatedType} двигун запущено. Доступна потужність: {_powerKilowatts} кВт. Заряд батареї SoC: {_batteryStateOfChargePercent:F1}%.";
     }
 
     /// <summary>
@@ -60,7 +138,7 @@ public sealed class Engine
     /// </summary>
     public string Stop()
     {
-        State = "Stopped";
+        _state = "Stopped";
         return "Двигун зупинено.";
     }
 
@@ -69,29 +147,29 @@ public sealed class Engine
     /// </summary>
     public string ChangeMode(string state)
     {
-        State = state;
+        _state = state;
 
         double efficiencyFactor;
         switch (state.ToLowerInvariant())
         {
             case "eco":
             {
-                efficiencyFactor = 0.92;
+                efficiencyFactor = ECO_EFFICIENCY;
                 break;
             }
             case "sport":
             {
-                efficiencyFactor = 0.82;
+                efficiencyFactor = SPORT_EFFICIENCY;
                 break;
             }
             case "active":
             {
-                efficiencyFactor = 0.88;
+                efficiencyFactor = ACTIVE_EFFICIENCY;
                 break;
             }
             case "emergency":
             {
-                efficiencyFactor = 0.78;
+                efficiencyFactor = EMERGENCY_EFFICIENCY;
                 break;
             }
             default:
@@ -101,7 +179,7 @@ public sealed class Engine
             }
         }
 
-        double effectivePowerKw = PowerKilowatts * efficiencyFactor;
+        double effectivePowerKw = _powerKilowatts * efficiencyFactor;
 
         string stateString;
         switch (state.ToLowerInvariant())

@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace Lab6;
 
 /// <summary>
@@ -5,6 +8,66 @@ namespace Lab6;
 /// </summary>
 public sealed class ComputerVisionModule
 {
+    private int _activeCameras;
+    private bool _isInitialized;
+
+    /// <summary>
+    /// Конструктор за замовчуванням (Canonical Class Template).
+    /// </summary>
+    public ComputerVisionModule()
+    {
+        _activeCameras = 6;
+        _isInitialized = true;
+    }
+
+    /// <summary>
+    /// Конструктор з повним набором конфігурацій.
+    /// </summary>
+    public ComputerVisionModule(int activeCameras, bool isInitialized)
+    {
+        _activeCameras = activeCameras;
+        _isInitialized = isInitialized;
+    }
+
+    /// <summary>
+    /// Конструктор копіювання (Canonical Class Template).
+    /// </summary>
+    public ComputerVisionModule(ComputerVisionModule other)
+    {
+        _activeCameras = other.ActiveCameras;
+        _isInitialized = other.IsInitialized;
+    }
+
+    /// <summary>
+    /// Повертає кількість активних камер.
+    /// </summary>
+    public int ActiveCameras
+    {
+        get
+        {
+            return _activeCameras;
+        }
+        set
+        {
+            _activeCameras = value;
+        }
+    }
+
+    /// <summary>
+    /// Повертає значення, чи ініціалізовано модуль.
+    /// </summary>
+    public bool IsInitialized
+    {
+        get
+        {
+            return _isInitialized;
+        }
+        set
+        {
+            _isInitialized = value;
+        }
+    }
+
     /// <summary>
     /// Розпізнає об'єкти навколо автомобіля за замовчуванням.
     /// </summary>
@@ -65,27 +128,21 @@ public sealed class ComputerVisionModule
             {
                 individualRisk = 15.5;
             }
+            else if (normalizedObject.Contains("дорожні роботи", StringComparison.Ordinal))
+            {
+                individualRisk = 8.0;
+            }
+            else if (normalizedObject.Contains("волог", StringComparison.Ordinal) || 
+                     normalizedObject.Contains("вод", StringComparison.Ordinal) ||
+                     normalizedObject.Contains("ожелед", StringComparison.Ordinal) ||
+                     normalizedObject.Contains("сніг", StringComparison.Ordinal) ||
+                     normalizedObject.Contains("лід", StringComparison.Ordinal))
+            {
+                individualRisk = 12.5;
+            }
             else
             {
-                if (normalizedObject.Contains("дорожні роботи", StringComparison.Ordinal))
-                {
-                    individualRisk = 8.0;
-                }
-                else
-                {
-                    if (normalizedObject.Contains("волог", StringComparison.Ordinal) || 
-                        normalizedObject.Contains("вод", StringComparison.Ordinal) ||
-                        normalizedObject.Contains("ожелед", StringComparison.Ordinal) ||
-                        normalizedObject.Contains("сніг", StringComparison.Ordinal) ||
-                        normalizedObject.Contains("лід", StringComparison.Ordinal))
-                    {
-                        individualRisk = 12.5;
-                    }
-                    else
-                    {
-                        individualRisk = 2.0;
-                    }
-                }
+                individualRisk = 2.0;
             }
 
             totalRiskScore += individualRisk;

@@ -2,33 +2,66 @@ namespace Lab6;
 
 /// <summary>
 /// Надає фіксовані демонстраційні вимірювання для стабільного лабораторного виведення.
-/// Реалізує ISensor без реального апаратного забезпечення, щоб не залежати від обладнання під час тестування.
 /// </summary>
 public sealed class FixedSensor : ISensor
 {
-    private readonly double sensorValue;
-    private readonly string sensorUnit;
+    private string _name;
+    private double _sensorValue;
+    private string _sensorUnit;
 
     /// <summary>
-    /// Ініціалізує новий фіксований сенсор із заданим значенням.
+    /// Конструктор за замовчуванням.
     /// </summary>
-    public FixedSensor(string name, double value, string unit)
+    public FixedSensor()
     {
-        Name = name;
-        sensorValue = value;
-        sensorUnit = unit;
+        _name = "Fixed Sensor";
+        _sensorValue = 0.0;
+        _sensorUnit = string.Empty;
     }
 
     /// <summary>
-    /// Повертає назву сенсора.
+    /// Конструктор з усіма параметрами.
     /// </summary>
-    public string Name { get; }
+    public FixedSensor(string name, double value, string unit)
+    {
+        _name = name;
+        _sensorValue = value;
+        _sensorUnit = unit;
+    }
+
+    /// <summary>
+    /// Конструктор копіювання.
+    /// </summary>
+    public FixedSensor(FixedSensor other)
+    {
+        _name = other.Name;
+        _sensorValue = other.SensorValue;
+        _sensorUnit = other.SensorUnit;
+    }
+
+    public string Name
+    {
+        get => _name;
+        set => _name = value;
+    }
+
+    public double SensorValue
+    {
+        get => _sensorValue;
+        set => _sensorValue = value;
+    }
+
+    public string SensorUnit
+    {
+        get => _sensorUnit;
+        set => _sensorUnit = value;
+    }
 
     /// <summary>
     /// Зчитує налаштоване фіксоване значення без звернення до апаратури.
     /// </summary>
     public SensorReading Read()
     {
-        return new SensorReading(Name, sensorValue, sensorUnit);
+        return new SensorReading(_name, _sensorValue, _sensorUnit);
     }
 }

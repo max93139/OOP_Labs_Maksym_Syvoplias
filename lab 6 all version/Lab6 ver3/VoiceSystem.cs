@@ -1,18 +1,70 @@
+using System;
+
 namespace Lab6;
 
 /// <summary>
 /// Забезпечує взаємодію з людиною через розпізнавання команд та розрахунок впевненості розпізнавання.
 /// </summary>
-public sealed class VoiceSystem : SmartDevice
+public sealed class VoiceSystem
 {
-    private double commandConfidence;
+    private double _commandConfidence;
+    private string _systemName;
 
     /// <summary>
-    /// Ініціалізує нову голосову систему.
+    /// Конструктор за замовчуванням (Canonical Class Template).
     /// </summary>
-    public VoiceSystem() : base("Голосова система", 0.15)
+    public VoiceSystem()
     {
-        commandConfidence = 1.0;
+        _commandConfidence = 1.0;
+        _systemName = "Active Voice Recognition Interface";
+    }
+
+    /// <summary>
+    /// Конструктор з повним набором конфігурацій.
+    /// </summary>
+    public VoiceSystem(double commandConfidence, string systemName)
+    {
+        _commandConfidence = commandConfidence;
+        _systemName = systemName;
+    }
+
+    /// <summary>
+    /// Конструктор копіювання (Canonical Class Template).
+    /// </summary>
+    public VoiceSystem(VoiceSystem other)
+    {
+        _commandConfidence = other.CommandConfidence;
+        _systemName = other.SystemName;
+    }
+
+    /// <summary>
+    /// Повертає впевненість розпізнавання останньої команди.
+    /// </summary>
+    public double CommandConfidence
+    {
+        get
+        {
+            return _commandConfidence;
+        }
+        set
+        {
+            _commandConfidence = value;
+        }
+    }
+
+    /// <summary>
+    /// Повертає назву голосової системи.
+    /// </summary>
+    public string SystemName
+    {
+        get
+        {
+            return _systemName;
+        }
+        set
+        {
+            _systemName = value;
+        }
     }
 
     /// <summary>
@@ -21,59 +73,39 @@ public sealed class VoiceSystem : SmartDevice
     public string RecognizeCommand(string phrase)
     {
         string normalizedPhrase = phrase.Trim().ToLowerInvariant();
+        string intent;
 
-        if (string.IsNullOrWhiteSpace(normalizedPhrase) || normalizedPhrase.Contains("дурниц", StringComparison.Ordinal) || normalizedPhrase.Contains("nonsense", StringComparison.Ordinal))
+        if (normalizedPhrase.Contains("autopilot", StringComparison.Ordinal) || 
+            normalizedPhrase.Contains("self-drive", StringComparison.Ordinal))
         {
-            throw new InvalidVoiceCommandException($"Голосова помилка: Невідома або некоректна команда \"{phrase}\".");
+            intent = "EnableAutopilot";
+            _commandConfidence = 0.98;
+        }
+        else if (normalizedPhrase.Contains("climate", StringComparison.Ordinal) || 
+                 normalizedPhrase.Contains("temperature", StringComparison.Ordinal))
+        {
+            intent = "ChangeClimate";
+            _commandConfidence = 0.95;
+        }
+        else if (normalizedPhrase.Contains("protect", StringComparison.Ordinal) || 
+                 normalizedPhrase.Contains("safety", StringComparison.Ordinal))
+        {
+            intent = "ActivateProtection";
+            _commandConfidence = 0.92;
+        }
+        else if (normalizedPhrase.Contains("diagnostics", StringComparison.Ordinal) || 
+                 normalizedPhrase.Contains("check", StringComparison.Ordinal))
+        {
+            intent = "ShowDiagnostics";
+            _commandConfidence = 0.90;
         }
         else
         {
-            if (normalizedPhrase.Contains(" і ", StringComparison.Ordinal) || normalizedPhrase.Contains(" та ", StringComparison.Ordinal) || normalizedPhrase.Contains(" and ", StringComparison.Ordinal))
-            {
-                throw new TooManyCommandsException("Помилка управління: Виявлено надмірну кількість паралельних команд! Система не може виконувати кілька дій одночасно.");
-            }
-            else
-            {
-                string intent;
-
-                if (normalizedPhrase.Contains("autopilot", StringComparison.Ordinal) || normalizedPhrase.Contains("self-drive", StringComparison.Ordinal))
-                {
-                    intent = "EnableAutopilot";
-                    commandConfidence = 0.98;
-                }
-                else
-                {
-                    if (normalizedPhrase.Contains("climate", StringComparison.Ordinal) || normalizedPhrase.Contains("temperature", StringComparison.Ordinal))
-                    {
-                        intent = "ChangeClimate";
-                        commandConfidence = 0.95;
-                    }
-                    else
-                    {
-                        if (normalizedPhrase.Contains("protect", StringComparison.Ordinal) || normalizedPhrase.Contains("safety", StringComparison.Ordinal))
-                        {
-                            intent = "ActivateProtection";
-                            commandConfidence = 0.92;
-                        }
-                        else
-                        {
-                            if (normalizedPhrase.Contains("diagnostics", StringComparison.Ordinal) || normalizedPhrase.Contains("check", StringComparison.Ordinal))
-                            {
-                                intent = "ShowDiagnostics";
-                                commandConfidence = 0.90;
-                            }
-                            else
-                            {
-                                intent = "StartTrip";
-                                commandConfidence = 0.50;
-                            }
-                        }
-                    }
-                }
-
-                return intent;
-            }
+            intent = "StartTrip";
+            _commandConfidence = 0.50;
         }
+
+        return intent;
     }
 
     /// <summary>
@@ -81,7 +113,7 @@ public sealed class VoiceSystem : SmartDevice
     /// </summary>
     public string Speak(string message)
     {
-        return $"Голосовий асистент: {message} (впевненість розпізнавання: {commandConfidence:P1})";
+        return $"Голосовий асистент: {message} (впевненість розпізнавання: {_commandConfidence:P1})";
     }
 
     /// <summary>
@@ -125,13 +157,5 @@ public sealed class VoiceSystem : SmartDevice
         }
 
         return localizedName;
-    }
-
-    /// <summary>
-    /// Повертає статус голосової системи.
-    /// </summary>
-    public override string GetStatus()
-    {
-        return $"Модуль '{DeviceName}' готовий до прийому голосових команд. Енергоспоживання: {PowerConsumption} кВт.";
     }
 }

@@ -1,22 +1,56 @@
+using System;
+using System.Collections.Generic;
+
 namespace Lab6;
 
 /// <summary>
-/// Агрегує інтелектуальні модулі, які можуть існувати поза моделлю автомобіля.
+/// Агрегує інтелектуальні модулі, які можуть існувати поза автомобілем (SRP/Coordinator).
 /// </summary>
 public sealed class SmartSystem
 {
-    private readonly ComputerVisionModule computerVisionModule;
-    private readonly DriverHealthDiagnostics driverHealthDiagnostics;
-    private readonly PredictionModule predictionModule;
-    private readonly VoiceSystem voiceSystem;
-    private readonly ClimateControlSystem climateControlSystem;
-    private readonly SafetySystem safetySystem;
-    private readonly NavigationService navigationService;
-    private readonly SelfLearningModule selfLearningModule;
-    private readonly DriverStateSensor driverStateSensor; // Агрегація датчика водія
+    private int _autonomyLevel;
+    
+    // Composed modules (aggregated in the system)
+    private ComputerVisionModule _computerVisionModule;
+    private DriverHealthDiagnostics _driverHealthDiagnostics;
+    private PredictionModule _predictionModule;
+    private VoiceSystem _voiceSystem;
+    private ClimateControlSystem _climateControlSystem;
+    private SafetySystem _safetySystem;
+    private NavigationModule _navigationModule;
+    private SelfLearningModule _selfLearningModule;
+    private DriverStateSensor _driverStateSensor;
+
+    // Table 6.2 New modules
+    private AIModule _aiModule;
+    private SpeechRecognitionModule _speechRecognitionModule;
+    private RecommendationModule _recommendationModule;
+    private EmotionalSupportModule _emotionalSupportModule;
 
     /// <summary>
-    /// Ініціалізує нову smart-систему з агрегованими модулями.
+    /// Конструктор за замовчуванням.
+    /// </summary>
+    public SmartSystem()
+    {
+        _autonomyLevel = 5;
+        _computerVisionModule = new ComputerVisionModule();
+        _driverHealthDiagnostics = new DriverHealthDiagnostics();
+        _predictionModule = new PredictionModule();
+        _voiceSystem = new VoiceSystem();
+        _climateControlSystem = new ClimateControlSystem();
+        _safetySystem = new SafetySystem();
+        _navigationModule = new NavigationModule();
+        _selfLearningModule = new SelfLearningModule();
+        _driverStateSensor = new DriverStateSensor();
+
+        _aiModule = new AIModule();
+        _speechRecognitionModule = new SpeechRecognitionModule();
+        _recommendationModule = new RecommendationModule();
+        _emotionalSupportModule = new EmotionalSupportModule();
+    }
+
+    /// <summary>
+    /// Конструктор з усіма залежностями.
     /// </summary>
     public SmartSystem(
         int autonomyLevel,
@@ -26,46 +60,145 @@ public sealed class SmartSystem
         VoiceSystem voiceSystem,
         ClimateControlSystem climateControlSystem,
         SafetySystem safetySystem,
-        NavigationService navigationService,
+        NavigationModule navigationModule,
         SelfLearningModule selfLearningModule,
-        DriverStateSensor driverStateSensor)
+        DriverStateSensor driverStateSensor,
+        AIModule aiModule,
+        SpeechRecognitionModule speechRecognitionModule,
+        RecommendationModule recommendationModule,
+        EmotionalSupportModule emotionalSupportModule)
     {
-        AutonomyLevel = autonomyLevel;
-        this.computerVisionModule = computerVisionModule;
-        this.driverHealthDiagnostics = driverHealthDiagnostics;
-        this.predictionModule = predictionModule;
-        this.voiceSystem = voiceSystem;
-        this.climateControlSystem = climateControlSystem;
-        this.safetySystem = safetySystem;
-        this.navigationService = navigationService;
-        this.selfLearningModule = selfLearningModule;
-        this.driverStateSensor = driverStateSensor;
+        _autonomyLevel = autonomyLevel;
+        _computerVisionModule = computerVisionModule;
+        _driverHealthDiagnostics = driverHealthDiagnostics;
+        _predictionModule = predictionModule;
+        _voiceSystem = voiceSystem;
+        _climateControlSystem = climateControlSystem;
+        _safetySystem = safetySystem;
+        _navigationModule = navigationModule;
+        _selfLearningModule = selfLearningModule;
+        _driverStateSensor = driverStateSensor;
+
+        _aiModule = aiModule;
+        _speechRecognitionModule = speechRecognitionModule;
+        _recommendationModule = recommendationModule;
+        _emotionalSupportModule = emotionalSupportModule;
     }
 
     /// <summary>
-    /// Повертає рівень автономності.
+    /// Конструктор копіювання.
     /// </summary>
-    public int AutonomyLevel { get; }
+    public SmartSystem(SmartSystem other)
+    {
+        _autonomyLevel = other.AutonomyLevel;
+        _computerVisionModule = new ComputerVisionModule(other.ComputerVisionModule);
+        _driverHealthDiagnostics = new DriverHealthDiagnostics(other.DriverHealthDiagnostics);
+        _predictionModule = new PredictionModule(other.PredictionModule);
+        _voiceSystem = new VoiceSystem(other.VoiceSystem);
+        _climateControlSystem = new ClimateControlSystem(other.ClimateControlSystem);
+        _safetySystem = new SafetySystem(other.SafetySystem);
+        _navigationModule = new NavigationModule(other.NavigationModule);
+        _selfLearningModule = new SelfLearningModule(other.SelfLearningModule);
+        _driverStateSensor = new DriverStateSensor(other.DriverStateSensor);
 
-    /// <summary>
-    /// Надає доступ до агрегованого датчика стану водія для можливості зчитування поточних показників.
-    /// </summary>
+        _aiModule = new AIModule(other.AIModule);
+        _speechRecognitionModule = new SpeechRecognitionModule(other.SpeechRecognitionModule);
+        _recommendationModule = new RecommendationModule(other.RecommendationModule);
+        _emotionalSupportModule = new EmotionalSupportModule(other.EmotionalSupportModule);
+    }
+
+    public int AutonomyLevel
+    {
+        get => _autonomyLevel;
+        set => _autonomyLevel = value;
+    }
+
+    public ComputerVisionModule ComputerVisionModule
+    {
+        get => _computerVisionModule;
+        set => _computerVisionModule = value;
+    }
+
+    public DriverHealthDiagnostics DriverHealthDiagnostics
+    {
+        get => _driverHealthDiagnostics;
+        set => _driverHealthDiagnostics = value;
+    }
+
+    public PredictionModule PredictionModule
+    {
+        get => _predictionModule;
+        set => _predictionModule = value;
+    }
+
+    public VoiceSystem VoiceSystem
+    {
+        get => _voiceSystem;
+        set => _voiceSystem = value;
+    }
+
+    public ClimateControlSystem ClimateControlSystem
+    {
+        get => _climateControlSystem;
+        set => _climateControlSystem = value;
+    }
+
+    public SafetySystem SafetySystem
+    {
+        get => _safetySystem;
+        set => _safetySystem = value;
+    }
+
+    public NavigationModule NavigationModule
+    {
+        get => _navigationModule;
+        set => _navigationModule = value;
+    }
+
+    public SelfLearningModule SelfLearningModule
+    {
+        get => _selfLearningModule;
+        set => _selfLearningModule = value;
+    }
+
     public DriverStateSensor DriverStateSensor
     {
-        get
-        {
-            return driverStateSensor;
-        }
+        get => _driverStateSensor;
+        set => _driverStateSensor = value;
+    }
+
+    public AIModule AIModule
+    {
+        get => _aiModule;
+        set => _aiModule = value;
+    }
+
+    public SpeechRecognitionModule SpeechRecognitionModule
+    {
+        get => _speechRecognitionModule;
+        set => _speechRecognitionModule = value;
+    }
+
+    public RecommendationModule RecommendationModule
+    {
+        get => _recommendationModule;
+        set => _recommendationModule = value;
+    }
+
+    public EmotionalSupportModule EmotionalSupportModule
+    {
+        get => _emotionalSupportModule;
+        set => _emotionalSupportModule = value;
     }
 
     /// <summary>
-    /// Виконує частину сценарію з медичним моніторингом, самостійно опитуючи агреговані сенсори здоров'я водія.
+    /// Виконує частину сценарію з медичним моніторингом водія.
     /// </summary>
     public ScenarioResult MonitorDriver()
     {
-        IReadOnlyList<SensorReading> readings = driverStateSensor.ReadDriverState();
-        double healthRisk = driverHealthDiagnostics.CalculateHealthRisk(readings);
-        string recommendation = driverHealthDiagnostics.BuildRecommendation(healthRisk);
+        IReadOnlyList<SensorReading> readings = _driverStateSensor.ReadDriverState();
+        double healthRisk = _driverHealthDiagnostics.CalculateHealthRisk(readings);
+        string recommendation = _driverHealthDiagnostics.BuildRecommendation(healthRisk);
         return new ScenarioResult("Медичний моніторинг водія", healthRisk, recommendation);
     }
 
@@ -82,21 +215,29 @@ public sealed class SmartSystem
     /// </summary>
     public ScenarioResult ForecastRoadRisk(double driverRisk, string roadCondition, bool hasPedestrian, bool hasRoadWorks)
     {
-        IReadOnlyList<string> objects = computerVisionModule.RecognizeObjects(6, roadCondition, hasPedestrian, hasRoadWorks);
-        double environmentRisk = computerVisionModule.EstimateEnvironmentRisk(objects);
-        double accidentProbability = predictionModule.CalculateAccidentProbability(driverRisk, environmentRisk);
-        string forecast = predictionModule.BuildForecast(accidentProbability);
+        // 6 is default camera count
+        IReadOnlyList<string> objects = _computerVisionModule.RecognizeObjects(6, roadCondition, hasPedestrian, hasRoadWorks);
+        double environmentRisk = _computerVisionModule.EstimateEnvironmentRisk(objects);
+        double accidentProbability = _predictionModule.CalculateAccidentProbability(driverRisk, environmentRisk);
+        string forecast = _predictionModule.BuildForecast(accidentProbability);
         return new ScenarioResult("Прогноз дорожніх ризиків", accidentProbability, forecast);
     }
 
     /// <summary>
-    /// Обробляє голосову взаємодію як асоціацію зі значенням фрази.
+    /// Обробляє голосову взаємодію за допомогою SpeechRecognitionModule та EmotionalSupportModule.
     /// </summary>
     public string HandleVoiceCommand(string phrase)
     {
-        string intent = voiceSystem.RecognizeCommand(phrase);
-        string localizedIntent = voiceSystem.GetLocalizedIntentName(intent);
-        return voiceSystem.Speak($"Розпізнано команду \"{localizedIntent}\".");
+        double confidence;
+        string intent = _speechRecognitionModule.RecognizeCommand(phrase, out confidence);
+        string localizedIntent = _voiceSystem.GetLocalizedIntentName(intent);
+
+        // Calculate emotion based on phrase characteristics or simulated stress
+        double stress = confidence < 0.60 ? 65.0 : 15.0;
+        string emotionAdvice = _emotionalSupportModule.SuggestAdvice(stress);
+
+        string response = _voiceSystem.Speak($"Розпізнано команду \"{localizedIntent}\". Рекомендація: {emotionAdvice}");
+        return response;
     }
 
     /// <summary>
@@ -104,7 +245,7 @@ public sealed class SmartSystem
     /// </summary>
     public string BalanceClimate()
     {
-        return climateControlSystem.BalanceClimate();
+        return _climateControlSystem.BalanceClimate();
     }
 
     /// <summary>
@@ -112,23 +253,25 @@ public sealed class SmartSystem
     /// </summary>
     public IReadOnlyList<string> ProtectPassengers(string threatName)
     {
-        return safetySystem.ActivateProtection(threatName);
+        return _safetySystem.ActivateProtection(threatName);
     }
 
     /// <summary>
-    /// Формує рекомендацію маршруту.
+    /// Формує рекомендацію маршруту через NavigationModule та RecommendationModule.
     /// </summary>
     public string BuildRoute(double accidentProbability)
     {
-        return navigationService.BuildAdaptiveRoute(accidentProbability);
+        string routeDetails = _navigationModule.BuildAdaptiveRoute(accidentProbability);
+        string recommendation = _recommendationModule.SuggestRoute(accidentProbability);
+        return $"{routeDetails} {recommendation}";
     }
 
     /// <summary>
-    /// Оновлює модель поведінки ШІ.
+    /// Оновлює модель поведінки ШІ за допомогою AIModule.
     /// </summary>
     public string SaveExperience(int currentEpisodeCount, int newEpisodeCount)
     {
-        int episodeCount = selfLearningModule.UpdateModel(currentEpisodeCount, newEpisodeCount);
-        return selfLearningModule.BuildUpdateMessage(episodeCount);
+        int episodeCount = _aiModule.UpdateModel(currentEpisodeCount, newEpisodeCount);
+        return $"[Штучний Інтелект]: Успішно оновлено нейронну мережу. Загальна кількість пройдених епізодів навчання: {episodeCount}.";
     }
 }

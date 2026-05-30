@@ -1,16 +1,73 @@
+using System;
+using System.Collections.Generic;
+
 namespace Lab6;
 
 /// <summary>
 /// Розпізнає дорожні об'єкти за даними камер та оцінює ризик середовища.
 /// </summary>
-public sealed class ComputerVisionModule : SmartDevice
+public sealed class ComputerVisionModule
 {
+    private int _activeCameras;
+    private bool _isInitialized;
+
     /// <summary>
-    /// Ініціалізує новий модуль комп'ютерного зору.
+    /// Конструктор за замовчуванням (Canonical Class Template).
     /// </summary>
-    public ComputerVisionModule() : base("Модуль комп'ютерного зору", 0.45)
+    public ComputerVisionModule()
     {
+        _activeCameras = 6;
+        _isInitialized = true;
     }
+
+    /// <summary>
+    /// Конструктор з повним набором конфігурацій.
+    /// </summary>
+    public ComputerVisionModule(int activeCameras, bool isInitialized)
+    {
+        _activeCameras = activeCameras;
+        _isInitialized = isInitialized;
+    }
+
+    /// <summary>
+    /// Конструктор копіювання (Canonical Class Template).
+    /// </summary>
+    public ComputerVisionModule(ComputerVisionModule other)
+    {
+        _activeCameras = other.ActiveCameras;
+        _isInitialized = other.IsInitialized;
+    }
+
+    /// <summary>
+    /// Повертає кількість активних камер.
+    /// </summary>
+    public int ActiveCameras
+    {
+        get
+        {
+            return _activeCameras;
+        }
+        set
+        {
+            _activeCameras = value;
+        }
+    }
+
+    /// <summary>
+    /// Повертає значення, чи ініціалізовано модуль.
+    /// </summary>
+    public bool IsInitialized
+    {
+        get
+        {
+            return _isInitialized;
+        }
+        set
+        {
+            _isInitialized = value;
+        }
+    }
+
     /// <summary>
     /// Розпізнає об'єкти навколо автомобіля за замовчуванням.
     /// </summary>
@@ -24,42 +81,35 @@ public sealed class ComputerVisionModule : SmartDevice
     /// </summary>
     public IReadOnlyList<string> RecognizeObjects(int cameraCount, string roadCondition, bool hasPedestrian, bool hasRoadWorks)
     {
-        if (cameraCount < 4)
+        List<string> objects = new List<string>();
+
+        if (hasPedestrian)
         {
-            throw new ContextInterpretationException($"Критична помилка комп'ютерного зору: Активно лише {cameraCount} камер(и) (мінімум 4). Дорожній контекст заблоковано!");
+            double pedestrianConfidence = 0.984;
+            double pedestrianDistanceMeter = 14.5;
+            objects.Add($"пішохід (відстань: {pedestrianDistanceMeter:F1}м, впевненість: {pedestrianConfidence:P1})");
         }
         else
         {
-            List<string> objects = new List<string>();
-
-            if (hasPedestrian)
-            {
-                double pedestrianConfidence = 0.984;
-                double pedestrianDistanceMeter = 14.5;
-                objects.Add($"пішохід (відстань: {pedestrianDistanceMeter:F1}м, впевненість: {pedestrianConfidence:P1})");
-            }
-            else
-            {
-                // У цьому сценарії пішоходів не виявлено
-            }
-
-            if (hasRoadWorks)
-            {
-                double roadWorksConfidence = 0.912;
-                double roadWorksDistanceMeter = 45.0;
-                objects.Add($"дорожні роботи (відстань: {roadWorksDistanceMeter:F1}м, впевненість: {roadWorksConfidence:P1})");
-            }
-            else
-            {
-                // У цьому сценарії дорожніх робіт не виявлено
-            }
-
-            double surfaceConfidence = 0.991;
-            objects.Add($"{roadCondition} (впевненість: {surfaceConfidence:P1})");
-
-            objects.Add($"{cameraCount} камер синхронізовано та активні");
-            return objects;
+            // У цьому сценарії пішоходів не виявлено
         }
+
+        if (hasRoadWorks)
+        {
+            double roadWorksConfidence = 0.912;
+            double roadWorksDistanceMeter = 45.0;
+            objects.Add($"дорожні роботи (відстань: {roadWorksDistanceMeter:F1}м, впевненість: {roadWorksConfidence:P1})");
+        }
+        else
+        {
+            // У цьому сценарії дорожніх робіт не виявлено
+        }
+
+        double surfaceConfidence = 0.991;
+        objects.Add($"{roadCondition} (впевненість: {surfaceConfidence:P1})");
+
+        objects.Add($"{cameraCount} камер синхронізовано та активні");
+        return objects;
     }
 
     /// <summary>
@@ -78,40 +128,26 @@ public sealed class ComputerVisionModule : SmartDevice
             {
                 individualRisk = 15.5;
             }
+            else if (normalizedObject.Contains("дорожні роботи", StringComparison.Ordinal))
+            {
+                individualRisk = 8.0;
+            }
+            else if (normalizedObject.Contains("волог", StringComparison.Ordinal) || 
+                     normalizedObject.Contains("вод", StringComparison.Ordinal) ||
+                     normalizedObject.Contains("ожелед", StringComparison.Ordinal) ||
+                     normalizedObject.Contains("сніг", StringComparison.Ordinal) ||
+                     normalizedObject.Contains("лід", StringComparison.Ordinal))
+            {
+                individualRisk = 12.5;
+            }
             else
             {
-                if (normalizedObject.Contains("дорожні роботи", StringComparison.Ordinal))
-                {
-                    individualRisk = 8.0;
-                }
-                else
-                {
-                    if (normalizedObject.Contains("волог", StringComparison.Ordinal) || 
-                        normalizedObject.Contains("вод", StringComparison.Ordinal) ||
-                        normalizedObject.Contains("ожелед", StringComparison.Ordinal) ||
-                        normalizedObject.Contains("сніг", StringComparison.Ordinal) ||
-                        normalizedObject.Contains("лід", StringComparison.Ordinal))
-                    {
-                        individualRisk = 12.5;
-                    }
-                    else
-                    {
-                        individualRisk = 2.0;
-                    }
-                }
+                individualRisk = 2.0;
             }
 
             totalRiskScore += individualRisk;
         }
 
         return Math.Min(100.0, totalRiskScore);
-    }
-
-    /// <summary>
-    /// Повертає поточний статус модуля комп'ютерного зору.
-    /// </summary>
-    public override string GetStatus()
-    {
-        return $"Модуль '{DeviceName}' працює в штатному режимі. Енергоспоживання: {PowerConsumption} кВт.";
     }
 }
